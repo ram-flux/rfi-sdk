@@ -88,7 +88,7 @@
 
 #### 删除设备
 
-**update_token**
+**del_device**
 
 > Requests and Parameter Description
 >
@@ -329,7 +329,7 @@
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
 > | chat_id   | int    | yes  | 聊天id                |
-> | key_word  | String | yes  | 关键字                |
+> | keyword   | String | yes  | 关键字                |
 >
 > Response and Parameters in data
 >
@@ -385,7 +385,7 @@
 
 #### 精灵信息
 
-**del_elf**
+**elf_detail**
 
 > Requests and Parameter Description
 >
@@ -514,6 +514,22 @@
 
 #### 社区详情
 
+**community_detail**
+
+> Requests and Parameter Description
+>
+> | Parameter    | Type | Must | Parameter Description |
+> | :----------- | :--- | :--- | :-------------------- |
+> | community_id | int  | yes  | 社区id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                       | Type | Must | Parameter Description |
+> | :------------------------------ | :--- | :--- | :-------------------- |
+> | community表数据结构（后续补充） |      |      |                       |
+
+------
+
 
 
 #### 更新社区信息
@@ -524,7 +540,7 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | id           | int    | yes  | 社区id                |
+> | community_id | int    | yes  | 社区id                |
 > | name         | String | yes  | 名称                  |
 > | bio          | String | yes  | 简介                  |
 > | passwd       | String | no   | 密码                  |
@@ -570,13 +586,12 @@
 > | father_id | int    | no   | 父社区id              |
 > | name      | String | yes  | 社区名称              |
 > | bio       | String | yes  | 简介                  |
-> | pinned    | bool   | yes  | 置顶                  |
 > | passwd    | String | no   | 密码                  |
 > | status    | int    | yes  | 1/普通社区 2/二级社区 |
->
-> Response and Parameters in data
->
-> | Parameter    | Type | Must | Parameter Description |
+> 
+>Response and Parameters in data
+> 
+>| Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
 > | community_id | int  | yes  | 社区id                |
 
@@ -627,6 +642,26 @@
 
 
 
+#### 更新新帖子
+
+**update_post**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type   | Must | Parameter Description |
+> | :-------- | :----- | :--- | :-------------------- |
+> | post_id   | int    | yes  | 帖子id                |
+> | name      | String | yes  | 名称                  |
+> | content   | String | yes  | 内容                  |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
 #### 查看帖子详情
 
 **post_detail**
@@ -645,6 +680,44 @@
 
 ------
 
+#### 删除帖子
+
+**del_post**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | post_id   | int  | yes  | 帖子id                |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
+#### 获取社区帖子回复列表
+
+**post_reply_list**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | post_id   | int  | yes  | 社区id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                                  | Type | Must | Parameter Description |
+> | :----------------------------------------- | :--- | :--- | :-------------------- |
+> | community_post_reply表数据结构（后续补充） |      |      |                       |
+
+------
+
+
+
 #### 回复帖子
 
 **reply_post**
@@ -662,6 +735,63 @@
 > no data
 
 ------
+
+
+
+#### 更新帖子回复
+
+**update_post_reply**
+
+> Requests and Parameter Description
+>
+> | Parameter     | Type   | Must | Parameter Description |
+> | :------------ | :----- | :--- | :-------------------- |
+> | post_reply_id | int    | yes  | 帖子id                |
+> | content       | String | yes  | 内容                  |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+#### 删除帖子回复
+
+**del_post_reply**
+
+> Requests and Parameter Description
+>
+> | Parameter     | Type | Must | Parameter Description |
+> | :------------ | :--- | :--- | :-------------------- |
+> | post_reply_id | int  | yes  | 帖子id                |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
+#### 获取社区帖子回复列表
+
+**post_reply_list**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | post_id   | int  | yes  | 社区id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                                  | Type | Must | Parameter Description |
+> | :----------------------------------------- | :--- | :--- | :-------------------- |
+> | community_post_reply表数据结构（后续补充） |      |      |                       |
+
+------
+
+
 
 
 
@@ -691,10 +821,11 @@
 
 > Requests and Parameter Description
 >
-> | Parameter    | Type | Must | Parameter Description |
-> | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | Parameter    | Type   | Must | Parameter Description |
+> | :----------- | :----- | :--- | :-------------------- |
+> | community_id | int    | yes  | 社区id                |
+> | user_id      | int    | yes  | 用户id                |
+> | type         | String | yes  | 类型                  |
 >
 > Response and Parameters in data
 >
