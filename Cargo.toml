@@ -1,4 +1,7 @@
-workspace = { members = ["payload"] }
+[workspace]
+
+members = ["payload","wallet"]
+
 
 [package]
 name = "im-sdk"
