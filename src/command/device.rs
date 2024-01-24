@@ -2,23 +2,23 @@ pub async fn init_device(
     account_pk: String,
     device_pk: String,
     proof: String,
-) -> crate::response::Response<payload::resources::device::Device> {
+) -> crate::response::Response<String> {
     let device = payload::resources::device::Device::default();
     #[cfg(feature = "mock")]
-    return Ok(device).into();
+    return Ok("encrypt_data".to_string()).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
 // 授权
-pub async fn warrant() -> crate::response::Response<()> {
+pub async fn warrant() -> crate::response::Response<String> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok("server_pubkey".to_string()).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
-pub async fn token() -> crate::response::Response<String> {
+pub async fn update_token() -> crate::response::Response<String> {
     let device = payload::resources::device::Device::default();
     let token = device.token;
     #[cfg(feature = "mock")]
@@ -27,7 +27,7 @@ pub async fn token() -> crate::response::Response<String> {
     todo!()
 }
 
-pub async fn del() -> crate::response::Response<()> {
+pub async fn del_device(device_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

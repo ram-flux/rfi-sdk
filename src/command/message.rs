@@ -1,19 +1,21 @@
-pub async fn push(
+pub async fn push_msg(
     content: String,
     mode: u8,
     from_id: i32,
     user_id: i32,
     chat_type: u8,
 ) -> crate::response::Response<()> {
-    let mut message = payload::resources::message::Message::default();
-    message.datas = content;
+    let message = payload::resources::message::Message {
+        datas: content,
+        ..Default::default()
+    };
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
-pub async fn pull(
+pub async fn pull_msg(
     message_id: u32,
 ) -> crate::response::Response<Vec<payload::resources::message::Message>> {
     #[cfg(feature = "mock")]
@@ -37,19 +39,28 @@ pub async fn pull(
     todo!()
 }
 
-pub async fn update(
+pub async fn update_msg(
     message_id: u32,
     content: String,
 ) -> crate::response::Response<payload::resources::message::Message> {
-    let mut message = payload::resources::message::Message::default();
-    message.datas = content;
+    let message = payload::resources::message::Message {
+        datas: content,
+        ..Default::default()
+    };
     #[cfg(feature = "mock")]
     return Ok(message).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
-pub async fn del(id: u32) -> crate::response::Response<()> {
+pub async fn del_msg(message_id: u32) -> crate::response::Response<()> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    todo!()
+}
+
+pub async fn pin_msg(message_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
