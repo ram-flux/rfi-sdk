@@ -102,7 +102,3 @@ pub async fn del_community(community_id: u32) -> crate::response::Response<()> {
     #[cfg(not(feature = "mock"))]
     todo!()
 }
-
-
-
-

@@ -5,8 +5,10 @@ pub async fn push_msg(
     user_id: i32,
     chat_type: u8,
 ) -> crate::response::Response<()> {
-    let mut message = payload::resources::message::Message::default();
-    message.datas = content;
+    let message = payload::resources::message::Message {
+        datas: content,
+        ..Default::default()
+    };
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -41,8 +43,10 @@ pub async fn update_msg(
     message_id: u32,
     content: String,
 ) -> crate::response::Response<payload::resources::message::Message> {
-    let mut message = payload::resources::message::Message::default();
-    message.datas = content;
+    let message = payload::resources::message::Message {
+        datas: content,
+        ..Default::default()
+    };
     #[cfg(feature = "mock")]
     return Ok(message).into();
     #[cfg(not(feature = "mock"))]
