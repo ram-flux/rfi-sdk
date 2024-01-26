@@ -1,4 +1,6 @@
-pub async fn list() -> crate::response::Response<Vec<payload::resources::apply::Apply>> {
+pub async fn apply_list(
+    user_id: u32,
+) -> crate::response::Response<Vec<payload::resources::apply::Apply>> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -23,7 +25,9 @@ pub async fn list() -> crate::response::Response<Vec<payload::resources::apply::
     todo!()
 }
 
-pub async fn detail() -> crate::response::Response<payload::resources::apply::Apply> {
+pub async fn apply_detail(
+    apply_id: u32,
+) -> crate::response::Response<payload::resources::apply::Apply> {
     #[cfg(feature = "mock")]
     {
         let apply = payload::resources::apply::Apply {
@@ -40,14 +44,19 @@ pub async fn detail() -> crate::response::Response<payload::resources::apply::Ap
     todo!()
 }
 
-pub async fn reply(apply_id: u32, user_id: u32, content: String) -> crate::response::Response<()> {
+pub async fn reply_apply(
+    apply_id: u32,
+    user_id: u32,
+    content: String,
+    status: u8,
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
-pub async fn del(apply_id: u32) -> crate::response::Response<()> {
+pub async fn del_apply(apply_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
