@@ -4,12 +4,10 @@
 
 //we is coin type:369777 is RF to ram flux
 //https://github.com/satoshilabs/slips/blob/master/slip-0044.md
-
-use anyhow::{Error, Ok};
 use bip39::{Language, Mnemonic, MnemonicType, Seed};
+use hex;
 use secp256k1::{PublicKey, Secp256k1, SecretKey};
 use tiny_hderive::bip32::ExtendedPrivKey;
-use hex;
 
 pub struct Hdrf<'a> {
     pub passwd: &'a str,
@@ -25,11 +23,11 @@ impl<'a> Hdrf<'a> {
         format!("m/44'/{}'/0'/0/0", coin_type)
     }
 
-    fn get_priv_key(&self, phrase: &str) -> Result<ExtendedPrivKey, Error> {
-        let mnemonic = Mnemonic::from_phrase(phrase, bip39::Language::English)?;
+    fn get_priv_key(&self, phrase: &str) -> Result<ExtendedPrivKey, crate::Error> {
+        let mnemonic = Mnemonic::from_phrase(phrase, bip39::Language::English)
+            .map_err(|e| crate::Error::Bip39(e.to_string()))?;
         let seed = Seed::new(&mnemonic, self.passwd);
-        let ext_priv_key = ExtendedPrivKey::derive(seed.as_bytes(), self.get_coin_type().as_str())
-            .map_err(|e| Error::msg(format!("ExtendedPrivKey:{:?}", e)))?;
+        let ext_priv_key = ExtendedPrivKey::derive(seed.as_bytes(), self.get_coin_type().as_str())?;
         Ok(ext_priv_key)
     }
 
@@ -40,13 +38,13 @@ impl<'a> Hdrf<'a> {
         mnemonic.phrase().to_string()
     }
 
-    pub fn recover_priv_key(&self, phrase: &str) -> Result<SecretKey, Error> {
+    pub fn recover_priv_key(&self, phrase: &str) -> Result<SecretKey, crate::Error> {
         let ext_priv_key = self.get_priv_key(phrase)?;
         let secp_secret_key = SecretKey::from_slice(&ext_priv_key.secret())?;
         Ok(secp_secret_key)
     }
 
-    pub fn get_pk(&self, phrase: &str) -> Result<(SecretKey, PublicKey), Error> {
+    pub fn get_pk(&self, phrase: &str) -> Result<(SecretKey, PublicKey), crate::Error> {
         let ext_priv_key = self.get_priv_key(phrase)?;
         let secp = Secp256k1::new();
         let secret_key = SecretKey::from_slice(&ext_priv_key.secret())?;
@@ -54,19 +52,18 @@ impl<'a> Hdrf<'a> {
         Ok((secret_key, public_key))
     }
 
-    pub fn get_pk_hex(&self, phrase: &str) -> Result<(String, String), Error> {
+    pub fn get_pk_hex(&self, phrase: &str) -> Result<(String, String), crate::Error> {
         let (secret_key, public_key) = self.get_pk(phrase)?;
         let secret_key_hex = hex::encode(secret_key.secret_bytes());
         let public_key_hex = hex::encode(public_key.serialize());
         Ok((secret_key_hex, public_key_hex))
     }
-
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bs58; 
+    use bs58;
     #[test]
     fn test_hdrf() {
         let hdrf = Hdrf::new("123456");
@@ -78,20 +75,20 @@ mod tests {
     }
 
     #[test]
-    fn test_hdrf_recover()-> Result<(), Error> {
+    fn test_hdrf_recover() -> Result<(), crate::Error> {
         let hdrf = Hdrf::new("123456");
         let phrase = "retreat clerk marine shoe dune evidence damage current inmate dose purchase search main vast curve latin crop glass melody sentence sheriff such fetch equal";
-        let secret_key_hex = hdrf.recover_priv_key(&phrase)?;
+        let secret_key_hex = hdrf.recover_priv_key(phrase)?;
         println!("phrase:{}", phrase);
         println!("secret_key_hex:{:?}", secret_key_hex);
         Ok(())
     }
 
     #[test]
-    fn test_hdrf_recover_pk()-> Result<(), Error> {
+    fn test_hdrf_recover_pk() -> Result<(), crate::Error> {
         let hdrf = Hdrf::new("1234567");
         let phrase = "retreat clerk marine shoe dune evidence damage current inmate dose purchase search main vast curve latin crop glass melody sentence sheriff such fetch equal";
-        let (secret_key, public_key) = hdrf.get_pk(&phrase)?;
+        let (secret_key, public_key) = hdrf.get_pk(phrase)?;
         println!("phrase:{}", phrase);
         println!("secret_key_hex:{:?}", secret_key);
         println!("public_key_hex:{:?}", public_key.to_string());
@@ -99,5 +96,4 @@ mod tests {
         println!("base58_address:{}", base58_address);
         Ok(())
     }
-
 }

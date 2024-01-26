@@ -2,7 +2,11 @@
 //  Copyright 2024 Ram Flux, LLC.
 //
 
+mod error;
+pub use error::Error;
+
 mod util;
+pub use util::{hdrf::Hdrf, pin::Pin};
 
 #[cfg(test)]
 mod tests {
@@ -20,12 +24,16 @@ mod tests {
         println!("public_key_hex:{}", public_key_hex);
 
         let wallet_priv_key = secret_key_hex.as_bytes().to_vec();
-        let pin = Pin::new(b"123456".to_vec(), b"some_salt".to_vec(), Some(wallet_priv_key));
+        let pin = Pin::new(
+            b"123456".to_vec(),
+            b"some_salt".to_vec(),
+            Some(wallet_priv_key),
+        );
         let (aes_key, aes_iv) = pin.derive_key()?;
 
         let ciphertext = pin.encrypt(&aes_key, &aes_iv)?;
 
-        let ciphertext_hex = hex::encode(&ciphertext);
+        let ciphertext_hex = hex::encode(ciphertext);
         println!("Ciphertext (Hex): {}", ciphertext_hex);
 
         let ciphertext = hex::decode(ciphertext_hex)?;
