@@ -81,7 +81,21 @@ mod test {
         let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
 
         let user_id = 123;
-        let res = crate::command::community::info::community_list(user_id).await;
+        let page_size = 3;
+        let offset = 0;
+        let res = crate::command::community::info::community_list(user_id, page_size, offset).await;
+        println!("res: {res:#?}");
+    }
+
+    #[tokio::test]
+    async fn test_sqlite_query_one() {
+        let pri_url = "sqlite://test_pri.db";
+        let pub_url = "sqlite://test_pub.db";
+        let _ = DbConnection::init_user_database(pri_url.to_string()).await;
+        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+
+        let community_id = 1614942208;
+        let res = crate::command::community::info::community_detail(community_id).await;
         println!("res: {res:#?}");
     }
 }

@@ -3,23 +3,38 @@ use crate::sqlite_operator::Query as _;
 #[cfg(not(feature = "mock"))]
 use resource::Action as _;
 
+#[derive(Debug, Default, serde::Serialize, sqlx::FromRow)]
+pub struct Community {
+    pub id: u32,
+    pub father_id: Option<u32>,
+    pub user_id: u32,
+    pub name: String,
+    pub bio: String,
+    pub passwd: Option<String>,
+    pub announcement: Option<String>,
+    pub pinned: bool,
+    pub status: u8,
+    pub created_at: sqlx::types::chrono::DateTime<sqlx::types::chrono::Utc>,
+    pub updated_at: Option<sqlx::types::chrono::DateTime<sqlx::types::chrono::Utc>>,
+}
+
 /// 社区列表
 pub async fn community_list(
     user_id: u32,
-) -> crate::response::Response<
-    crate::sqlite_operator::QueryResult<payload::resources::community::Community>,
-> {
+    page_size: u16,
+    offset: u16,
+) -> crate::response::Response<crate::sqlite_operator::QueryResult<Community>> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
-            payload::resources::community::Community {
+            Community {
                 father_id: None,
                 user_id: 6546,
                 name: "test".to_string(),
                 status: 1,
                 ..Default::default()
             },
-            payload::resources::community::Community {
+            Community {
                 father_id: Some(123),
                 user_id: 5435,
                 name: "test2".to_string(),
@@ -32,34 +47,33 @@ pub async fn community_list(
         return Ok(crate::sqlite_operator::QueryResult::Vec(list)).into();
     }
     #[cfg(not(feature = "mock"))]
-    payload::resources::community::Community::query(
-        async move |user_pool, pub_pool| {
-        let sql =
-            "SELECT id, father_id, user_id, name, bio, passwd, announcement, pinned, status, created_at, 
-            updated_at FROM community 
-            WHERE user_id =$1;";
-        sqlx::query_as::<sqlx::Sqlite, _>(sql)
+    Community::query(async move |user_pool, pub_pool| {
+        let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement,
+                 pinned, status, created_at, updated_at 
+            FROM community 
+            WHERE user_id = $1
+            LIMIT $2 OFFSET $3;";
+
+        sqlx::query_as::<sqlx::Sqlite, Community>(sql)
             .bind(user_id)
+            .bind(page_size)
+            .bind(offset)
             .fetch_all(user_pool.as_ref())
             .await
             .map(Into::into)
     })
     .await
-    .map_err(|e| crate::Error::BadRequest(
-        crate::CommunityError::DatabaseError(e).into()
-    ))
+    .map_err(|e| crate::Error::BadRequest(crate::CommunityError::DatabaseError(e).into()))
     .into()
 }
 
 /// 社区详情
 pub async fn community_detail(
-    user_id: u32,
-) -> crate::response::Response<
-    crate::sqlite_operator::QueryResult<payload::resources::community::Community>,
-> {
+    community_id: u32,
+) -> crate::response::Response<crate::sqlite_operator::QueryResult<Community>> {
     #[cfg(feature = "mock")]
     {
-        let comm = payload::resources::community::Community {
+        let comm = Community {
             father_id: Some(123),
             user_id: 5435,
             name: "test2".to_string(),
@@ -74,20 +88,21 @@ pub async fn community_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        payload::resources::community::Community::query(async move |user_pool, pub_pool| {
+        Community::query(async move |user_pool, pub_pool| {
             let sql =
-                "SELECT id, father_id, user_id, name, bio, passwd, announcement, pinned, status FROM community 
-                WHERE user_id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, payload::resources::community::Community>(sql)
-                .bind(user_id)
+                "SELECT id, father_id, user_id, name, bio, passwd, announcement,
+                    pinned, status, created_at, updated_at 
+                FROM community 
+                WHERE id =$1;";
+            sqlx::query_as::<sqlx::Sqlite, Community>(sql)
+                .bind(community_id)
                 .fetch_one(user_pool.as_ref())
                 .await
                 .map(Into::into)
         })
         .await
-        .map_err(|e| crate::Error::BadRequest(
-            crate::InitDatabaseError::DatabaseError(e).into()
-        )).into()
+        .map_err(|e| crate::Error::BadRequest(crate::CommunityError::DatabaseError(e).into()))
+        .into()
     }
 }
 
