@@ -1,12 +1,11 @@
 pub mod account;
 pub mod apply;
-pub mod broadcast;
 pub mod chat;
 pub mod community;
 pub mod contact;
 pub mod device;
 pub mod elf;
+pub mod favorite;
 pub mod message;
 pub mod nav;
-pub mod server;
-pub mod session;
+pub mod settings;

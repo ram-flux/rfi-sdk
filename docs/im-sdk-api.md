@@ -425,9 +425,41 @@
 
 #### 搜索
 
+**search_contact**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type   | Must | Parameter Description |
+> | :-------- | :----- | :--- | :-------------------- |
+> | keyword   | String | yes  | 关键字                |
+>
+> Response and Parameters in data
+>
+> | Parameter                     | Type | Must | Parameter Description |
+> | :---------------------------- | :--- | :--- | :-------------------- |
+> | contact表数据结构（后续补充） |      |      |                       |
+
+------
 
 
-#### 个人详情
+
+#### 获取联系人详情
+
+****
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | user_id   | int  | yes  | 用户id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                     | Type | Must | Parameter Description |
+> | :---------------------------- | :--- | :--- | :-------------------- |
+> | contact表数据结构（后续补充） |      |      |                       |
+
+------
 
 
 
@@ -1073,6 +1105,193 @@
 
 ## 设置
 
+#### 获取设置信息
+
+**settings_detail**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | user_id   | int  | yes  | 用户id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                      | Type | Must | Parameter Description |
+> | :----------------------------- | :--- | :--- | :-------------------- |
+> | settings表数据结构（后续补充） |      |      |                       |
+
+------
 
 
-## 菜单
+
+#### 修改语言
+
+**update_language**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type   | Must | Parameter Description |
+> | :-------- | :----- | :--- | :-------------------- |
+> | user_id   | int    | yes  | 用户id                |
+> | language  | String | no   | 语言                  |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
+### 收藏夹
+
+#### 收藏夹列表
+
+**favorite_list**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | user_id   | int  | yes  | 用户id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                      | Type | Must | Parameter Description |
+> | :----------------------------- | :--- | :--- | :-------------------- |
+> | favorite表数据结构（后续补充） |      |      |                       |
+
+------
+
+
+
+#### 收藏项详情
+
+**favorite_detail**
+
+> Requests and Parameter Description
+>
+> | Parameter   | Type | Must | Parameter Description |
+> | :---------- | :--- | :--- | :-------------------- |
+> | favorite_id | int  | yes  | 收藏项id              |
+>
+> Response and Parameters in data
+>
+> | Parameter                      | Type | Must | Parameter Description |
+> | :----------------------------- | :--- | :--- | :-------------------- |
+> | favorite表数据结构（后续补充） |      |      |                       |
+
+------
+
+
+
+#### 添加到收藏夹
+
+**add_favorite**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type   | Must | Parameter Description |
+> | :-------- | :----- | :--- | :-------------------- |
+> | user_id   | int    | yes  | 用户id                |
+> | content   | String | yes  | 内容                  |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+#### 从收藏夹移除
+
+**del_favorite**
+
+> Requests and Parameter Description
+>
+> | Parameter   | Type | Must | Parameter Description |
+> | :---------- | :--- | :--- | :-------------------- |
+> | favorite_id | int  | yes  | 收藏项id              |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
+## 导航
+
+#### 导航列表
+
+**nav_list**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | user_id   | int  | yes  | 用户id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                 | Type | Must | Parameter Description |
+> | :------------------------ | :--- | :--- | :-------------------- |
+> | nav表数据结构（后续补充） |      |      |                       |
+
+------
+
+#### 添加导航
+
+**add_nav**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description       |
+> | :-------- | :--- | :--- | :-------------------------- |
+> | user_id   | int  | yes  | 用户id                      |
+> | type      | int  | yes  | 1/私聊 2/社区 3/精灵 7/广播 |
+> | type_id   | int  | yes  | 对应的id                    |
+> | sort      | int  | yes  | 位置索引                    |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+#### 更新导航
+
+**update_nav**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | nav_id    | int  | yes  | 导航id                |
+> | sort      | int  | no   | 位置索引              |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
+#### 删除导航
+
+**del_nav**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | nav_id    | int  | yes  | 导航id                |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+

@@ -39,11 +39,11 @@ where
 
 impl From<crate::Error> for (u32, String) {
     fn from(err: crate::Error) -> Self {
-        // use crate::Error;
         let (code, message) = match err {
-            // Error::Json(_) => (203, "json error".to_string(), err.to_string()),
-            // Error::System(e) => e.into(),
-            // Error::Route(_) => (201, "route error".to_string(), err.to_string()),
+            crate::Error::Parse(_) => (203, err.to_string()),
+            crate::Error::BadRequest(_) => (203, err.to_string()),
+            crate::Error::Database(_) => (203, err.to_string()),
+            crate::Error::Sqlx(_) => (203, err.to_string()),
         };
         (code, message)
     }
