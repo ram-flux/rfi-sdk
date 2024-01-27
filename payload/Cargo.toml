@@ -6,7 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# resource = { path = "../resources" }
+
+resource = { git = "https://github.com/tediou5/resources.git", branch = "sqlite" }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
 thiserror = "1"
+
+
+sqlx = { version = "0.7", features = [
+    "json",
+    "runtime-tokio-rustls",
+    "postgres",
+    "sqlite",
+    "any",
+    "chrono",
+] }
