@@ -17,7 +17,12 @@ pub async fn nav_list() -> crate::response::Response<Vec<payload::resources::nav
     todo!()
 }
 
-pub async fn add_nav(user_id: u32, r#type: u8, type_id: u32, sort: u8) -> Result<(), crate::Error> {
+pub async fn add_nav(
+    user_id: u32,
+    r#type: u8,
+    type_id: u32,
+    sort: u8,
+) -> crate::response::Response<()> {
     let nav = payload::resources::nav::Nav {
         user_id,
         updated_at: Some(payload::utils::time::now()),

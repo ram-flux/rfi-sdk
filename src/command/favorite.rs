@@ -18,7 +18,7 @@ pub async fn favorite_list(
     todo!()
 }
 
-pub async fn add_favorite(user_id: u32, content: String) -> Result<(), crate::Error> {
+pub async fn add_favorite(user_id: u32, content: String) -> crate::response::Response<()> {
     let favorite = payload::resources::favorite::Favorite {
         user_id,
         updated_at: Some(payload::utils::time::now()),
@@ -39,7 +39,7 @@ pub async fn del_favorite(favorite_id: u32) -> crate::response::Response<()> {
 
 pub async fn favorite_detail(
     favorite_id: u32,
-) -> Result<payload::resources::favorite::Favorite, crate::Error> {
+) -> crate::response::Response<payload::resources::favorite::Favorite> {
     let favorite = payload::resources::favorite::Favorite {
         id: favorite_id,
         updated_at: Some(payload::utils::time::now()),

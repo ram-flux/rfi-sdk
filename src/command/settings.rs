@@ -1,6 +1,6 @@
 pub async fn settings_detail(
     user_id: u32,
-) -> Result<payload::resources::settings::Settings, crate::Error> {
+) -> crate::response::Response<payload::resources::settings::Settings> {
     let elf = payload::resources::settings::Settings {
         user_id,
         updated_at: Some(payload::utils::time::now()),
