@@ -1,38 +1,29 @@
-use chrono::prelude::*;
-
+use chrono::{DateTime, Utc};
 use resource::Resource;
+
 #[derive(
     serde::Deserialize,
     serde::Serialize,
     PartialEq,
     Debug,
-    // resource_macros::Resource,
+    // resource::resource_macros::Resource,
     Default,
+    sqlx::FromRow,
 )]
 // #[resource(
-//     schema_name = "im",
-//     pg_table_name = "account",
-//     sqlite_table_name = "account",
-//     primary_key = "id:u32",
-//     constraint = "im_account_pkey"
+//     schema_name = "public",
+//     pg_table_name = "device",
+//     sqlite_table_name = "device",
+//     primary_key = "device_id:u32",
+//     constraint = "im_device_id_idx"
 // )]
-pub struct Avatar {
-    pub avatar: String,
+pub struct Token {
+    pub token: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
-impl Avatar {
-    pub fn new(avatar: String) -> Self {
-        Self {
-            avatar,
-            created_at: crate::utils::time::now(),
-            updated_at: Some(crate::utils::time::now()),
-        }
-    }
-}
-
-impl resource::GenResourceID for Avatar {
+impl resource::GenResourceID for Token {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {
@@ -42,19 +33,19 @@ impl resource::GenResourceID for Avatar {
     }
 }
 
-impl Resource<sqlx::Sqlite> for Avatar {
+impl Resource<sqlx::Sqlite> for Token {
     type ResourceID = u32;
 
     async fn update<'c, E>(&self, id: &Self::ResourceID, executor: E) -> Result<(), resource::Error>
     where
         E: sqlx::prelude::Executor<'c, Database = sqlx::Sqlite>,
     {
-        let sql = "UPDATE account SET 
-        avatar = $1, 
+        let sql = "UPDATE device SET 
+        token = $1, 
         updated_at = $2
-        WHERE user_id = $3;";
+        WHERE device_id = $3;";
         sqlx::query(sql)
-            .bind(&self.avatar)
+            .bind(&self.token)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

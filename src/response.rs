@@ -43,6 +43,7 @@ impl From<crate::Error> for (u32, String) {
             crate::Error::Parse(_) => (203, err.to_string()),
             crate::Error::BadRequest(_) => (203, err.to_string()),
             crate::Error::Database(_) => (203, err.to_string()),
+            crate::Error::Wallet(_) => (203, err.to_string()),
             crate::Error::Sqlx(_) => (203, err.to_string()),
         };
         (code, message)

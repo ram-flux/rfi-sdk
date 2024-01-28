@@ -147,7 +147,10 @@ impl DbConnection {
                 // .ok_or(crate::DatabaseError::MigratorGetFailed)?
                 .run(&sqlite_pool)
                 .await
-                .map_err(|_| crate::DatabaseError::MigrationRunFailed)?;
+                .map_err(|e| {
+                    println!("[init_database] migrate failed: {e}");
+                    crate::DatabaseError::MigrationRunFailed
+                })?;
             sqlite_pool
         } else {
             sqlite_pool

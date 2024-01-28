@@ -144,6 +144,24 @@
 
 ------
 
+#### 获取账号详情
+
+**account_detail**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type | Must | Parameter Description |
+> | :-------- | :--- | :--- | :-------------------- |
+> | user_id   | int  | yes  | 用户id                |
+>
+> Response and Parameters in data
+>
+> | Parameter                     | Type | Must | Parameter Description |
+> | :---------------------------- | :--- | :--- | :-------------------- |
+> | account表数据结构（后续补充） |      |      |                       |
+
+------
+
 
 
 #### 加入社区

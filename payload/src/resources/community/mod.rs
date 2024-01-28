@@ -18,7 +18,7 @@ pub mod post_reply;
     sqlx::FromRow,
 )]
 #[resource(
-    schema_name = "public",
+    schema_name = "im",
     pg_table_name = "community",
     sqlite_table_name = "community",
     primary_key = "id:u32",

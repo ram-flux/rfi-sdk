@@ -7,10 +7,11 @@ pub mod db;
 pub mod error;
 pub mod resources;
 pub mod response;
+pub mod service;
 pub mod sqlite_operator;
 
 #[cfg(not(feature = "mock"))]
-pub(crate) use error::api::community::CommunityError;
+pub(crate) use error::api::{account::AccountError, community::CommunityError};
 
 pub(crate) use error::{
     api::init_database::InitDatabaseError, bad_request::BadRequest,
@@ -33,6 +34,15 @@ pub fn version() -> std::collections::HashMap<String, String> {
     version.insert("im-sdk".to_string(), env!("CARGO_PKG_VERSION").to_string());
 
     version
+}
+
+#[allow(dead_code)]
+pub(crate) fn init_log() {
+    tracing_subscriber::fmt()
+        .pretty()
+        .with_max_level(tracing::Level::DEBUG)
+        .with_test_writer()
+        .init();
 }
 
 #[cfg(test)]

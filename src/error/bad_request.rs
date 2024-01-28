@@ -4,6 +4,8 @@ pub enum BadRequest {
     InitDatabase(#[from] super::api::init_database::InitDatabaseError),
     #[error("Community error: {0}")]
     Community(#[from] super::api::community::CommunityError),
+    #[error("Account error: {0}")]
+    Account(#[from] super::api::account::AccountError),
 }
 
 impl BadRequest {
