@@ -5,14 +5,12 @@ pub async fn member_list(
     {
         let list = vec![
             payload::resources::community::member::Member {
-                id: 123,
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
             payload::resources::community::member::Member {
-                id: 1243,
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
@@ -27,7 +25,6 @@ pub async fn member_list(
 
 pub async fn add_member(community_id: u32, user_id: u32) -> Result<(), crate::Error> {
     let admin = payload::resources::community::member::Member {
-        id: user_id,
         user_id,
         ..Default::default()
     };
@@ -62,7 +59,6 @@ pub async fn member_detail(
     #[cfg(feature = "mock")]
     {
         let member = payload::resources::community::member::Member {
-            id: 123,
             r#type: 1,
             user_id: 6565656,
             name: "tester".to_string(),

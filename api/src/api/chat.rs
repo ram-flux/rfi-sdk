@@ -3,14 +3,12 @@ pub async fn chat_list(user_id: u32) -> Result<Vec<payload::resources::chat::Cha
     {
         let list = vec![
             payload::resources::chat::Chat {
-                chat_id: 123,
                 user_id: 6546,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
             payload::resources::chat::Chat {
-                chat_id: 124,
                 user_id: 5435,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),

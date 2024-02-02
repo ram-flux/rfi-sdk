@@ -5,14 +5,12 @@ pub async fn admin_list(
     {
         let list = vec![
             payload::resources::community::admin::Admin {
-                id: 123,
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
             payload::resources::community::admin::Admin {
-                id: 1243,
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
@@ -61,7 +59,6 @@ pub async fn admin_detail(
     #[cfg(feature = "mock")]
     {
         let admin = payload::resources::community::admin::Admin {
-            id: 123,
             r#type: 1,
             community_id: 43434,
             user_id: 6565656,

@@ -5,7 +5,6 @@ pub async fn post_reply_list(
     {
         let list = vec![
             payload::resources::community::post_reply::PostReply {
-                id: 123,
                 user_id: 6565656,
                 post_id: 2343,
                 content: "test".to_string(),
@@ -14,7 +13,6 @@ pub async fn post_reply_list(
                 ..Default::default()
             },
             payload::resources::community::post_reply::PostReply {
-                id: 1243,
                 user_id: 6565656,
                 post_id: 2343,
                 content: "test".to_string(),
@@ -56,7 +54,6 @@ pub async fn post_reply_detail(
     #[cfg(feature = "mock")]
     {
         let post = payload::resources::community::post_reply::PostReply {
-            id: 123,
             user_id: 6565656,
             post_id: 2343,
             content: "test".to_string(),

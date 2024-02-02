@@ -1,6 +1,5 @@
 pub async fn create_elf(r#type: u8, name: String, avatar: String) -> Result<(), crate::Error> {
     let elf = payload::resources::elf::Elf {
-        id: 123123,
         r#type,
         name,
         avatar,
@@ -23,7 +22,6 @@ pub async fn update_elf(
     status: u8,
 ) -> Result<(), crate::Error> {
     let elf = payload::resources::elf::Elf {
-        id: elf_id,
         r#type,
         name,
         avatar,
@@ -39,7 +37,6 @@ pub async fn update_elf(
 
 pub async fn elf_detail(elf_id: u32) -> Result<payload::resources::elf::Elf, crate::Error> {
     let elf = payload::resources::elf::Elf {
-        id: elf_id,
         updated_at: Some(payload::utils::time::now()),
         ..Default::default()
     };
@@ -51,7 +48,6 @@ pub async fn elf_detail(elf_id: u32) -> Result<payload::resources::elf::Elf, cra
 
 pub async fn del_elf(elf_id: u32) -> Result<(), crate::Error> {
     let elf = payload::resources::elf::Elf {
-        id: elf_id,
         updated_at: Some(payload::utils::time::now()),
         ..Default::default()
     };

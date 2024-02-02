@@ -5,7 +5,6 @@ pub async fn post_list(
     {
         let list = vec![
             payload::resources::community::post::Post {
-                id: community_id,
                 user_id: 6546,
                 name: "test".to_string(),
                 created_at: payload::utils::time::now(),
@@ -13,7 +12,6 @@ pub async fn post_list(
                 ..Default::default()
             },
             payload::resources::community::post::Post {
-                id: community_id,
                 user_id: 5435,
                 name: "test2".to_string(),
                 created_at: payload::utils::time::now(),
@@ -34,7 +32,6 @@ pub async fn create_post(
     content: String,
 ) -> Result<u32, crate::Error> {
     let post = payload::resources::community::post::Post {
-        id: 123123,
         community_id,
         user_id,
         name,
@@ -42,7 +39,7 @@ pub async fn create_post(
         ..Default::default()
     };
     #[cfg(feature = "mock")]
-    return Ok(post.id).into();
+    return Ok(3234).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
@@ -67,7 +64,6 @@ pub async fn post_detail(
     #[cfg(feature = "mock")]
     {
         let post = payload::resources::community::post::Post {
-            id: post_id,
             user_id: 6565656,
             name: "tester".to_string(),
             content: "test".to_string(),

@@ -40,7 +40,6 @@ pub async fn favorite_detail(
     favorite_id: u32,
 ) -> Result<payload::resources::favorite::Favorite, crate::Error> {
     let favorite = payload::resources::favorite::Favorite {
-        id: favorite_id,
         updated_at: Some(payload::utils::time::now()),
         ..Default::default()
     };

@@ -5,14 +5,12 @@ pub async fn apply_list(
     {
         let list = vec![
             payload::resources::apply::Apply {
-                id: 123,
                 user_id: 6546,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
             payload::resources::apply::Apply {
-                id: 124,
                 user_id: 5435,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
@@ -29,7 +27,6 @@ pub async fn apply_detail(apply_id: u32) -> Result<payload::resources::apply::Ap
     #[cfg(feature = "mock")]
     {
         let apply = payload::resources::apply::Apply {
-            id: 123,
             r#type: 1,
             user_id: 6565656,
             created_at: payload::utils::time::now(),
