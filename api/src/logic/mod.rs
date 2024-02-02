@@ -147,11 +147,37 @@ pub(crate) mod update {
     }
 
     update_resource!(
+        update_admin,
+        Admin,
+        UpdateAdmin,
+        payload::resources::community::admin::Admin
+    );
+    update_resource!(
+        update_member,
+        Member,
+        UpdateMember,
+        payload::resources::community::member::Member
+    );
+    update_resource!(
+        update_post,
+        Post,
+        UpdatePost,
+        payload::resources::community::post::Post
+    );
+    update_resource!(
+        update_post_reply,
+        PostReply,
+        UpdatePost,
+        payload::resources::community::post_reply::PostReply
+    );
+
+    update_resource!(
         update_account,
         Account,
         UpdateAccount,
         payload::resources::account::Account
     );
+
     update_resource!(
         update_token,
         Token,
@@ -163,6 +189,39 @@ pub(crate) mod update {
         Avatar,
         UpdateAvatar,
         payload::resources::account::avatar::Avatar
+    );
+    update_resource!(pin_chat, Chat, UpdateChat, payload::resources::chat::Chat);
+    update_resource!(
+        update_contact,
+        Contact,
+        UpdateContact,
+        payload::resources::contact::Contact
+    );
+    update_resource!(update_elf, Elf, UpdateElf, payload::resources::elf::Elf);
+    update_resource!(
+        update_message,
+        Message,
+        UpdateMessage,
+        payload::resources::message::Message
+    );
+    update_resource!(
+        update_message_status,
+        Status,
+        UpdateMessageStatus,
+        payload::resources::message::status::Status
+    );
+    update_resource!(
+        edit_message,
+        Status,
+        UpdateMessageStatus,
+        payload::resources::message::status::Status
+    );
+    update_resource!(update_nav, Nav, UpdateNav, payload::resources::nav::Nav);
+    update_resource!(
+        update_language,
+        Settings,
+        UpdateSetting,
+        payload::resources::settings::Settings
     );
 }
 

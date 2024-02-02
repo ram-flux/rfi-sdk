@@ -7,7 +7,7 @@ use payload::resources::{
     device::{token::Token, Device},
     elf::Elf,
     favorite::Favorite,
-    message::{block::Block, Message},
+    message::{block::Block, status::Status, Message},
     nav::Nav,
     settings::Settings,
 };
@@ -32,6 +32,7 @@ pub enum Resources {
     // Message
     Message(resource::Command<resource::GeneralAction<Message>>),
     Block(resource::Command<resource::GeneralAction<Block>>),
+    Status(resource::Command<resource::GeneralAction<Status>>),
     // Apply
     Apply(resource::Command<resource::GeneralAction<Apply>>),
     ApplyReply(resource::Command<resource::GeneralAction<ApplyReply>>),
@@ -62,6 +63,7 @@ impl resource::Action for Resources {
             Resources::Token(r) => r.execute(executor).await,
             Resources::Message(r) => r.execute(executor).await,
             Resources::Block(r) => r.execute(executor).await,
+            Resources::Status(r) => r.execute(executor).await,
             Resources::Apply(r) => r.execute(executor).await,
             Resources::ApplyReply(r) => r.execute(executor).await,
             Resources::Contact(r) => r.execute(executor).await,

@@ -48,3 +48,10 @@ pub async fn search_chat(
     #[cfg(not(feature = "mock"))]
     todo!()
 }
+
+pub async fn pin_chat(chat: u32) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    todo!()
+}
