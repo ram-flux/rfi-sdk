@@ -66,6 +66,13 @@ pub(crate) mod upsert {
         UpsertContact,
         payload::resources::contact::Contact
     );
+
+    upsert_resource!(
+        add_admin,
+        Admin,
+        UpsertAdmin,
+        payload::resources::community::admin::Admin
+    );
 }
 
 #[macro_use]
