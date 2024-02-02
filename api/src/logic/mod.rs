@@ -73,6 +73,50 @@ pub(crate) mod upsert {
         UpsertAdmin,
         payload::resources::community::admin::Admin
     );
+
+    upsert_resource!(
+        add_member,
+        Member,
+        UpsertMember,
+        payload::resources::community::member::Member
+    );
+
+    upsert_resource!(
+        create_post,
+        Post,
+        UpsertPost,
+        payload::resources::community::post::Post
+    );
+
+    upsert_resource!(
+        reply_post,
+        PostReply,
+        UpsertPostReply,
+        payload::resources::community::post_reply::PostReply
+    );
+
+    upsert_resource!(
+        reply_apply,
+        Apply,
+        UpsertApply,
+        payload::resources::apply::Apply
+    );
+
+    upsert_resource!(create_elf, Elf, UpsertElf, payload::resources::elf::Elf);
+
+    upsert_resource!(
+        add_favorite,
+        Favorite,
+        UpsertFavorite,
+        payload::resources::favorite::Favorite
+    );
+    upsert_resource!(add_nav, Nav, UpsertNav, payload::resources::nav::Nav);
+    upsert_resource!(
+        new_settings,
+        Settings,
+        UpsertSettings,
+        payload::resources::settings::Settings
+    );
 }
 
 #[macro_use]
