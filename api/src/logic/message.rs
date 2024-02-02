@@ -1,60 +1,62 @@
-use std::{future::Future, pin::Pin};
+use resource::Action as _;
+
+// net send
 pub(crate) async fn send_message(
-    message: payload::resources::message::Message,
+    message: &payload::resources::message::Message,
     message_id: u32,
-) -> Result<(), crate::Error> {
+    recv_list: Vec<u32>,
+) -> Result<(), crate::SystemError> {
     // #[cfg(feature = "mock")]
-    let mut worker = payload::utils::worker();
-    let trace_id = worker.next_id().unwrap();
+    let mut worker = crate::operator::WrapWorker::worker()?;
+    let trace_id = worker.gen_trace_id()?;
 
-    // 生成handler
-
-    #[cfg(feature = "mock")]
-    let mut handler = {
-        let (sink, stream) = tokio::sync::mpsc::unbounded_channel();
-        let stream = tokio_stream::wrappers::UnboundedReceiverStream::new(stream);
-
-        let handler = im_codec::Handler::handshake(sink, stream).await.unwrap();
-        handler
+    let data = {
+        let data = bson::to_vec(message).map_err(|e| crate::SystemError::Serde(e.into()))?;
+        std::sync::Arc::new(data)
     };
 
-    #[cfg(not(feature = "mock"))]
-    let mut handler = {
-        let handler =
-            im_codec::Handler::handshake(endpoint.parse().unwrap(), Protocol::heartbeat(trace_id))
-                .await
-                .unwrap();
-        handler
-    };
+    let list: Vec<[u8; 32]> = Vec::new();
+    let msg = im_codec::Protocol::message(trace_id as u64, list, data);
 
-    let sink = handler.sink();
-    let protocol = im_codec::Protocol::heartbeat(worker.next_id().unwrap());
-    tracing::info!("[push_msg] protocol: {protocol:?}");
-
-    let _ = sink.send(protocol);
-
-    tokio::spawn(async move {
-        let mop = |a: Vec<[u8; 32]>,
-                   b: std::sync::Arc<Vec<u8>>|
-         -> Pin<Box<dyn Future<Output = Result<(), im_codec::Error>> + Send>> {
-            // TODO: 处理message
-            tracing::error!("[handle_request] message a: {a:?}, b: {b:?}");
-            Box::pin(async move { Ok::<(), im_codec::Error>(()) })
-        };
-        let aop = |trace_id: u64,
-                   header: im_codec::ResponseHeader|
-         -> Pin<Box<dyn Future<Output = Result<(), im_codec::Error>> + Send>> {
-            // TODO: 处理response
-            tracing::error!("[handle_request] response trace_id: {trace_id:?}, header: {header:?}");
-            Box::pin(async move { Ok::<(), im_codec::Error>(()) })
-        };
-        if let Err(e) = handler
-            .handle_request(|a, b| Box::pin(mop(a, b)), |a, b| Box::pin(aop(a, b)))
-            .await
-        {
-            tracing::error!("[handle_request] error: {e}");
-        };
-    });
+    let tx = crate::operator::net::channel::net_channel_generator();
+    tx.send(crate::operator::net::channel::Event::Send {
+        from_id: message.from_id,
+        recv_list,
+        data: msg,
+    })
+    .map_err(|e| crate::SystemError::Net(e.into()))?;
 
     Ok(())
 }
+
+// db save
+pub(crate) async fn save_message(
+    message: payload::resources::message::Message,
+    message_id: u32,
+) -> Result<(), crate::SystemError> {
+    let id = crate::operator::WrapWorker::worker()?.gen_trace_id()?;
+    let message_action = resource::GeneralAction::Upsert {
+        id: Some(message_id),
+        resource: message,
+    };
+
+    let account_resource = crate::resources::Resources::Message(resource::Command::new(
+        id,
+        message_action,
+        "UpsertAccount".to_string(),
+    ));
+
+    let pool = crate::operator::sqlite::init::USER_SQLITE_POOL.read().await;
+    let pool = pool.get_pool()?;
+    let res = account_resource.execute(pool.as_ref()).await;
+    println!("[new_message] res: {res:?}");
+    Ok(())
+}
+
+// let recv_list: Vec<[u8; 32]> = recv_list
+//     .iter()
+//     .map(|&x| {
+//         let bytes: [u8; 32] = x.to_le_bytes();
+//         bytes
+//     })
+//     .collect();

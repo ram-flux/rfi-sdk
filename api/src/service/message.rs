@@ -1,20 +1,9 @@
-use resource::Action as _;
-
-pub(crate) async fn save_message(account: payload::resources::message::Message, account_id: u32) {
-    let id = payload::utils::gen_id();
-    let message_action = resource::GeneralAction::Upsert {
-        id: Some(account_id),
-        resource: account,
-    };
-
-    let account_resource = crate::resources::Resources::Message(resource::Command::new(
-        id as i64,
-        message_action,
-        "UpsertAccount".to_string(),
-    ));
-
-    let pool = crate::operator::sqlite::init::USER_SQLITE_POOL.read().await;
-    let pool = pool.get_pool().unwrap();
-    let res = account_resource.execute(pool.as_ref()).await;
-    println!("[new_message] res: {res:?}");
+pub(crate) async fn send_message(
+    message: payload::resources::message::Message,
+    message_id: u32,
+    recv_list: Vec<u32>,
+) -> Result<(), crate::SystemError> {
+    crate::logic::message::send_message(&message, message_id, recv_list).await?;
+    crate::logic::message::save_message(message, message_id as u32).await?;
+    Ok(())
 }

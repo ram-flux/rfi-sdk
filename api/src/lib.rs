@@ -1,4 +1,4 @@
-#![feature(try_trait_v2, async_closure, associated_type_defaults)]
+#![feature(try_trait_v2, async_closure, associated_type_defaults, let_chains)]
 #![allow(unused_variables)]
 #![allow(unreachable_code)]
 #![allow(clippy::too_many_arguments)]
@@ -13,9 +13,11 @@ pub mod service;
 #[cfg(not(feature = "mock"))]
 pub(crate) use error::api::{account::AccountError, community::CommunityError};
 
-pub(crate) use error::{common::database::DatabaseError, Error};
+pub(crate) use error::{common::channel::ChannelError, common::database::DatabaseError, Error};
 
 pub use operator::sqlite::init::DbConnection;
+
+use error::{common::net::NetError, system::SystemError};
 
 // pub(crate) static mut SQLITE_POOL: once_cell::sync::OnceCell<sqlx::Pool<sqlx::Sqlite>> =
 //     once_cell::sync::OnceCell::new();

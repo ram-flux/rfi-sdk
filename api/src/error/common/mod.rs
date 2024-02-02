@@ -1,4 +1,6 @@
+pub mod channel;
 pub mod database;
+pub mod net;
 pub mod parse;
 pub mod serde;
 
@@ -6,10 +8,8 @@ pub mod serde;
 pub enum BadRequest {
     #[error("Parse error: {0}")]
     Parse(#[from] parse::ParseError),
-
     #[error("Database error: {0}")]
     Database(#[from] database::DatabaseError),
-
     #[error("Serde error: {0}")]
     Serde(#[from] serde::SerdeError),
 }

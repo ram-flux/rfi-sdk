@@ -12,14 +12,13 @@ pub async fn push_msg(
 
     // #[cfg(not(feature = "mock"))]
     {
-        let mut worker = payload::utils::worker();
-        let trace_id = worker.next_id().unwrap();
-        let message_id = worker.next_id().unwrap();
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let message_id = worker.gen_id()?;
         let message =
             payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type)
                 .set_data(&content, mode);
-        crate::service::message::save_message(message, message_id as u32).await;
-        crate::logic::message::send_message(message, message_id as u32).await?;
+        let recv_list = Vec::new();
+        crate::service::message::send_message(message, message_id, recv_list).await?;
         Ok(()).into()
     }
 }
