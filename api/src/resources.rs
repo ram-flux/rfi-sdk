@@ -1,6 +1,7 @@
 use payload::resources::{
     account::{avatar::Avatar, community::AccountCommunity, Account},
     community::Community,
+    contact::Contact,
     device::{token::Token, Device},
     message::Message,
 };
@@ -14,6 +15,7 @@ pub enum Resources {
     Device(resource::Command<resource::GeneralAction<Device>>),
     Token(resource::Command<resource::GeneralAction<Token>>),
     Message(resource::Command<resource::GeneralAction<Message>>),
+    Contact(resource::Command<resource::GeneralAction<Contact>>),
 }
 
 impl resource::Action for Resources {
@@ -29,6 +31,7 @@ impl resource::Action for Resources {
             Resources::Device(r) => r.execute(executor).await,
             Resources::Token(r) => r.execute(executor).await,
             Resources::Message(r) => r.execute(executor).await,
+            Resources::Contact(r) => r.execute(executor).await,
         }
     }
 }

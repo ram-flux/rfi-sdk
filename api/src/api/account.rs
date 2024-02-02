@@ -102,18 +102,6 @@ pub async fn quit_community(user_id: u32, community_id: u32) -> Result<(), crate
     }
 }
 
-/// 添加帖子
-pub async fn add_contact(
-    friend_id: u32,
-    user_id: u32,
-    content: String,
-) -> Result<(), crate::Error> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
-}
-
 #[cfg(test)]
 mod test {
     use crate::operator::sqlite::init::DbConnection;

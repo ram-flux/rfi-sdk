@@ -59,6 +59,13 @@ pub(crate) mod upsert {
         UpsertMessage,
         payload::resources::message::Message
     );
+
+    upsert_resource!(
+        add_contact,
+        Contact,
+        UpsertContact,
+        payload::resources::contact::Contact
+    );
 }
 
 #[macro_use]
