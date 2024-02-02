@@ -37,33 +37,27 @@ pub struct Message {
 }
 
 impl Message {
-    pub fn new(
-        mode: u8,
-        from_id: u32,
-        user_id: u32,
-        chat_id: u32,
-        chat_type: u8,
-        datas: String,
-        has_read: u8,
-        msg_error: u8,
-        status: u8,
-        send_time: DateTime<Utc>,
-        accept_time: DateTime<Utc>,
-    ) -> Self {
+    pub fn set_data(mut self, data: &str, mode: u8) -> Self {
+        self.datas = data.to_string();
+        self.mode = mode;
+        let time = crate::utils::time::now();
+        self.send_time = time;
+        self.created_at = time;
+        self
+    }
+
+    pub fn new(from_id: u32, user_id: u32, chat_id: u32, chat_type: u8) -> Self {
+        let time = crate::utils::time::now();
         Self {
-            mode,
             from_id,
             user_id,
             chat_id,
             chat_type,
-            datas,
-            has_read,
-            msg_error,
-            send_time,
-            accept_time,
-            status,
-            created_at: crate::utils::time::now(),
-            updated_at: Some(crate::utils::time::now()),
+            has_read: 2,
+            status: 1,
+            send_time: time,
+            created_at: time,
+            ..Default::default()
         }
     }
 }
