@@ -13,7 +13,7 @@ const TIMESTAMP_LEFT_SHIFT: u128 = SEQUENCE_BITS + WORKER_ID_BITS + DATA_CENTER_
 // 4095
 const SEQUENCE_MASK: u128 = (-1 ^ (-1 << SEQUENCE_BITS)) as u128;
 
-pub(crate) struct SnowflakeIdWorkerInner {
+pub struct SnowflakeIdWorkerInner {
     worker_id: u128,
     data_center_id: u128,
     sequence: u128,
@@ -55,7 +55,7 @@ impl SnowflakeIdWorkerInner {
         })
     }
 
-    pub(crate) fn next_id(&mut self) -> Result<u64, crate::PayloadError> {
+    pub fn next_id(&mut self) -> Result<u64, crate::PayloadError> {
         let mut timestamp = Self::get_time()?;
         if timestamp < self.last_timestamp {
             return Err(

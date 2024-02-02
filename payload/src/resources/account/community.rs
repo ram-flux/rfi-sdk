@@ -10,7 +10,7 @@ use sqlx::Sqlite;
     Default,
 )]
 #[resource(
-    schema_name = "public",
+    schema_name = "im",
     pg_table_name = "account_community",
     sqlite_table_name = "account_community",
     primary_key = "id:u32",
