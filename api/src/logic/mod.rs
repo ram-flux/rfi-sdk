@@ -1,4 +1,5 @@
 pub mod account;
+pub mod community;
 // #[cfg(not(feature = "mock"))]
 pub mod message;
 
@@ -47,7 +48,7 @@ pub(crate) mod upsert {
     );
 
     upsert_resource!(
-        add_community,
+        join_community,
         AccountCommunity,
         UpsertAccountCommunity,
         payload::resources::account::community::AccountCommunity
@@ -65,6 +66,13 @@ pub(crate) mod upsert {
         Contact,
         UpsertContact,
         payload::resources::contact::Contact
+    );
+
+    upsert_resource!(
+        create_community,
+        Community,
+        UpsertCommunity,
+        payload::resources::community::Community
     );
 
     upsert_resource!(
