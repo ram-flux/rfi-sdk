@@ -51,3 +51,38 @@ impl AccountDetailReq {
         crate::logic::account::AccountDetailRes::exec(self.user_id).await
     }
 }
+
+pub(crate) struct AddCommunityReq {
+    community: payload::resources::account::community::AccountCommunity,
+    community_id: u32,
+}
+
+impl AddCommunityReq {
+    pub(crate) fn new(
+        community: payload::resources::account::community::AccountCommunity,
+        community_id: u32,
+    ) -> Self {
+        Self {
+            community,
+            community_id,
+        }
+    }
+    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+        crate::logic::upsert::add_community(self.community, self.community_id).await?;
+        Ok(())
+    }
+}
+
+pub(crate) struct QuitCommunityReq {
+    community_id: u32,
+}
+
+impl QuitCommunityReq {
+    pub(crate) fn new(community_id: u32) -> Self {
+        Self { community_id }
+    }
+    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+        crate::logic::delete::quit_community(self.community_id).await?;
+        Ok(())
+    }
+}

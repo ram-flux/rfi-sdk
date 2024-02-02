@@ -47,6 +47,13 @@ pub(crate) mod upsert {
     );
 
     upsert_resource!(
+        add_community,
+        AccountCommunity,
+        UpsertAccountCommunity,
+        payload::resources::account::community::AccountCommunity
+    );
+
+    upsert_resource!(
         new_message,
         Message,
         UpsertMessage,
@@ -126,4 +133,5 @@ pub(crate) mod delete {
     }
 
     delete_resource!(del_device, Device, DropDevice);
+    delete_resource!(quit_community, AccountCommunity, DropAccountCommunity);
 }

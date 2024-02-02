@@ -1,5 +1,5 @@
 use payload::resources::{
-    account::{avatar::Avatar, Account},
+    account::{avatar::Avatar, community::AccountCommunity, Account},
     community::Community,
     device::{token::Token, Device},
     message::Message,
@@ -10,6 +10,7 @@ pub enum Resources {
     Account(resource::Command<resource::GeneralAction<Account>>),
     Avatar(resource::Command<resource::GeneralAction<Avatar>>),
     Community(resource::Command<resource::GeneralAction<Community>>),
+    AccountCommunity(resource::Command<resource::GeneralAction<AccountCommunity>>),
     Device(resource::Command<resource::GeneralAction<Device>>),
     Token(resource::Command<resource::GeneralAction<Token>>),
     Message(resource::Command<resource::GeneralAction<Message>>),
@@ -24,6 +25,7 @@ impl resource::Action for Resources {
             Resources::Avatar(r) => r.execute(executor).await,
             Resources::Account(r) => r.execute(executor).await,
             Resources::Community(r) => r.execute(executor).await,
+            Resources::AccountCommunity(r) => r.execute(executor).await,
             Resources::Device(r) => r.execute(executor).await,
             Resources::Token(r) => r.execute(executor).await,
             Resources::Message(r) => r.execute(executor).await,

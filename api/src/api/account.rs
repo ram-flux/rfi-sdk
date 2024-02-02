@@ -64,24 +64,42 @@ pub async fn account_detail(
     }
 }
 
-/// 添加社区
+/// 添加社区(done, untested)
 pub async fn add_community(
-    community: u32,
+    community_id: u32,
     user_id: u32,
-    content: String,
+    name: String,
+    avatar: String,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let community = payload::resources::account::community::AccountCommunity::new(
+            community_id,
+            user_id,
+            name,
+            avatar,
+        );
+
+        crate::service::account::AddCommunityReq::new(community, community_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
-/// 退出社区
+/// 退出社区(done, untested)
 pub async fn quit_community(user_id: u32, community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        crate::service::account::QuitCommunityReq::new(community_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
 /// 添加帖子
