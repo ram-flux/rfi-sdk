@@ -14,7 +14,7 @@ pub async fn init_codec(
     from_id: u32,
     recv_id: u32,
     #[cfg(not(feature = "mock"))] endpoint: std::net::SocketAddr,
-    #[cfg(not(feature = "mock"))] hanshake: im_codec::Protocol,
+    #[cfg(not(feature = "mock"))] hanshake: im_net::Protocol,
 ) -> Result<(), crate::Error> {
     // #[cfg(not(feature = "mock"))]
     // todo!()
@@ -27,7 +27,7 @@ pub async fn init_codec(
         hanshake,
     )
     .await
-    .map_err(|e| crate::Error::System(e))?;
+    .map_err(crate::Error::System)?;
 
     net_tx
         .send(crate::operator::net::channel::Event::Join {

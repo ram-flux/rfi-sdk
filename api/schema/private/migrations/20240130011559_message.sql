@@ -16,4 +16,4 @@ CREATE TABLE message (
     updated_at TIMESTAMP,
     PRIMARY KEY (id)
 );
-CREATE INDEX im_message_id_idx ON device (id);
+CREATE INDEX im_message_id_idx ON message (id);

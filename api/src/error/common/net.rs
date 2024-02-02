@@ -1,7 +1,7 @@
 #[derive(Debug, thiserror::Error)]
 pub enum NetError {
     #[error("Codec error: {0}")]
-    Codec(#[from] im_codec::Error),
+    Codec(#[from] im_net::Error),
     #[error("Channel error: {0}")]
     Channel(#[from] super::channel::ChannelError),
     #[error("Parse error: {0}")]

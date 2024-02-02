@@ -29,6 +29,8 @@ pub enum Migrator {
 
 pub type PoolSqlite = Pool<Sqlite>;
 
+pub(crate) type UserPool = std::sync::Arc<Pool<Sqlite>>;
+
 impl DbConnection {
     pub async fn init_user_database(url: String) -> Result<(), crate::DatabaseError> {
         let mut conn = DbConnection::default();
@@ -58,6 +60,11 @@ impl DbConnection {
         PUBLIC_SQLITE_POOL
             .get()
             .ok_or(crate::DatabaseError::GetPublicSqliteConnFailed)
+    }
+
+    pub async fn get_user_connection() -> Result<UserPool, crate::DatabaseError> {
+        let pool = crate::operator::sqlite::init::USER_SQLITE_POOL.read().await;
+        pool.get_pool()
     }
 
     pub fn migrator(&self) -> sqlx::migrate::Migrator {
@@ -148,13 +155,14 @@ impl DbConnection {
         Ok(self)
     }
 
-    pub fn get_pool(&self) -> Result<&std::sync::Arc<Pool<Sqlite>>, crate::DatabaseError> {
-        self.conn.as_ref().ok_or({
-            match self.migrator {
-                Migrator::Pub => crate::DatabaseError::GetPublicSqlitePoolFailed,
-                Migrator::Pri => crate::DatabaseError::GetUserSqlitePoolFailed,
-            }
-        })
+    pub fn get_pool(&self) -> Result<std::sync::Arc<Pool<Sqlite>>, crate::DatabaseError> {
+        match &self.conn {
+            Some(conn) => Ok(conn.clone()),
+            None => match self.migrator {
+                Migrator::Pub => Err(crate::DatabaseError::GetPublicSqlitePoolFailed),
+                Migrator::Pri => Err(crate::DatabaseError::GetUserSqlitePoolFailed),
+            },
+        }
     }
 
     pub async fn get_uri(&self) -> String {

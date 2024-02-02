@@ -24,6 +24,7 @@ impl WrapWorker {
         payload::utils::worker().map(Self).map_err(Into::into)
     }
 
+    // #[cfg(not(feature = "mock"))]
     pub fn gen_id(&mut self) -> Result<u32, crate::SystemError> {
         self.next_id().map_err(Into::into).map(|id| id as u32)
     }

@@ -17,7 +17,7 @@ impl<T> From<T> for QueryResult<T> {
     }
 }
 
-pub(super) trait Query: serde::Serialize + Sized + std::fmt::Debug {
+pub(crate) trait Query: serde::Serialize + Sized + std::fmt::Debug {
     type Res = QueryResult<Self>;
 
     async fn query<F, O>(op: F) -> Result<Self::Res, crate::DatabaseError>

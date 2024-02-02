@@ -11,12 +11,13 @@ pub async fn init_device(
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(454456).into();
-    #[cfg(not(feature = "mock"))]
+    // #[cfg(not(feature = "mock"))]
     {
-        let mut worker = payload::utils::worker();
-        let user_id = worker.next_id().unwrap() as u32;
-        let device_id = worker.next_id().unwrap() as u32;
-        let account_id = worker.next_id().unwrap() as u32;
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let user_id = worker.gen_id()?;
+        let device_id = worker.gen_id()?;
+        let account_id = worker.gen_id()?;
+
         let device = payload::resources::device::Device {
             public_key: device_pk,
             def: platform,
@@ -28,7 +29,6 @@ pub async fn init_device(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        crate::service::device::new_device(device, device_id).await;
         let account = payload::resources::account::Account {
             public_key: account_pk,
             user_id,
@@ -38,8 +38,10 @@ pub async fn init_device(
             name,
             ..Default::default()
         };
-        crate::service::account::new_account(account, account_id).await;
-        Ok(device_id).into()
+        crate::service::device::InitDeviceReq::new(device, device_id, account, account_id)
+            .exec()
+            .await?;
+        Ok(device_id)
     }
 }
 
@@ -84,10 +86,11 @@ pub async fn update_token(device_id: u32) -> Result<String, crate::Error> {
             token: new_token.to_string(),
             created_at: payload::utils::time::now(),
             updated_at: Some(payload::utils::time::now()),
-            ..Default::default()
         };
-        crate::service::device::update_token(token, device_id).await;
-        Ok(new_token.to_string()).into()
+        crate::service::device::UpdateTokenReq::new(token, device_id)
+            .exec()
+            .await?;
+        Ok(new_token.to_string())
     }
 }
 
@@ -97,8 +100,10 @@ pub async fn del_device(device_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::service::device::del_device(device_id).await;
-        Ok(()).into()
+        crate::service::device::DelDeviceReq::new(device_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 

@@ -31,10 +31,11 @@ pub(crate) enum Event {
         recv_id: u32,
         sender: super::codec::CodecChannel,
     },
+    // #[cfg(not(feature = "mock"))]
     Send {
         from_id: u32,
         recv_list: Vec<u32>,
-        data: im_codec::Protocol,
+        data: im_net::Protocol,
     },
 }
 
@@ -76,6 +77,7 @@ pub fn handle() -> (NetChannel, impl std::future::Future<Output = ()>) {
                             list: std::collections::HashMap::from([(recv_id, sender)]),
                         });
                 }
+                // #[cfg(not(feature = "mock"))]
                 Event::Send {
                     from_id,
                     recv_list,

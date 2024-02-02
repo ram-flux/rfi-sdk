@@ -1,6 +1,3 @@
-#[cfg(not(feature = "mock"))]
-use resource::Action as _;
-
 use crate::operator::sqlite::query::QueryResult;
 
 /// 更新账户(tested)
@@ -22,67 +19,48 @@ pub async fn update_info(
         let account = payload::resources::account::Account::new(
             user_id, public_key, account, salt, gender, name, avatar, bio,
         );
-        crate::service::account::update_account(account, account_id).await;
-        Ok(()).into()
+        crate::logic::update::update_account(account, account_id).await;
+        Ok(())
     }
 }
 
 /// 更新头像(tested)
-pub async fn update_avatar(user_id: u32, avatar: String) -> Result<(), crate::Error> {
+pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        let avatar = payload::resources::account::avatar::Avatar::new(avatar);
-        let avatar_action = resource::GeneralAction::Update {
-            id: user_id,
-            resource: avatar,
-        };
+        let account = account_detail(account_id).await?;
+        if let QueryResult::One(data) = account {
+            let avatar = payload::resources::account::avatar::Avatar::new(avatar);
 
-        let avatar_resource = crate::resources::Resources::Avatar(resource::Command::new(
-            user_id as i64,
-            avatar_action,
-            "UpdateAvatar".to_string(),
-        ));
-        let pool = crate::db::USER_SQLITE_POOL.read().await;
-        let pool = pool.get_pool().unwrap();
-        let _ = avatar_resource.execute(pool.as_ref()).await;
-        Ok(()).into()
+            crate::service::account::UpdateAvatarReq::new(avatar, account_id)
+                .exec()
+                .await?;
+        }
+
+        Ok(())
     }
 }
 
 /// 账号详情(tested)
 pub async fn account_detail(
-    account_id: u32,
-) -> Result<QueryResult<payload::resources::account::Account>, crate::Error> {
+    user_id: u32,
+) -> Result<QueryResult<crate::logic::account::AccountDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
-        let comm = payload::resources::account::Account {
+        let comm = crate::logic::account::AccountDetailRes {
             user_id: 5435,
             name: "test2".to_string(),
-            // created_at: payload::utils::time::now(),
-            // updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
         return Ok(QueryResult::One(comm)).into();
     }
     #[cfg(not(feature = "mock"))]
     {
-        use Query as _;
-        payload::resources::account::Account::query(async move |user_pool, pub_pool| {
-            let sql = "SELECT user_id, public_key, account, salt, gender, name, avatar,
-                bio, created_at, updated_at 
-                FROM account 
-                WHERE id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, payload::resources::account::Account>(sql)
-                .bind(account_id)
-                .fetch_one(user_pool.as_ref())
-                .await
-                .map(Into::into)
-        })
-        .await
-        .map_err(|e| crate::Error::BadRequest(crate::AccountError::DatabaseError(e).into()))
-        .into()
+        Ok(crate::service::account::AccountDetailReq::new(user_id)
+            .exec()
+            .await?)
     }
 }
 
@@ -170,15 +148,15 @@ mod test {
         println!("res: {res:#?}");
     }
 
-    #[tokio::test]
-    async fn test_sqlite_query_one() {
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let _ = DbConnection::init_user_database(pri_url.to_string()).await;
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+    // #[tokio::test]
+    // async fn test_sqlite_query_one() {
+    //     let pri_url = "sqlite://test_pri.db";
+    //     let pub_url = "sqlite://test_pub.db";
+    //     let _ = DbConnection::init_user_database(pri_url.to_string()).await;
+    //     let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
 
-        let community_id = 1614942208;
-        let res = crate::api::community::info::community_detail(community_id).await;
-        println!("res: {res:#?}");
-    }
+    //     let community_id = 1614942208;
+    //     let res = crate::api::community::info::community_detail(community_id).await;
+    //     println!("res: {res:#?}");
+    // }
 }

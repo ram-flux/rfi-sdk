@@ -1,3 +1,4 @@
+/// 发送消息(tested)
 pub async fn push_msg(
     content: String,
     mode: u8,
@@ -10,7 +11,7 @@ pub async fn push_msg(
     #[cfg(feature = "mock")]
     return Ok(()).into();
 
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         let mut worker = crate::operator::WrapWorker::worker()?;
         let message_id = worker.gen_id()?;
@@ -18,8 +19,10 @@ pub async fn push_msg(
             payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type)
                 .set_data(&content, mode);
         let recv_list = Vec::new();
-        crate::service::message::send_message(message, message_id, recv_list).await?;
-        Ok(()).into()
+        crate::service::message::SendMessageReq::new(message, message_id, recv_list)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 

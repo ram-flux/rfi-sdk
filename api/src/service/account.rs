@@ -1,41 +1,53 @@
-#[cfg(not(feature = "mock"))]
-use resource::Action as _;
-
-#[cfg(not(feature = "mock"))]
-pub(crate) async fn new_account(account: payload::resources::account::Account, account_id: u32) {
-    let id = payload::utils::gen_id();
-    let account_action = resource::GeneralAction::Upsert {
-        id: Some(account_id),
-        resource: account,
-    };
-
-    let account_resource = crate::resources::Resources::Account(resource::Command::new(
-        id as i64,
-        account_action,
-        "UpsertAccount".to_string(),
-    ));
-
-    let pool = crate::db::USER_SQLITE_POOL.read().await;
-    let pool = pool.get_pool().unwrap();
-    let _ = account_resource.execute(pool.as_ref()).await;
+pub(crate) struct UpdateAccountReq {
+    account: payload::resources::account::Account,
+    account_id: u32,
 }
 
-#[cfg(not(feature = "mock"))]
-pub(crate) async fn update_account(account: payload::resources::account::Account, account_id: u32) {
-    let id = payload::utils::gen_id();
+impl UpdateAccountReq {
+    pub(crate) fn new(account: payload::resources::account::Account, account_id: u32) -> Self {
+        Self {
+            account,
+            account_id,
+        }
+    }
+    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+        crate::logic::upsert::new_account(self.account, self.account_id).await?;
+        Ok(())
+    }
+}
 
-    let account_action = resource::GeneralAction::Update {
-        id: account_id,
-        resource: account,
-    };
+pub(crate) struct UpdateAvatarReq {
+    avatar: payload::resources::account::avatar::Avatar,
+    account_id: u32,
+}
 
-    let account_resource = crate::resources::Resources::Account(resource::Command::new(
-        id as i64,
-        account_action,
-        "UpdateAccount".to_string(),
-    ));
+impl UpdateAvatarReq {
+    pub(crate) fn new(
+        avatar: payload::resources::account::avatar::Avatar,
+        account_id: u32,
+    ) -> Self {
+        Self { avatar, account_id }
+    }
+    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+        crate::logic::update::update_avatar(self.avatar, self.account_id).await?;
+        Ok(())
+    }
+}
 
-    let pool = crate::db::USER_SQLITE_POOL.read().await;
-    let pool = pool.get_pool().unwrap();
-    let _ = account_resource.execute(pool.as_ref()).await;
+pub(crate) struct AccountDetailReq {
+    user_id: u32,
+}
+
+impl AccountDetailReq {
+    pub(crate) fn new(user_id: u32) -> Self {
+        Self { user_id }
+    }
+    pub(crate) async fn exec(
+        self,
+    ) -> Result<
+        crate::operator::sqlite::query::QueryResult<crate::logic::account::AccountDetailRes>,
+        crate::SystemError,
+    > {
+        crate::logic::account::AccountDetailRes::exec(self.user_id).await
+    }
 }
