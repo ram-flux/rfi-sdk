@@ -57,3 +57,10 @@ pub async fn del_apply(apply_id: u32) -> Result<(), crate::Error> {
     #[cfg(not(feature = "mock"))]
     todo!()
 }
+
+pub async fn del_apply_reply(apply_id: u32) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    todo!()
+}

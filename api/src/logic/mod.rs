@@ -249,6 +249,18 @@ pub(crate) mod delete {
         };
     }
 
+    delete_resource!(del_admin, Admin, DropAdmin);
+    delete_resource!(del_community, Community, DropCommunity);
+    delete_resource!(del_member, Member, DropMember);
+    delete_resource!(del_post, Post, DropPost);
+    delete_resource!(del_post_reply, PostReply, DropPostReply);
+    delete_resource!(del_apply, Apply, DropApply);
+    delete_resource!(del_apply_reply, ApplyReply, DropApplyReply);
+    delete_resource!(del_contact, Contact, DropContact);
     delete_resource!(del_device, Device, DropDevice);
+    delete_resource!(del_elf, Elf, DropElf);
+    delete_resource!(del_favorite, Favorite, DropFavorite);
+    delete_resource!(del_message, Message, DropMessage);
+    delete_resource!(del_nav, Nav, DropNav);
     delete_resource!(quit_community, AccountCommunity, DropAccountCommunity);
 }
