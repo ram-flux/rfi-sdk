@@ -20,20 +20,23 @@ impl CreateCommunityReq {
     }
 }
 
-pub(crate) struct UpdateAccountReq {
-    account: payload::resources::account::Account,
-    account_id: u32,
+pub(crate) struct UpdateCommunityReq {
+    community: payload::resources::community::info::CommunityInfo,
+    community_id: u32,
 }
 
-impl UpdateAccountReq {
-    pub(crate) fn new(account: payload::resources::account::Account, account_id: u32) -> Self {
+impl UpdateCommunityReq {
+    pub(crate) fn new(
+        community: payload::resources::community::info::CommunityInfo,
+        community_id: u32,
+    ) -> Self {
         Self {
-            account,
-            account_id,
+            community,
+            community_id,
         }
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::upsert::new_account(self.account, self.account_id).await?;
+        crate::logic::update::update_community(self.community, self.community_id).await?;
         Ok(())
     }
 }
@@ -120,16 +123,16 @@ impl AddCommunityReq {
     }
 }
 
-pub(crate) struct QuitCommunityReq {
+pub(crate) struct DeleteCommunityReq {
     community_id: u32,
 }
 
-impl QuitCommunityReq {
+impl DeleteCommunityReq {
     pub(crate) fn new(community_id: u32) -> Self {
         Self { community_id }
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::delete::quit_community(self.community_id).await?;
+        crate::logic::delete::del_community(self.community_id).await?;
         Ok(())
     }
 }

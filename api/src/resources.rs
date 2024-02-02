@@ -2,7 +2,10 @@ use payload::resources::{
     account::{avatar::Avatar, community::AccountCommunity, elf::AccountElf, Account},
     apply::{reply::ApplyReply, Apply},
     chat::Chat,
-    community::{admin::Admin, member::Member, post::Post, post_reply::PostReply, Community},
+    community::{
+        admin::Admin, info::CommunityInfo, member::Member, post::Post, post_reply::PostReply,
+        Community,
+    },
     contact::Contact,
     device::{token::Token, Device},
     elf::Elf,
@@ -21,6 +24,7 @@ pub enum Resources {
     Avatar(resource::Command<resource::GeneralAction<Avatar>>),
     // Community
     Community(resource::Command<resource::GeneralAction<Community>>),
+    CommunityInfo(resource::Command<resource::GeneralAction<CommunityInfo>>),
     Admin(resource::Command<resource::GeneralAction<Admin>>),
     Member(resource::Command<resource::GeneralAction<Member>>),
     Post(resource::Command<resource::GeneralAction<Post>>),
@@ -55,6 +59,7 @@ impl resource::Action for Resources {
             Resources::AccountCommunity(r) => r.execute(executor).await,
             Resources::Avatar(r) => r.execute(executor).await,
             Resources::Community(r) => r.execute(executor).await,
+            Resources::CommunityInfo(r) => r.execute(executor).await,
             Resources::Admin(r) => r.execute(executor).await,
             Resources::Member(r) => r.execute(executor).await,
             Resources::Post(r) => r.execute(executor).await,

@@ -205,6 +205,12 @@ pub(crate) mod update {
         UpdateContact,
         payload::resources::contact::Contact
     );
+    update_resource!(
+        update_community,
+        CommunityInfo,
+        UpdateCommunityInfo,
+        payload::resources::community::info::CommunityInfo
+    );
     update_resource!(update_elf, Elf, UpdateElf, payload::resources::elf::Elf);
     update_resource!(
         update_message,

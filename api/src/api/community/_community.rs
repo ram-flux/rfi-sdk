@@ -1,9 +1,12 @@
-use crate::operator::sqlite::query::{Query as _, QueryResult};
+use crate::{
+    operator::sqlite::query::{Query as _, QueryResult},
+    service,
+};
 #[cfg(not(feature = "mock"))]
 use resource::Action as _;
 // #[cfg(not(feature = "mock"))]
 
-/// 社区列表
+/// 社区列表(done, untested)
 pub async fn community_list(
     user_id: u32,
     page_size: u16,
@@ -44,7 +47,7 @@ pub async fn community_list(
     }
 }
 
-/// 社区详情
+/// 社区详情(done, untested)
 pub async fn community_detail(
     community_id: u32,
 ) -> Result<QueryResult<crate::logic::community::CommunityDetailRes>, crate::Error> {
@@ -74,7 +77,7 @@ pub async fn community_detail(
     }
 }
 
-/// 创建社区
+/// 创建社区(done, untested)
 pub async fn create_community(
     user_id: u32,
     father_id: Option<u32>,
@@ -87,7 +90,7 @@ pub async fn create_community(
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(3434).into();
-    #[cfg(not(feature = "mock"))]
+    // #[cfg(not(feature = "mock"))]
     {
         let community = payload::resources::community::Community::new(
             father_id,
@@ -99,26 +102,17 @@ pub async fn create_community(
             pinned,
             status,
         );
-        let id = payload::utils::gen_id();
-        let community_action = resource::GeneralAction::Upsert {
-            id: Some(id),
-            resource: community,
-        };
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let community_id = worker.gen_id()?;
+        service::community::_community::CreateCommunityReq::new(community, community_id)
+            .exec()
+            .await?;
 
-        let community_resource = crate::resources::Resources::Community(resource::Command::new(
-            user_id as i64,
-            community_action,
-            "UpsertCommunity".to_string(),
-        ));
-
-        let pool = crate::db::USER_SQLITE_POOL.read().await;
-        let pool = pool.get_pool().unwrap();
-        let _ = community_resource.execute(pool.as_ref()).await;
-        Ok(id).into()
+        Ok(community_id).into()
     }
 }
 
-/// 更新社区
+/// 更新社区(done, untested)
 pub async fn update_community(
     community_id: u32,
     name: String,
@@ -131,13 +125,33 @@ pub async fn update_community(
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let community = payload::resources::community::info::CommunityInfo::new(
+            name,
+            bio,
+            passwd,
+            announcement,
+            pinned,
+            status,
+        );
+
+        crate::service::community::_community::UpdateCommunityReq::new(community, community_id)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
 }
 
-/// 删除社区
+/// 删除社区(done, untested)
 pub async fn del_community(community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        crate::service::community::_community::DeleteCommunityReq::new(community_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
