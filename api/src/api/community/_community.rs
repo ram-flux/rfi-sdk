@@ -11,18 +11,18 @@ pub async fn community_list(
     user_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<QueryResult<crate::logic::community::CommunityDetailRes>, crate::Error> {
+) -> Result<QueryResult<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
-            crate::logic::community::CommunityDetailRes {
+            crate::logic::community::_community::CommunityDetailRes {
                 father_id: None,
                 user_id: 6546,
                 name: "test".to_string(),
                 status: 1,
                 ..Default::default()
             },
-            crate::logic::community::CommunityDetailRes {
+            crate::logic::community::_community::CommunityDetailRes {
                 father_id: Some(123),
                 user_id: 5435,
                 name: "test2".to_string(),
@@ -32,7 +32,7 @@ pub async fn community_list(
                 ..Default::default()
             },
         ];
-        return Ok(QueryResult::Vec(list)).into();
+        return Ok(QueryResult::Vec(list));
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -50,23 +50,21 @@ pub async fn community_list(
 /// 社区详情(done, untested)
 pub async fn community_detail(
     community_id: u32,
-) -> Result<QueryResult<crate::logic::community::CommunityDetailRes>, crate::Error> {
+) -> Result<QueryResult<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
-        let comm = crate::logic::community::CommunityDetailRes {
+        let comm = crate::logic::community::_community::CommunityDetailRes {
             father_id: Some(123),
             user_id: 5435,
             name: "test2".to_string(),
             passwd: Some("asdasd".to_string()),
             pinned: true,
             status: 2,
-            // created_at: payload::utils::time::now(),
-            // updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(QueryResult::One(comm)).into();
+        return Ok(QueryResult::One(comm));
     }
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         use crate::operator::sqlite::query::Query;
         Ok(
@@ -90,7 +88,7 @@ pub async fn create_community(
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(3434).into();
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         let community = payload::resources::community::Community::new(
             father_id,

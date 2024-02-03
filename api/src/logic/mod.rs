@@ -77,9 +77,9 @@ pub(crate) mod upsert {
 
     upsert_resource!(
         add_admin,
-        Admin,
+        CommunityAdmin,
         UpsertAdmin,
-        payload::resources::community::admin::Admin
+        payload::resources::community::admin::CommunityAdmin
     );
 
     upsert_resource!(
@@ -155,10 +155,10 @@ pub(crate) mod update {
     }
 
     update_resource!(
-        update_admin,
-        Admin,
+        update_admin_type,
+        CommunityAdminType,
         UpdateAdmin,
-        payload::resources::community::admin::Admin
+        payload::resources::community::admin::typ::CommunityAdminType
     );
     update_resource!(
         update_member,
@@ -263,7 +263,7 @@ pub(crate) mod delete {
         };
     }
 
-    delete_resource!(del_admin, Admin, DropAdmin);
+    delete_resource!(del_admin, CommunityAdmin, DropAdmin);
     delete_resource!(del_community, Community, DropCommunity);
     delete_resource!(del_member, Member, DropMember);
     delete_resource!(del_post, Post, DropPost);

@@ -1,3 +1,5 @@
+pub mod typ;
+
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};
 use sqlx::Sqlite;
@@ -11,19 +13,19 @@ use sqlx::Sqlite;
 )]
 #[resource(
     schema_name = "im",
-    pg_table_name = "admin",
-    sqlite_table_name = "admin",
+    pg_table_name = "community_admin",
+    sqlite_table_name = "community_admin",
     primary_key = "id:u32",
-    constraint = "im_admin_id_idx"
+    constraint = "im_community_admin_id_idx"
 )]
-pub struct Admin {
+pub struct CommunityAdmin {
     pub r#type: u8,
     pub community_id: u32,
     pub user_id: u32,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
-impl Admin {
+impl CommunityAdmin {
     pub fn new(r#type: u8, community_id: u32, user_id: u32) -> Self {
         Self {
             created_at: crate::utils::time::now(),
@@ -35,7 +37,7 @@ impl Admin {
     }
 }
 
-impl resource::GenResourceID for Admin {
+impl resource::GenResourceID for CommunityAdmin {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {

@@ -50,7 +50,7 @@ impl CommunityDetailRes {
             WHERE user_id = $1
             LIMIT $2 OFFSET $3;";
 
-            sqlx::query_as::<sqlx::Sqlite, crate::logic::community::CommunityDetailRes>(sql)
+            sqlx::query_as::<sqlx::Sqlite, CommunityDetailRes>(sql)
                 .bind(user_id)
                 .bind(page_size)
                 .bind(offset)

@@ -1,30 +1,47 @@
+use crate::operator::sqlite::query::QueryResult;
+
+/// 管理员列表(done, untested)
 pub async fn admin_list(
-    user_id: u32,
-) -> Result<Vec<payload::resources::community::admin::Admin>, crate::Error> {
+    community_id: u32,
+    page_size: u16,
+    offset: u16,
+) -> Result<QueryResult<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
-            payload::resources::community::admin::Admin {
+            crate::logic::community::admin::CommunityAdminDetailRes {
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
-            payload::resources::community::admin::Admin {
+            crate::logic::community::admin::CommunityAdminDetailRes {
                 user_id: 6565656,
                 created_at: payload::utils::time::now(),
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
         ];
-        return Ok(list).into();
+        return Ok(QueryResult::Vec(list));
     }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        Ok(
+            crate::service::community::admin::CommunityAdminlistReq::new(
+                community_id,
+                page_size,
+                offset,
+            )
+            .exec()
+            .await?,
+        )
+    }
 }
 
+/// 添加管理员(done, untested)
 pub async fn add_admin(community_id: u32, r#type: u8, user_id: u32) -> Result<(), crate::Error> {
-    let admin = payload::resources::community::admin::Admin {
+    let admin = payload::resources::community::admin::CommunityAdmin {
         community_id,
         r#type,
         user_id,
@@ -35,38 +52,78 @@ pub async fn add_admin(community_id: u32, r#type: u8, user_id: u32) -> Result<()
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let admin = payload::resources::community::admin::CommunityAdmin::new(
+            r#type,
+            community_id,
+            user_id,
+        );
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let admin_id = worker.gen_id()?;
+        crate::service::community::admin::AddCommunityAdminReq::new(admin, admin_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
-pub async fn update_admin(community_id: u32, r#type: u8, user_id: u32) -> Result<(), crate::Error> {
+/// 更新管理员类型(done, untested)
+pub async fn update_admin(r#type: u8, admin_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let admin_type = payload::resources::community::admin::typ::CommunityAdminType::new(r#type);
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        crate::service::community::admin::UpdateCommunityAdminTypeReq::new(admin_type, admin_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
+/// 删除管理员(done, untested)
 pub async fn del_admin(community_id: u32, user_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        crate::service::community::admin::DeleteAdminReq::new(community_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
+/// 管理员详情(done, untested)
 pub async fn admin_detail(
     community_id: u32,
     user_id: u32,
-) -> Result<payload::resources::community::admin::Admin, crate::Error> {
+) -> Result<
+    crate::operator::sqlite::query::QueryResult<
+        crate::logic::community::admin::CommunityAdminDetailRes,
+    >,
+    crate::Error,
+> {
     #[cfg(feature = "mock")]
     {
-        let admin = payload::resources::community::admin::Admin {
+        let admin = crate::logic::community::admin::CommunityAdminDetailRes {
             r#type: 1,
             community_id: 43434,
             user_id: 6565656,
             created_at: payload::utils::time::now(),
             updated_at: Some(payload::utils::time::now()),
+            ..Default::default()
         };
-        return Ok(admin).into();
+        return Ok(crate::operator::sqlite::query::QueryResult::One(admin));
     }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        Ok(
+            crate::service::community::admin::CommunityAdminDetailReq::new(community_id)
+                .exec()
+                .await?,
+        )
+    }
 }
