@@ -11,26 +11,35 @@ use sqlx::Sqlite;
 )]
 #[resource(
     schema_name = "im",
-    pg_table_name = "member",
-    sqlite_table_name = "member",
+    pg_table_name = "community_member",
+    sqlite_table_name = "community_member",
     primary_key = "id:u32",
-    constraint = "im_member_id_idx"
+    constraint = "im_community_member_id_idx"
 )]
-pub struct Member {
+pub struct CommunityMember {
     pub r#type: u8,
     pub user_id: u32,
+    pub community_id: u32,
     pub name: String,
     pub avatar: String,
     pub sort: i32,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
-impl Member {
-    pub fn new(r#type: u8, user_id: u32, name: String, avatar: String, sort: i32) -> Self {
+impl CommunityMember {
+    pub fn new(
+        r#type: u8,
+        community_id: u32,
+        user_id: u32,
+        name: String,
+        avatar: String,
+        sort: i32,
+    ) -> Self {
         Self {
             created_at: crate::utils::time::now(),
             r#type,
             user_id,
+            community_id,
             name,
             avatar,
             sort,
@@ -39,7 +48,7 @@ impl Member {
     }
 }
 
-impl resource::GenResourceID for Member {
+impl resource::GenResourceID for CommunityMember {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {

@@ -5,7 +5,7 @@ use payload::resources::{
     community::{
         admin::{typ::CommunityAdminType, CommunityAdmin},
         info::CommunityInfo,
-        member::Member,
+        member::CommunityMember,
         post::Post,
         post_reply::PostReply,
         Community,
@@ -31,7 +31,7 @@ pub enum Resources {
     CommunityInfo(resource::Command<resource::GeneralAction<CommunityInfo>>),
     CommunityAdmin(resource::Command<resource::GeneralAction<CommunityAdmin>>),
     CommunityAdminType(resource::Command<resource::GeneralAction<CommunityAdminType>>),
-    Member(resource::Command<resource::GeneralAction<Member>>),
+    Member(resource::Command<resource::GeneralAction<CommunityMember>>),
     Post(resource::Command<resource::GeneralAction<Post>>),
     PostReply(resource::Command<resource::GeneralAction<PostReply>>),
 

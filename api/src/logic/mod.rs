@@ -86,7 +86,7 @@ pub(crate) mod upsert {
         add_member,
         Member,
         UpsertMember,
-        payload::resources::community::member::Member
+        payload::resources::community::member::CommunityMember
     );
 
     upsert_resource!(
@@ -164,7 +164,7 @@ pub(crate) mod update {
         update_member,
         Member,
         UpdateMember,
-        payload::resources::community::member::Member
+        payload::resources::community::member::CommunityMember
     );
     update_resource!(
         update_post,
