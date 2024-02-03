@@ -1,7 +1,7 @@
 use payload::resources::{
     account::{avatar::Avatar, community::AccountCommunity, elf::AccountElf, Account},
     apply::{reply::ApplyReply, Apply},
-    chat::Chat,
+    chat::{status::ChatStatus, Chat},
     community::{
         admin::{typ::CommunityAdminType, CommunityAdmin},
         info::CommunityInfo,
@@ -47,7 +47,9 @@ pub enum Resources {
     ApplyReply(resource::Command<resource::GeneralAction<ApplyReply>>),
     Contact(resource::Command<resource::GeneralAction<Contact>>),
     Elf(resource::Command<resource::GeneralAction<Elf>>),
+    // Chat
     Chat(resource::Command<resource::GeneralAction<Chat>>),
+    ChatStatus(resource::Command<resource::GeneralAction<ChatStatus>>),
     Favorite(resource::Command<resource::GeneralAction<Favorite>>),
     Nav(resource::Command<resource::GeneralAction<Nav>>),
     Settings(resource::Command<resource::GeneralAction<Settings>>),
@@ -80,6 +82,7 @@ impl resource::Action for Resources {
             Resources::Contact(r) => r.execute(executor).await,
             Resources::Elf(r) => r.execute(executor).await,
             Resources::Chat(r) => r.execute(executor).await,
+            Resources::ChatStatus(r) => r.execute(executor).await,
             Resources::Favorite(r) => r.execute(executor).await,
             Resources::Nav(r) => r.execute(executor).await,
             Resources::Settings(r) => r.execute(executor).await,

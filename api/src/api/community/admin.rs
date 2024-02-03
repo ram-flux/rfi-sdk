@@ -74,7 +74,6 @@ pub async fn update_admin(r#type: u8, admin_id: u32) -> Result<(), crate::Error>
     #[cfg(not(feature = "mock"))]
     {
         let admin_type = payload::resources::community::admin::typ::CommunityAdminType::new(r#type);
-        let mut worker = crate::operator::WrapWorker::worker()?;
         crate::service::community::admin::UpdateCommunityAdminTypeReq::new(admin_type, admin_id)
             .exec()
             .await?;

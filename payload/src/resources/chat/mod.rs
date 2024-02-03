@@ -1,3 +1,4 @@
+pub mod status;
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};
 use sqlx::Sqlite;
@@ -13,7 +14,7 @@ use sqlx::Sqlite;
     schema_name = "im",
     pg_table_name = "chat",
     sqlite_table_name = "chat",
-    primary_key = "id:u32",
+    primary_key = "chat_id:u32",
     constraint = "im_chat_id_idx"
 )]
 pub struct Chat {
@@ -29,7 +30,7 @@ pub struct Chat {
     pub from_msg: String,
     pub from_update: String,
     pub ext: String,
-    pub status: String,
+    pub status: u8,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
@@ -47,7 +48,7 @@ impl Chat {
         from_msg: String,
         from_update: String,
         ext: String,
-        status: String,
+        status: u8,
     ) -> Self {
         Self {
             created_at: crate::utils::time::now(),

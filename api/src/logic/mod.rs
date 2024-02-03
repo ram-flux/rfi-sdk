@@ -1,4 +1,6 @@
 pub mod account;
+pub mod apply;
+pub mod chat;
 pub mod community;
 // #[cfg(not(feature = "mock"))]
 pub mod message;
@@ -198,7 +200,12 @@ pub(crate) mod update {
         UpdateAvatar,
         payload::resources::account::avatar::Avatar
     );
-    update_resource!(pin_chat, Chat, UpdateChat, payload::resources::chat::Chat);
+    update_resource!(
+        update_chat_status,
+        ChatStatus,
+        UpdateChatStatus,
+        payload::resources::chat::status::ChatStatus
+    );
     update_resource!(
         update_contact,
         Contact,

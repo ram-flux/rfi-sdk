@@ -1,10 +1,18 @@
+/// 回复帖子列表(done, untested)
 pub async fn post_reply_list(
     post_id: u32,
-) -> Result<Vec<payload::resources::community::post_reply::PostReply>, crate::Error> {
+    page_size: u16,
+    offset: u16,
+) -> Result<
+    crate::operator::sqlite::query::QueryResult<
+        crate::logic::community::post_reply::PostReplyDetailRes,
+    >,
+    crate::Error,
+> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
-            payload::resources::community::post_reply::PostReply {
+            crate::logic::community::post_reply::PostReplyDetailRes {
                 user_id: 6565656,
                 post_id: 2343,
                 content: "test".to_string(),
@@ -12,7 +20,7 @@ pub async fn post_reply_list(
                 updated_at: Some(payload::utils::time::now()),
                 ..Default::default()
             },
-            payload::resources::community::post_reply::PostReply {
+            crate::logic::community::post_reply::PostReplyDetailRes {
                 user_id: 6565656,
                 post_id: 2343,
                 content: "test".to_string(),
@@ -21,39 +29,101 @@ pub async fn post_reply_list(
                 ..Default::default()
             },
         ];
-        return Ok(list).into();
+        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
     }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        Ok(
+            crate::service::community::post_reply::PostReplyListReq::new(
+                post_id, page_size, offset,
+            )
+            .exec()
+            .await?,
+        )
+    }
 }
 
-pub async fn reply_post(post_id: u32, user_id: u32, content: String) -> Result<(), crate::Error> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
-}
-
-pub async fn update_post_reply(post_id: u32) -> Result<(), crate::Error> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
-}
-
-pub async fn del_post_reply(post_id: u32) -> Result<(), crate::Error> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
-}
-
-pub async fn post_reply_detail(
+/// 回复帖子(done, untested)
+pub async fn reply_post(
+    community_id: u32,
     post_id: u32,
-) -> Result<payload::resources::community::post_reply::PostReply, crate::Error> {
+    user_id: u32,
+    content: String,
+    sort: i32,
+) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    {
+        let post_reply = payload::resources::community::post_reply::PostReply::new(
+            community_id,
+            user_id,
+            post_id,
+            content,
+            sort,
+        );
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let post_reply_id = worker.gen_id()?;
+        crate::service::community::post_reply::ReplyPostReq::new(post_reply, post_reply_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
+}
+
+/// 更新帖子回复(done, untested)
+pub async fn update_post_reply(
+    post_reply_id: u32,
+    community_id: u32,
+    user_id: u32,
+    post_id: u32,
+    content: String,
+    sort: i32,
+) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    {
+        let post_reply = payload::resources::community::post_reply::PostReply::new(
+            community_id,
+            user_id,
+            post_id,
+            content,
+            sort,
+        );
+        crate::service::community::post_reply::UpdatePostReplyReq::new(post_reply, post_reply_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
+}
+
+/// 删除帖子回复(done, untested)
+pub async fn del_post_reply(post_reply_id: u32) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    {
+        crate::service::community::post_reply::DeletePostReplyReq::new(post_reply_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
+}
+
+/// 帖子回复详情(done, untested)
+pub async fn post_reply_detail(
+    post_reply_id: u32,
+) -> Result<
+    crate::operator::sqlite::query::QueryResult<
+        crate::logic::community::post_reply::PostReplyDetailRes,
+    >,
+    crate::Error,
+> {
     #[cfg(feature = "mock")]
     {
-        let post = payload::resources::community::post_reply::PostReply {
+        let post_reply = crate::logic::community::post_reply::PostReplyDetailRes {
             user_id: 6565656,
             post_id: 2343,
             content: "test".to_string(),
@@ -61,8 +131,15 @@ pub async fn post_reply_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(post).into();
+        return Ok(crate::operator::sqlite::query::QueryResult::One(post_reply));
     }
-    #[cfg(not(feature = "mock"))]
-    todo!()
+    // #[cfg(not(feature = "mock"))]
+    {
+        use crate::operator::sqlite::query::Query;
+        Ok(
+            crate::service::community::post_reply::PostReplyDetailReq::new(post_reply_id)
+                .exec()
+                .await?,
+        )
+    }
 }
