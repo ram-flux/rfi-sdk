@@ -53,7 +53,7 @@ pub async fn add_member(
             ..Default::default()
         };
     }
-    return Ok(323).into();
+    return Ok(323);
     #[cfg(not(feature = "mock"))]
     {
         let community_member = payload::resources::community::member::CommunityMember::new(
@@ -83,7 +83,7 @@ pub async fn update_member(
     sort: i32,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(());
     #[cfg(not(feature = "mock"))]
     {
         let member = payload::resources::community::member::CommunityMember::new(
@@ -105,7 +105,7 @@ pub async fn update_member(
 /// 删除成员(done, untested)
 pub async fn del_member(member_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(());
     #[cfg(not(feature = "mock"))]
     {
         crate::service::community::member::DeleteMemberReq::new(member_id)

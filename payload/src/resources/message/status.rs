@@ -54,7 +54,7 @@ impl Resource<sqlx::Sqlite> for Status {
         updated_at = $2
         WHERE id = $3;";
         sqlx::query(sql)
-            .bind(&self.status)
+            .bind(self.status)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

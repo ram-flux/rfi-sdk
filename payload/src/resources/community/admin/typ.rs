@@ -46,7 +46,7 @@ impl Resource<sqlx::Sqlite> for CommunityAdminType {
         updated_at = $2
         WHERE id = $3;";
         sqlx::query(sql)
-            .bind(&self.r#type)
+            .bind(self.r#type)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

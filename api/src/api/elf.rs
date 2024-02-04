@@ -54,11 +54,13 @@ pub async fn update_elf(
 /// 精灵详情(done, untested)
 pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
-    let elf = crate::logic::elf::ElfDetailRes {
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
-    return Ok(elf);
+    {
+        let elf = crate::logic::elf::ElfDetailRes {
+            updated_at: Some(payload::utils::time::now()),
+            ..Default::default()
+        };
+        return Ok(elf);
+    }
     #[cfg(not(feature = "mock"))]
     {
         use crate::operator::sqlite::query::Query;

@@ -47,7 +47,7 @@ impl Resource<sqlx::Sqlite> for ChatStatus {
         updated_at = $2
         WHERE chat_id = $3;";
         sqlx::query(sql)
-            .bind(&self.status)
+            .bind(self.status)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

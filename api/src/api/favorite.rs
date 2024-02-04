@@ -29,6 +29,7 @@ pub async fn favorite_list(
     }
 }
 
+/// 添加收藏(done, untested)
 pub async fn add_favorite(content: String) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(123);
@@ -42,13 +43,14 @@ pub async fn add_favorite(content: String) -> Result<u32, crate::Error> {
             .exec()
             .await?;
 
-        Ok(favorite_id).into()
+        Ok(favorite_id)
     }
 }
 
+/// 删除收藏(done, untested)
 pub async fn del_favorite(favorite_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(());
     #[cfg(not(feature = "mock"))]
     {
         crate::service::favorite::DeleteFavoriteReq::new(favorite_id)
@@ -58,6 +60,7 @@ pub async fn del_favorite(favorite_id: u32) -> Result<(), crate::Error> {
     }
 }
 
+/// 收藏详情(done, untested)
 pub async fn favorite_detail(
     favorite_id: u32,
 ) -> Result<crate::logic::favorite::FavoriteDetailRes, crate::Error> {

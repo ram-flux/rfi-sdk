@@ -79,12 +79,13 @@ pub async fn create_community(
     bio: String,
     name: String,
     announcement: Option<String>,
+    avatar: String,
     pinned: bool,
     status: u8,
     passwd: Option<String>,
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(3434).into();
+    return Ok(3434);
     #[cfg(not(feature = "mock"))]
     {
         let community = payload::resources::community::Community::new(
@@ -94,6 +95,7 @@ pub async fn create_community(
             bio,
             passwd,
             announcement,
+            avatar,
             pinned,
             status,
         );
@@ -103,7 +105,7 @@ pub async fn create_community(
             .exec()
             .await?;
 
-        Ok(community_id).into()
+        Ok(community_id)
     }
 }
 
@@ -118,7 +120,7 @@ pub async fn update_community(
     status: u8,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(());
     #[cfg(not(feature = "mock"))]
     {
         let community = payload::resources::community::info::CommunityInfo::new(
@@ -141,7 +143,7 @@ pub async fn update_community(
 /// 删除社区(done, untested)
 pub async fn del_community(community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(());
     #[cfg(not(feature = "mock"))]
     {
         crate::service::community::_community::DeleteCommunityReq::new(community_id)

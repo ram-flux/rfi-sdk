@@ -45,7 +45,6 @@ pub async fn add_admin(community_id: u32, r#type: u8, user_id: u32) -> Result<()
         user_id,
         created_at: payload::utils::time::now(),
         updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
     };
     #[cfg(feature = "mock")]
     return Ok(()).into();
