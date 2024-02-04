@@ -1,21 +1,40 @@
 pub(crate) struct CreateCommunityReq {
     community: payload::resources::community::Community,
     community_id: u32,
+    community_member: payload::resources::community::member::CommunityMember,
+    user_id: u32,
+    community_admin: payload::resources::community::admin::CommunityAdmin,
+    community_admin_id: u32,
 }
 
 impl CreateCommunityReq {
     pub(crate) fn new(
         community: payload::resources::community::Community,
         community_id: u32,
+        community_member: payload::resources::community::member::CommunityMember,
+        user_id: u32,
+        community_admin: payload::resources::community::admin::CommunityAdmin,
+        community_admin_id: u32,
     ) -> Self {
         Self {
             community,
             community_id,
+            community_member,
+            user_id,
+            community_admin,
+            community_admin_id,
         }
     }
 
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
         crate::logic::upsert::create_community(self.community, self.community_id).await?;
+        crate::logic::upsert::add_member(
+            self.community_member,
+            (self.user_id, self.community_id),
+            // self.community_member_id
+        )
+        .await?;
+        crate::logic::upsert::add_admin(self.community_admin, self.community_admin_id).await?;
         Ok(())
     }
 }

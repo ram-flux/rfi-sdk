@@ -13,10 +13,11 @@ pub mod message;
 #[macro_use]
 pub(crate) mod upsert {
     macro_rules! upsert_resource {
-        ($fn_name:ident, $resource_type:ident, $action_name:expr, $payload_type:ty) => {
+        ($fn_name:ident, $resource_type:ident, $action_name:expr, $payload_type:ty, $id_ty: ty) => {
             pub(crate) async fn $fn_name(
                 resource: $payload_type,
-                id: u32,
+                // id: u32,
+                id: $id_ty,
             ) -> Result<(), crate::SystemError> {
                 // #[cfg(not(feature = "mock"))]
                 {
@@ -44,107 +45,128 @@ pub(crate) mod upsert {
         new_device,
         Device,
         UpsertDevice,
-        payload::resources::device::Device
+        payload::resources::device::Device,
+        u32
     );
 
     upsert_resource!(
         new_account,
         Account,
         UpsertAccount,
-        payload::resources::account::Account
+        payload::resources::account::Account,
+        u32
     );
 
     upsert_resource!(
         join_community,
         AccountCommunity,
         UpsertAccountCommunity,
-        payload::resources::account::community::AccountCommunity
+        payload::resources::account::community::AccountCommunity,
+        u32
     );
 
     upsert_resource!(
         create_account_elf,
         AccountElf,
         UpsertAccountElf,
-        payload::resources::account::elf::AccountElf
+        payload::resources::account::elf::AccountElf,
+        u32
     );
 
     upsert_resource!(
         new_message,
         Message,
         UpsertMessage,
-        payload::resources::message::Message
+        payload::resources::message::Message,
+        u32
     );
 
     upsert_resource!(
         add_contact,
         Contact,
         UpsertContact,
-        payload::resources::contact::Contact
+        payload::resources::contact::Contact,
+        u32
     );
 
     upsert_resource!(
         create_community,
         Community,
         UpsertCommunity,
-        payload::resources::community::Community
+        payload::resources::community::Community,
+        u32
     );
 
     upsert_resource!(
         add_admin,
         CommunityAdmin,
         UpsertAdmin,
-        payload::resources::community::admin::CommunityAdmin
+        payload::resources::community::admin::CommunityAdmin,
+        u32
     );
 
     upsert_resource!(
         add_member,
-        Member,
+        CommunityMember,
         UpsertMember,
-        payload::resources::community::member::CommunityMember
+        payload::resources::community::member::CommunityMember,
+        (u32, u32) // u32
     );
 
     upsert_resource!(
         create_post,
         Post,
         UpsertPost,
-        payload::resources::community::post::Post
+        payload::resources::community::post::Post,
+        u32
     );
 
     upsert_resource!(
         reply_post,
         PostReply,
         UpsertPostReply,
-        payload::resources::community::post_reply::PostReply
+        payload::resources::community::post_reply::PostReply,
+        u32
     );
 
     upsert_resource!(
         create_apply,
         Apply,
         UpsertApply,
-        payload::resources::apply::Apply
+        payload::resources::apply::Apply,
+        u32
     );
 
     upsert_resource!(
         reply_apply,
         ApplyReply,
         UpsertApplyReply,
-        payload::resources::apply::reply::ApplyReply
+        payload::resources::apply::reply::ApplyReply,
+        u32
     );
 
-    upsert_resource!(create_elf, Elf, UpsertElf, payload::resources::elf::Elf);
+    upsert_resource!(
+        create_elf,
+        Elf,
+        UpsertElf,
+        payload::resources::elf::Elf,
+        u32
+    );
 
     upsert_resource!(
         add_favorite,
         Favorite,
         UpsertFavorite,
-        payload::resources::favorite::Favorite
+        payload::resources::favorite::Favorite,
+        u32
     );
-    upsert_resource!(add_nav, Nav, UpsertNav, payload::resources::nav::Nav);
+    upsert_resource!(add_nav, Nav, UpsertNav, payload::resources::nav::Nav, u32);
     upsert_resource!(
         new_settings,
         Settings,
         UpsertSettings,
-        payload::resources::settings::Settings
+        payload::resources::settings::Settings,
+        u32
     );
 }
 
@@ -181,11 +203,17 @@ pub(crate) mod update {
         UpdateAdmin,
         payload::resources::community::admin::typ::CommunityAdminType
     );
+    // update_resource!(
+    //     update_member,
+    //     CommunityMember,
+    //     UpdateMember,
+    //     payload::resources::community::member::CommunityMember
+    // );
     update_resource!(
-        update_member,
-        Member,
+        update_member_type,
+        CommunityMemberType,
         UpdateMember,
-        payload::resources::community::member::CommunityMember
+        payload::resources::community::member::typ::CommunityMemberType
     );
     update_resource!(
         update_post,
@@ -274,8 +302,8 @@ pub(crate) mod update {
 #[macro_use]
 pub(crate) mod delete {
     macro_rules! delete_resource {
-        ($fn_name:ident, $resource_type:ident, $action_name:expr) => {
-            pub(crate) async fn $fn_name(id: u32) -> Result<(), crate::SystemError> {
+        ($fn_name:ident, $resource_type:ident, $action_name:expr, $id_ty: ty) => {
+            pub(crate) async fn $fn_name(id: $id_ty) -> Result<(), crate::SystemError> {
                 // #[cfg(not(feature = "mock"))]
                 {
                     use resource::Action as _;
@@ -295,18 +323,18 @@ pub(crate) mod delete {
         };
     }
 
-    delete_resource!(del_admin, CommunityAdmin, DropAdmin);
-    delete_resource!(del_community, Community, DropCommunity);
-    delete_resource!(del_member, Member, DropMember);
-    delete_resource!(del_post, Post, DropPost);
-    delete_resource!(del_post_reply, PostReply, DropPostReply);
-    delete_resource!(del_apply, Apply, DropApply);
-    delete_resource!(del_apply_reply, ApplyReply, DropApplyReply);
-    delete_resource!(del_contact, Contact, DropContact);
-    delete_resource!(del_device, Device, DropDevice);
-    delete_resource!(del_elf, Elf, DropElf);
-    delete_resource!(del_favorite, Favorite, DropFavorite);
-    delete_resource!(del_message, Message, DropMessage);
-    delete_resource!(del_nav, Nav, DropNav);
-    delete_resource!(quit_community, AccountCommunity, DropAccountCommunity);
+    delete_resource!(del_admin, CommunityAdmin, DropAdmin, u32);
+    delete_resource!(del_community, Community, DropCommunity, u32);
+    delete_resource!(del_member, CommunityMember, DropMember, (u32, u32));
+    delete_resource!(del_post, Post, DropPost, u32);
+    delete_resource!(del_post_reply, PostReply, DropPostReply, u32);
+    delete_resource!(del_apply, Apply, DropApply, u32);
+    delete_resource!(del_apply_reply, ApplyReply, DropApplyReply, u32);
+    delete_resource!(del_contact, Contact, DropContact, u32);
+    delete_resource!(del_device, Device, DropDevice, u32);
+    delete_resource!(del_elf, Elf, DropElf, u32);
+    delete_resource!(del_favorite, Favorite, DropFavorite, u32);
+    delete_resource!(del_message, Message, DropMessage, u32);
+    delete_resource!(del_nav, Nav, DropNav, u32);
+    delete_resource!(quit_community, AccountCommunity, DropAccountCommunity, u32);
 }

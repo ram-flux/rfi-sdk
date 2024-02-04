@@ -4,7 +4,6 @@ use resource::Action as _;
 
 /// 创建社区(tested)
 pub async fn create_community(
-    user_id: u32,
     father_id: Option<u32>,
     bio: String,
     name: String,
@@ -18,28 +17,51 @@ pub async fn create_community(
     return Ok(3434);
     #[cfg(not(feature = "mock"))]
     {
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
         let community = payload::resources::community::Community::new(
             father_id,
-            user_id,
-            name,
+            user.user_id,
+            &name,
             bio,
             passwd,
             announcement,
-            avatar,
+            &avatar,
             pinned,
             status,
         );
         let mut worker = crate::operator::WrapWorker::worker()?;
         let community_id = worker.gen_id()?;
-        service::community::_community::CreateCommunityReq::new(community, community_id)
-            .exec()
-            .await?;
+        let community_member_id = worker.gen_id()?;
+        let community_admin_id = worker.gen_id()?;
+
+        let community_member = payload::resources::community::member::CommunityMember::new(
+            community_member_id,
+            1,
+            name,
+            avatar,
+            0,
+        );
+        let community_admin = payload::resources::community::admin::CommunityAdmin::new(
+            1,
+            community_id,
+            user.user_id,
+        );
+        service::community::_community::CreateCommunityReq::new(
+            community,
+            community_id,
+            community_member,
+            user.user_id,
+            community_admin,
+            community_admin_id,
+        )
+        .exec()
+        .await?;
 
         Ok(community_id)
     }
 }
 
-/// 更新社区(done, untested)
+/// 更新社区(tested)
 pub async fn update_community(
     community_id: u32,
     name: String,
@@ -72,7 +94,7 @@ pub async fn update_community(
     }
 }
 
-/// 删除社区(done, untested)
+/// 删除社区(tested)
 pub async fn del_community(community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(());
@@ -85,7 +107,7 @@ pub async fn del_community(community_id: u32) -> Result<(), crate::Error> {
     }
 }
 
-/// 社区列表(done, untested)
+/// 社区列表(tested)
 pub async fn community_list(
     user_id: u32,
     page_size: u16,
@@ -126,7 +148,7 @@ pub async fn community_list(
     }
 }
 
-/// 社区详情(done, untested)
+/// 社区详情(tested)
 pub async fn community_detail(
     community_id: u32,
 ) -> Result<crate::logic::community::_community::CommunityDetailRes, crate::Error> {
@@ -156,22 +178,28 @@ pub async fn community_detail(
 
 #[cfg(test)]
 mod tests {
+    use crate::{api::account::account_list, operator::sqlite::UserState};
+
     use super::*;
 
-    async fn init_db() {
+    async fn init() {
         use crate::operator::sqlite::init::DbConnection;
         let pri_url = "sqlite://test_pri.db";
         let pub_url = "sqlite://test_pub.db";
         let res = DbConnection::init_user_database(pri_url.to_string()).await;
         println!("init_user_database res: {res:?}");
         let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+
+        let user_id = account_list(1, 0).await.unwrap().pop().unwrap();
+        UserState::init_user_state(user_id.user_id).await;
     }
 
     #[tokio::test]
     async fn test_create_community() {
-        init_db().await;
+        init().await;
+
+        crate::init_log();
         // Test case for creating a community
-        let user_id = 121769984;
         let father_id = Some(2);
         let bio = "Community Bio".to_string();
         let name = "Test Community".to_string();
@@ -182,7 +210,6 @@ mod tests {
         let passwd = Some("password".to_string());
 
         let result = create_community(
-            user_id,
             father_id,
             bio,
             name,
@@ -201,7 +228,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_update_community() {
-        init_db().await;
+        init().await;
         // Test case for updating a community
         let community_id = 662835200;
         let name = "Updated Community Name".to_string();
@@ -229,7 +256,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_community_list() {
-        init_db().await;
+        init().await;
         // Test case for getting a list of communities
         let user_id = 121769984;
         let page_size = 10;
@@ -244,7 +271,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_community_detail() {
-        init_db().await;
+        init().await;
         // Test case for getting details of a community
         let community_id = 1442975744;
 

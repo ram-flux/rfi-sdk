@@ -11,7 +11,7 @@ pub async fn init_device(
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(454456).into();
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         let mut worker = crate::operator::WrapWorker::worker()?;
         let user_id = worker.gen_id()?;

@@ -39,7 +39,7 @@ impl ElfDetailRes {
     //     use crate::operator::sqlite::query::Query as _;
     //     ElfDetailRes::query_all(async move |user_pool, pub_pool| {
     //         let sql = "SELECT id, type, token, name, avatar, ext, status,
-    //             created_at, updated_at 
+    //             created_at, updated_at
     //         FROM elf
     //         WHERE type = $1 AND type_id = $2
     //         LIMIT $2 OFFSET $3;";

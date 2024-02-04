@@ -14,17 +14,12 @@ pub(crate) struct UserState {
 }
 #[derive(Debug, Default, Clone)]
 pub(crate) struct UserData {
-    pub(crate) account_id: u32,
     pub(crate) user_id: u32,
 }
 
 impl UserState {
-    pub(crate) async fn init_user_state(
-        account_id: u32,
-        user_id: u32,
-    ) -> Result<(), crate::SystemError> {
+    pub(crate) async fn init_user_state(user_id: u32) -> Result<(), crate::SystemError> {
         let mut state = USER_STATE.write().await;
-        state.state.account_id = account_id;
         state.state.user_id = user_id;
         Ok(())
     }

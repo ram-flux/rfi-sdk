@@ -5,7 +5,7 @@ use payload::resources::{
     community::{
         admin::{typ::CommunityAdminType, CommunityAdmin},
         info::CommunityInfo,
-        member::CommunityMember,
+        member::{typ::CommunityMemberType, CommunityMember},
         post::Post,
         post_reply::PostReply,
         Community,
@@ -31,7 +31,8 @@ pub enum Resources {
     CommunityInfo(resource::Command<resource::GeneralAction<CommunityInfo>>),
     CommunityAdmin(resource::Command<resource::GeneralAction<CommunityAdmin>>),
     CommunityAdminType(resource::Command<resource::GeneralAction<CommunityAdminType>>),
-    Member(resource::Command<resource::GeneralAction<CommunityMember>>),
+    CommunityMember(resource::Command<resource::GeneralAction<CommunityMember>>),
+    CommunityMemberType(resource::Command<resource::GeneralAction<CommunityMemberType>>),
     Post(resource::Command<resource::GeneralAction<Post>>),
     PostReply(resource::Command<resource::GeneralAction<PostReply>>),
 
@@ -75,7 +76,8 @@ impl resource::Action for Resources {
             Resources::CommunityInfo(r) => r.execute(executor).await,
             Resources::CommunityAdmin(r) => r.execute(executor).await,
             Resources::CommunityAdminType(r) => r.execute(executor).await,
-            Resources::Member(r) => r.execute(executor).await,
+            Resources::CommunityMember(r) => r.execute(executor).await,
+            Resources::CommunityMemberType(r) => r.execute(executor).await,
             Resources::Post(r) => r.execute(executor).await,
             Resources::PostReply(r) => r.execute(executor).await,
             // Device

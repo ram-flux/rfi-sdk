@@ -46,7 +46,23 @@ impl AccountDetailReq {
     pub(crate) async fn exec(
         self,
     ) -> Result<crate::logic::account::AccountDetailRes, crate::SystemError> {
-        crate::logic::account::AccountDetailRes::exec(self.user_id).await
+        crate::logic::account::AccountDetailRes::detail(self.user_id).await
+    }
+}
+
+pub(crate) struct AccountListReq {
+    page_size: u16,
+    offset: u16,
+}
+
+impl AccountListReq {
+    pub(crate) fn new(page_size: u16, offset: u16) -> Self {
+        Self { page_size, offset }
+    }
+    pub(crate) async fn exec(
+        self,
+    ) -> Result<Vec<crate::logic::account::AccountDetailRes>, crate::SystemError> {
+        crate::logic::account::AccountDetailRes::list(self.page_size, self.offset).await
     }
 }
 

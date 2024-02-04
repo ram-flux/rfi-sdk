@@ -62,6 +62,30 @@ pub async fn account_detail(
     }
 }
 
+/// 账号列表(tested)
+pub async fn account_list(
+    page_size: u16,
+    offset: u16,
+) -> Result<Vec<crate::logic::account::AccountDetailRes>, crate::Error> {
+    #[cfg(feature = "mock")]
+    {
+        let comm = vec![crate::logic::account::AccountDetailRes {
+            user_id: 5435,
+            name: "test2".to_string(),
+            ..Default::default()
+        }];
+        return Ok(comm).into();
+    }
+    #[cfg(not(feature = "mock"))]
+    {
+        Ok(
+            crate::service::account::AccountListReq::new(page_size, offset)
+                .exec()
+                .await?,
+        )
+    }
+}
+
 /// 添加社区(done, untested)
 pub async fn add_community(community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
@@ -125,14 +149,24 @@ pub async fn quit_community(user_id: u32, community_id: u32) -> Result<(), crate
 
 #[cfg(test)]
 mod test {
-    use crate::operator::sqlite::init::DbConnection;
+    use crate::{api::account::account_list, operator::sqlite::UserState};
+
+    use super::*;
+    async fn init() {
+        use crate::operator::sqlite::init::DbConnection;
+        let pri_url = "sqlite://test_pri.db";
+        let pub_url = "sqlite://test_pub.db";
+        let res = DbConnection::init_user_database(pri_url.to_string()).await;
+        println!("init_user_database res: {res:?}");
+        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+
+        let user_id = account_list(1, 0).await.unwrap().pop().unwrap();
+        UserState::init_user_state(user_id.user_id).await;
+    }
 
     #[tokio::test]
     async fn test_update_account() {
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let _ = DbConnection::init_user_database(pri_url.to_string()).await;
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+        init().await;
 
         let account_id = 1308758018;
         let user_id = 123;
@@ -152,10 +186,7 @@ mod test {
 
     #[tokio::test]
     async fn test_update_avatar() {
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let _ = DbConnection::init_user_database(pri_url.to_string()).await;
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+        init().await;
 
         let user_id = 123;
         let avatar = "dfdsfdsf".to_string();
@@ -165,10 +196,7 @@ mod test {
 
     #[tokio::test]
     async fn test_account_detail() {
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let _ = DbConnection::init_user_database(pri_url.to_string()).await;
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+        init().await;
 
         let account_id = 1308758018;
         let res = crate::api::account::account_detail(account_id).await;
