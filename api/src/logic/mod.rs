@@ -227,11 +227,17 @@ pub(crate) mod update {
         EditPost,
         payload::resources::community::post::info::PostInfo
     );
+    // update_resource!(
+    //     update_post_reply,
+    //     PostReply,
+    //     UpdatePost,
+    //     payload::resources::community::post_reply::PostReply
+    // );
     update_resource!(
-        update_post_reply,
-        PostReply,
-        UpdatePost,
-        payload::resources::community::post_reply::PostReply
+        edit_post_reply,
+        PostReplyInfo,
+        EditPostReply,
+        payload::resources::community::post_reply::info::PostReplyInfo
     );
 
     update_resource!(

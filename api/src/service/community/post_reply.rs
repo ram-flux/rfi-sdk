@@ -20,24 +20,46 @@ impl ReplyPostReq {
     }
 }
 
-pub(crate) struct UpdatePostReplyReq {
-    post_reply: payload::resources::community::post_reply::PostReply,
+// pub(crate) struct UpdatePostReplyReq {
+//     post_reply: payload::resources::community::post_reply::PostReply,
+//     post_reply_id: u32,
+// }
+
+// impl UpdatePostReplyReq {
+//     pub(crate) fn new(
+//         post_reply: payload::resources::community::post_reply::PostReply,
+//         post_reply_id: u32,
+//     ) -> Self {
+//         Self {
+//             post_reply,
+//             post_reply_id,
+//         }
+//     }
+
+//     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+//         crate::logic::update::update_post_reply(self.post_reply, self.post_reply_id).await?;
+//         Ok(())
+//     }
+// }
+
+pub(crate) struct EditPostReplyReq {
+    post_reply_info: payload::resources::community::post_reply::info::PostReplyInfo,
     post_reply_id: u32,
 }
 
-impl UpdatePostReplyReq {
+impl EditPostReplyReq {
     pub(crate) fn new(
-        post_reply: payload::resources::community::post_reply::PostReply,
+        post_reply_info: payload::resources::community::post_reply::info::PostReplyInfo,
         post_reply_id: u32,
     ) -> Self {
         Self {
-            post_reply,
+            post_reply_info,
             post_reply_id,
         }
     }
 
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::update::update_post_reply(self.post_reply, self.post_reply_id).await?;
+        crate::logic::update::edit_post_reply(self.post_reply_info, self.post_reply_id).await?;
         Ok(())
     }
 }
@@ -93,7 +115,7 @@ impl DeletePostReplyReq {
         Self { post_reply_id }
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::delete::del_apply_reply(self.post_reply_id).await?;
+        crate::logic::delete::del_post_reply(self.post_reply_id).await?;
         Ok(())
     }
 }

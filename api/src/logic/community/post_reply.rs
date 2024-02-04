@@ -18,7 +18,7 @@ impl PostReplyDetailRes {
         PostReplyDetailRes::query_one(async move |user_pool, pub_pool| {
             let sql = "SELECT id, community_id, user_id, post_id, content, sort,
                     created_at, updated_at
-                FROM post_reply
+                FROM community_post_reply
                 WHERE id =$1;";
             sqlx::query_as::<sqlx::Sqlite, PostReplyDetailRes>(sql)
                 .bind(post_id)
@@ -38,7 +38,7 @@ impl PostReplyDetailRes {
         PostReplyDetailRes::query_all(async move |user_pool, pub_pool| {
             let sql = "SELECT id, community_id, user_id, post_id, content, sort,
                 created_at, updated_at
-            FROM post_reply
+            FROM community_post_reply
             WHERE post_id = $1
             LIMIT $2 OFFSET $3;";
 

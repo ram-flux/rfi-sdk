@@ -7,7 +7,7 @@ use payload::resources::{
         info::CommunityInfo,
         member::{typ::CommunityMemberType, CommunityMember},
         post::{info::PostInfo, Post},
-        post_reply::PostReply,
+        post_reply::{info::PostReplyInfo, PostReply},
         Community,
     },
     contact::{remark::ContactRemark, Contact},
@@ -37,6 +37,7 @@ pub enum Resources {
     Post(resource::Command<resource::GeneralAction<Post>>),
     PostInfo(resource::Command<resource::GeneralAction<PostInfo>>),
     PostReply(resource::Command<resource::GeneralAction<PostReply>>),
+    PostReplyInfo(resource::Command<resource::GeneralAction<PostReplyInfo>>),
 
     // Device
     Device(resource::Command<resource::GeneralAction<Device>>),
@@ -84,6 +85,7 @@ impl resource::Action for Resources {
             Resources::Post(r) => r.execute(executor).await,
             Resources::PostInfo(r) => r.execute(executor).await,
             Resources::PostReply(r) => r.execute(executor).await,
+            Resources::PostReplyInfo(r) => r.execute(executor).await,
             // Device
             Resources::Device(r) => r.execute(executor).await,
             Resources::Token(r) => r.execute(executor).await,

@@ -14,6 +14,7 @@ pub enum Error {
     // 鉴权错误
     #[error("Unauthorized")]
     UnAuthorize,
+
     #[error("parse failed: {0:?}")]
     Parse(String),
     #[error("Database error: {0}")]

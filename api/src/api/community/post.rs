@@ -145,6 +145,8 @@ pub async fn post_detail(
 
 #[cfg(test)]
 mod tests {
+    use crate::api::{account::account_list, community::_community::community_list};
+
     use super::*;
 
     async fn init_db() {
@@ -177,8 +179,14 @@ mod tests {
     async fn test_create_post() {
         init_db().await;
         // Test case for create_post function
-        let community_id = 784470016;
-        let user_id = 2894204928;
+        let user = account_list(1, 0).await.unwrap().pop().unwrap();
+        let community = community_list(user.user_id, 1, 0)
+            .await
+            .unwrap()
+            .pop()
+            .unwrap();
+        let community_id = community.id;
+        let user_id = user.user_id;
         let name = "Test Post".to_string();
         let content = "Post content here".to_string();
         let sort_count = 42;
