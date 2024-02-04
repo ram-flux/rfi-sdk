@@ -3,6 +3,7 @@ pub mod apply;
 pub mod chat;
 pub mod community;
 pub mod contact;
+pub mod elf;
 // #[cfg(not(feature = "mock"))]
 pub mod message;
 
