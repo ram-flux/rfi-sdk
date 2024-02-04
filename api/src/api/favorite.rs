@@ -1,50 +1,79 @@
-pub async fn favorite_list() -> Result<Vec<payload::resources::favorite::Favorite>, crate::Error> {
+/// 收藏列表(done, untested)
+pub async fn favorite_list(
+    page_size: u16,
+    offset: u16,
+) -> Result<Vec<crate::logic::favorite::FavoriteDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![
-            payload::resources::favorite::Favorite {
+            crate::logic::favorite::FavoriteDetailRes {
                 user_id: 123123,
                 ..Default::default()
             },
-            payload::resources::favorite::Favorite {
+            crate::logic::favorite::FavoriteDetailRes {
                 user_id: 123123,
                 ..Default::default()
             },
         ];
-        return Ok(msgs).into();
+        return Ok(msgs);
     }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::favorite::FavoriteListReq::new(user.user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
+    }
 }
 
-pub async fn add_favorite(user_id: u32, content: String) -> Result<(), crate::Error> {
-    let favorite = payload::resources::favorite::Favorite {
-        user_id,
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
+pub async fn add_favorite(content: String) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(123);
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        let favorite = payload::resources::favorite::Favorite::new(user.user_id, content);
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let favorite_id = worker.gen_id()?;
+        crate::service::favorite::AddFavorite::new(favorite, favorite_id)
+            .exec()
+            .await?;
+
+        Ok(favorite_id).into()
+    }
 }
 
 pub async fn del_favorite(favorite_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        crate::service::favorite::DeleteFavoriteReq::new(favorite_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
 pub async fn favorite_detail(
     favorite_id: u32,
-) -> Result<payload::resources::favorite::Favorite, crate::Error> {
-    let favorite = payload::resources::favorite::Favorite {
+) -> Result<crate::logic::favorite::FavoriteDetailRes, crate::Error> {
+    let favorite = crate::logic::favorite::FavoriteDetailRes {
         updated_at: Some(payload::utils::time::now()),
         ..Default::default()
     };
     #[cfg(feature = "mock")]
-    return Ok(favorite).into();
+    return Ok(favorite);
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        Ok(
+            crate::service::favorite::FavoriteDetailReq::new(favorite_id)
+                .exec()
+                .await?,
+        )
+    }
 }
