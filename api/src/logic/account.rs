@@ -14,12 +14,9 @@ pub struct AccountDetailRes {
 }
 
 impl AccountDetailRes {
-    pub(crate) async fn exec(
-        user_id: u32,
-    ) -> Result<crate::operator::sqlite::query::QueryResult<AccountDetailRes>, crate::SystemError>
-    {
+    pub(crate) async fn exec(user_id: u32) -> Result<AccountDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        AccountDetailRes::query(async move |user_pool, pub_pool| {
+        AccountDetailRes::query_one(async move |user_pool, pub_pool| {
             let sql = "SELECT id, user_id, public_key, account, salt, gender, name, avatar,
                 bio, created_at, updated_at 
                 FROM account 
@@ -28,7 +25,6 @@ impl AccountDetailRes {
                 .bind(user_id)
                 .fetch_one(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)

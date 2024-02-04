@@ -13,12 +13,9 @@ pub struct CommunityAdminDetailRes {
 impl CommunityAdminDetailRes {
     pub(crate) async fn detail(
         admin_id: u32,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<CommunityAdminDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<CommunityAdminDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityAdminDetailRes::query(async move |user_pool, pub_pool| {
+        CommunityAdminDetailRes::query_one(async move |user_pool, pub_pool| {
             let sql = "SELECT id, type, user_id, community_id,
                     created_at, updated_at
                 FROM community_admin
@@ -27,7 +24,6 @@ impl CommunityAdminDetailRes {
                 .bind(admin_id)
                 .fetch_one(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)
@@ -37,12 +33,9 @@ impl CommunityAdminDetailRes {
         community_id: u32,
         page_size: u16,
         offset: u16,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<CommunityAdminDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<CommunityAdminDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityAdminDetailRes::query(async move |user_pool, pub_pool| {
+        CommunityAdminDetailRes::query_all(async move |user_pool, pub_pool| {
             let sql = "SELECT id, type, user_id, community_id,
                 created_at, updated_at
             FROM community
@@ -55,7 +48,6 @@ impl CommunityAdminDetailRes {
                 .bind(offset)
                 .fetch_all(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)

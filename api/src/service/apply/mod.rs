@@ -1,17 +1,16 @@
-pub(crate) struct ReplyApplyReq {
-    account: payload::resources::account::Account,
-    account_id: u32,
+pub(crate) mod reply;
+
+pub(crate) struct CreateApplyReq {
+    apply: payload::resources::apply::Apply,
+    apply_id: u32,
 }
 
-impl ReplyApplyReq {
-    pub(crate) fn new(account: payload::resources::account::Account, account_id: u32) -> Self {
-        Self {
-            account,
-            account_id,
-        }
+impl CreateApplyReq {
+    pub(crate) fn new(apply: payload::resources::apply::Apply, apply_id: u32) -> Self {
+        Self { apply, apply_id }
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::upsert::new_account(self.account, self.account_id).await?;
+        crate::logic::upsert::create_apply(self.apply, self.apply_id).await?;
         Ok(())
     }
 }
@@ -44,10 +43,7 @@ impl ApplyDetailReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::apply::ApplyDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<crate::logic::apply::ApplyDetailRes, crate::SystemError> {
         crate::logic::apply::ApplyDetailRes::detail(self.admin_id).await
     }
 }
@@ -70,10 +66,7 @@ impl ApplyListReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::apply::ApplyDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<crate::logic::apply::ApplyDetailRes>, crate::SystemError> {
         crate::logic::apply::ApplyDetailRes::list(
             self.r#type,
             self.type_id,
@@ -94,20 +87,6 @@ impl DeleteApplyReq {
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
         crate::logic::delete::del_apply(self.apply_id).await?;
-        Ok(())
-    }
-}
-
-pub(crate) struct DeleteApplyReplyReq {
-    apply_id: u32,
-}
-
-impl DeleteApplyReplyReq {
-    pub(crate) fn new(apply_id: u32) -> Self {
-        Self { apply_id }
-    }
-    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
-        crate::logic::delete::del_apply_reply(self.apply_id).await?;
         Ok(())
     }
 }

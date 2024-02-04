@@ -3,12 +3,7 @@ pub async fn member_list(
     community_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::member::CommunityMemberDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<Vec<crate::logic::community::member::CommunityMemberDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -25,7 +20,7 @@ pub async fn member_list(
                 ..Default::default()
             },
         ];
-        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -124,12 +119,7 @@ pub async fn del_member(member_id: u32) -> Result<(), crate::Error> {
 pub async fn member_detail(
     community_id: u32,
     user_id: u32,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::member::CommunityMemberDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<crate::logic::community::member::CommunityMemberDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let member = crate::logic::community::member::CommunityMemberDetailRes {
@@ -140,7 +130,7 @@ pub async fn member_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(crate::operator::sqlite::query::QueryResult::One(member));
+        return Ok(member);
     }
     #[cfg(not(feature = "mock"))]
     {

@@ -3,12 +3,7 @@ pub async fn post_reply_list(
     post_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::post_reply::PostReplyDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<Vec<crate::logic::community::post_reply::PostReplyDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -29,7 +24,7 @@ pub async fn post_reply_list(
                 ..Default::default()
             },
         ];
-        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -115,12 +110,7 @@ pub async fn del_post_reply(post_reply_id: u32) -> Result<(), crate::Error> {
 /// 帖子回复详情(done, untested)
 pub async fn post_reply_detail(
     post_reply_id: u32,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::post_reply::PostReplyDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<crate::logic::community::post_reply::PostReplyDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let post_reply = crate::logic::community::post_reply::PostReplyDetailRes {
@@ -131,7 +121,7 @@ pub async fn post_reply_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(crate::operator::sqlite::query::QueryResult::One(post_reply));
+        return Ok(post_reply);
     }
     // #[cfg(not(feature = "mock"))]
     {

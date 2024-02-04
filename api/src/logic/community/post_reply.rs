@@ -1,4 +1,3 @@
-
 use sqlx::types::chrono::{DateTime, Utc};
 
 #[derive(Debug, Default, serde::Serialize, sqlx::FromRow)]
@@ -14,12 +13,9 @@ pub struct PostReplyDetailRes {
 }
 
 impl PostReplyDetailRes {
-    pub(crate) async fn detail(
-        post_id: u32,
-    ) -> Result<crate::operator::sqlite::query::QueryResult<PostReplyDetailRes>, crate::SystemError>
-    {
+    pub(crate) async fn detail(post_id: u32) -> Result<PostReplyDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        PostReplyDetailRes::query(async move |user_pool, pub_pool| {
+        PostReplyDetailRes::query_one(async move |user_pool, pub_pool| {
             let sql = "SELECT id, community_id, user_id, post_id, content, sort
                     created_at, updated_at
                 FROM post_reply
@@ -28,7 +24,6 @@ impl PostReplyDetailRes {
                 .bind(post_id)
                 .fetch_one(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)
@@ -38,10 +33,9 @@ impl PostReplyDetailRes {
         post_id: u32,
         page_size: u16,
         offset: u16,
-    ) -> Result<crate::operator::sqlite::query::QueryResult<PostReplyDetailRes>, crate::SystemError>
-    {
+    ) -> Result<Vec<PostReplyDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        PostReplyDetailRes::query(async move |user_pool, pub_pool| {
+        PostReplyDetailRes::query_all(async move |user_pool, pub_pool| {
             let sql = "SELECT id, community_id, user_id, post_id, content, sort
                 created_at, updated_at
             FROM post_reply
@@ -54,7 +48,6 @@ impl PostReplyDetailRes {
                 .bind(offset)
                 .fetch_all(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)

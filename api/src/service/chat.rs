@@ -35,10 +35,7 @@ impl ChatListReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::chat::ChatDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<crate::logic::chat::ChatDetailRes>, crate::SystemError> {
         crate::logic::chat::ChatDetailRes::list(self.user_id, self.page_size, self.offset).await
     }
 }

@@ -40,10 +40,7 @@ impl PostDetailReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::community::post::PostDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<crate::logic::community::post::PostDetailRes, crate::SystemError> {
         crate::logic::community::post::PostDetailRes::detail(self.post_id).await
     }
 }
@@ -64,10 +61,7 @@ impl PostListReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::community::post::PostDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<crate::logic::community::post::PostDetailRes>, crate::SystemError> {
         crate::logic::community::post::PostDetailRes::list(
             self.community_id,
             self.page_size,

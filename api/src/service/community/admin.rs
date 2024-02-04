@@ -46,12 +46,7 @@ impl CommunityAdminDetailReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<
-            crate::logic::community::admin::CommunityAdminDetailRes,
-        >,
-        crate::SystemError,
-    > {
+    ) -> Result<crate::logic::community::admin::CommunityAdminDetailRes, crate::SystemError> {
         crate::logic::community::admin::CommunityAdminDetailRes::detail(self.admin_id).await
     }
 }
@@ -72,12 +67,8 @@ impl CommunityAdminlistReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<
-            crate::logic::community::admin::CommunityAdminDetailRes,
-        >,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<crate::logic::community::admin::CommunityAdminDetailRes>, crate::SystemError>
+    {
         crate::logic::community::admin::CommunityAdminDetailRes::list(
             self.community_id,
             self.page_size,

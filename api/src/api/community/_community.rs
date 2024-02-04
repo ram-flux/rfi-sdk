@@ -1,7 +1,4 @@
-use crate::{
-    operator::sqlite::query::{Query as _, QueryResult},
-    service,
-};
+use crate::{operator::sqlite::query::Query as _, service};
 #[cfg(not(feature = "mock"))]
 use resource::Action as _;
 // #[cfg(not(feature = "mock"))]
@@ -11,7 +8,7 @@ pub async fn community_list(
     user_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<QueryResult<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
+) -> Result<Vec<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -32,7 +29,7 @@ pub async fn community_list(
                 ..Default::default()
             },
         ];
-        return Ok(QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -50,7 +47,7 @@ pub async fn community_list(
 /// 社区详情(done, untested)
 pub async fn community_detail(
     community_id: u32,
-) -> Result<QueryResult<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
+) -> Result<crate::logic::community::_community::CommunityDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let comm = crate::logic::community::_community::CommunityDetailRes {
@@ -62,7 +59,7 @@ pub async fn community_detail(
             status: 2,
             ..Default::default()
         };
-        return Ok(QueryResult::One(comm));
+        return Ok(comm);
     }
     #[cfg(not(feature = "mock"))]
     {

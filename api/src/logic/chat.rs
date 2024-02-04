@@ -21,12 +21,9 @@ pub struct ChatDetailRes {
 }
 
 impl ChatDetailRes {
-    pub(crate) async fn detail(
-        chat_id: u32,
-    ) -> Result<crate::operator::sqlite::query::QueryResult<ChatDetailRes>, crate::SystemError>
-    {
+    pub(crate) async fn detail(chat_id: u32) -> Result<ChatDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        ChatDetailRes::query(async move |user_pool, pub_pool| {
+        ChatDetailRes::query_one(async move |user_pool, pub_pool| {
             let sql = "SELECT id, type, user_id, msg_increase, from_id,
                     from_public_key, from_name, from_avatar, from_unread_num, 
                     from_msg_id, from_msg, from_update, ext, status,
@@ -37,7 +34,6 @@ impl ChatDetailRes {
                 .bind(chat_id)
                 .fetch_one(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)
@@ -47,10 +43,9 @@ impl ChatDetailRes {
         user_id: u32,
         page_size: u16,
         offset: u16,
-    ) -> Result<crate::operator::sqlite::query::QueryResult<ChatDetailRes>, crate::SystemError>
-    {
+    ) -> Result<Vec<ChatDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        ChatDetailRes::query(async move |user_pool, pub_pool| {
+        ChatDetailRes::query_all(async move |user_pool, pub_pool| {
             let sql = "SELECT id, type, user_id, msg_increase, from_id,
                 from_public_key, from_name, from_avatar, from_unread_num, 
                 from_msg_id, from_msg, from_update, ext, status,
@@ -65,7 +60,6 @@ impl ChatDetailRes {
                 .bind(offset)
                 .fetch_all(user_pool.as_ref())
                 .await
-                .map(Into::into)
         })
         .await
         .map_err(Into::into)

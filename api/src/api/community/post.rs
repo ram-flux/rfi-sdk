@@ -3,10 +3,7 @@ pub async fn post_list(
     community_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<crate::logic::community::post::PostDetailRes>,
-    crate::Error,
-> {
+) -> Result<Vec<crate::logic::community::post::PostDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -25,7 +22,7 @@ pub async fn post_list(
                 ..Default::default()
             },
         ];
-        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -46,13 +43,6 @@ pub async fn create_post(
     content: String,
     sort_count: i32,
 ) -> Result<u32, crate::Error> {
-    let post = payload::resources::community::post::Post {
-        community_id,
-        user_id,
-        name,
-        content,
-        ..Default::default()
-    };
     #[cfg(feature = "mock")]
     return Ok(3234).into();
     // #[cfg(not(feature = "mock"))]
@@ -116,17 +106,14 @@ pub async fn del_post(post_id: u32) -> Result<(), crate::Error> {
 /// 帖子详情(done, untested)
 pub async fn post_detail(
     post_id: u32,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<crate::logic::community::post::PostDetailRes>,
-    crate::Error,
-> {
+) -> Result<crate::logic::community::post::PostDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let post = crate::logic::community::post::PostDetailRes {
             user_id: 6565656,
             ..Default::default()
         };
-        return Ok(crate::operator::sqlite::query::QueryResult::One(post));
+        return Ok(post);
     }
     // #[cfg(not(feature = "mock"))]
     {

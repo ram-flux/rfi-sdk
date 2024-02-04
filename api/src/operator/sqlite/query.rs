@@ -1,32 +1,53 @@
-#[derive(Debug, serde::Serialize)]
-#[serde(untagged)]
-pub enum QueryResult<T> {
-    Vec(Vec<T>),
-    One(T),
-}
+// #[derive(Debug, serde::Serialize)]
+// #[serde(untagged)]
+// pub enum QueryResult<T> {
+//     Vec(Vec<T>),
+//     One(T),
+// }
 
-impl<T> From<Vec<T>> for QueryResult<T> {
-    fn from(value: Vec<T>) -> Self {
-        QueryResult::Vec(value)
-    }
-}
+// impl<T> From<Vec<T>> for QueryResult<T> {
+//     fn from(value: Vec<T>) -> Self {
+//         QueryResult::Vec(value)
+//     }
+// }
 
-impl<T> From<T> for QueryResult<T> {
-    fn from(value: T) -> Self {
-        QueryResult::One(value)
-    }
-}
+// impl<T> From<T> for QueryResult<T> {
+//     fn from(value: T) -> Self {
+//         QueryResult::One(value)
+//     }
+// }
 
 pub(crate) trait Query: serde::Serialize + Sized + std::fmt::Debug {
-    type Res = QueryResult<Self>;
+    // type Res = QueryResult<Self>;
 
-    async fn query<F, O>(op: F) -> Result<Self::Res, crate::DatabaseError>
+    async fn query_one<F, O>(op: F) -> Result<Self, crate::DatabaseError>
     where
         F: FnOnce(
             std::sync::Arc<super::init::PoolSqlite>,
             std::sync::Arc<super::init::PoolSqlite>,
         ) -> O,
-        O: std::future::Future<Output = Result<Self::Res, sqlx::Error>>,
+        O: std::future::Future<Output = Result<Self, sqlx::Error>>,
+    {
+        let user_pool = super::init::USER_SQLITE_POOL.read().await;
+        let user_pool = user_pool.get_pool()?;
+
+        let pub_pool = super::init::DbConnection::get_pub_connection()?;
+        let pub_pool = pub_pool.get_pool()?;
+        let res = op(user_pool.clone(), pub_pool.clone()).await.map_err(|e| {
+            println!("error: {e}");
+            crate::DatabaseError::QueryFailed
+        })?;
+        // tracing::info!("query result: {res:?}");
+        Ok(res)
+    }
+
+    async fn query_all<F, O>(op: F) -> Result<Vec<Self>, crate::DatabaseError>
+    where
+        F: FnOnce(
+            std::sync::Arc<super::init::PoolSqlite>,
+            std::sync::Arc<super::init::PoolSqlite>,
+        ) -> O,
+        O: std::future::Future<Output = Result<Vec<Self>, sqlx::Error>>,
     {
         let user_pool = super::init::USER_SQLITE_POOL.read().await;
         let user_pool = user_pool.get_pool()?;

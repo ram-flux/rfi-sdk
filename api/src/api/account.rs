@@ -1,4 +1,4 @@
-use crate::operator::sqlite::query::QueryResult;
+use Vec;
 
 /// 更新账户(tested)
 pub async fn update_info(
@@ -28,17 +28,15 @@ pub async fn update_info(
 pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
+    // #[cfg(not(feature = "mock"))]
     {
         let account = account_detail(account_id).await?;
-        if let QueryResult::One(data) = account {
-            let avatar = payload::resources::account::avatar::Avatar::new(avatar);
 
-            crate::service::account::UpdateAvatarReq::new(avatar, account_id)
-                .exec()
-                .await?;
-        }
+        let avatar = payload::resources::account::avatar::Avatar::new(avatar);
 
+        crate::service::account::UpdateAvatarReq::new(avatar, account.user_id)
+            .exec()
+            .await?;
         Ok(())
     }
 }
@@ -46,7 +44,7 @@ pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate:
 /// 账号详情(tested)
 pub async fn account_detail(
     user_id: u32,
-) -> Result<QueryResult<crate::logic::account::AccountDetailRes>, crate::Error> {
+) -> Result<crate::logic::account::AccountDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let comm = crate::logic::account::AccountDetailRes {
@@ -54,7 +52,7 @@ pub async fn account_detail(
             name: "test2".to_string(),
             ..Default::default()
         };
-        return Ok(QueryResult::One(comm)).into();
+        return Ok(comm).into();
     }
     #[cfg(not(feature = "mock"))]
     {

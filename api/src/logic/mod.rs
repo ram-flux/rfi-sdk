@@ -106,10 +106,17 @@ pub(crate) mod upsert {
     );
 
     upsert_resource!(
-        reply_apply,
+        create_apply,
         Apply,
         UpsertApply,
         payload::resources::apply::Apply
+    );
+
+    upsert_resource!(
+        reply_apply,
+        ApplyReply,
+        UpsertApplyReply,
+        payload::resources::apply::reply::ApplyReply
     );
 
     upsert_resource!(create_elf, Elf, UpsertElf, payload::resources::elf::Elf);

@@ -69,12 +69,7 @@ impl CommunityDetailReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<
-            crate::logic::community::_community::CommunityDetailRes,
-        >,
-        crate::SystemError,
-    > {
+    ) -> Result<crate::logic::community::_community::CommunityDetailRes, crate::SystemError> {
         crate::logic::community::_community::CommunityDetailRes::detail(self.community_id).await
     }
 }
@@ -95,12 +90,8 @@ impl CommunityListReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<
-            crate::logic::community::_community::CommunityDetailRes,
-        >,
-        crate::SystemError,
-    > {
+    ) -> Result<Vec<crate::logic::community::_community::CommunityDetailRes>, crate::SystemError>
+    {
         crate::logic::community::_community::CommunityDetailRes::list(
             self.user_id,
             self.page_size,

@@ -44,10 +44,7 @@ impl AccountDetailReq {
     }
     pub(crate) async fn exec(
         self,
-    ) -> Result<
-        crate::operator::sqlite::query::QueryResult<crate::logic::account::AccountDetailRes>,
-        crate::SystemError,
-    > {
+    ) -> Result<crate::logic::account::AccountDetailRes, crate::SystemError> {
         crate::logic::account::AccountDetailRes::exec(self.user_id).await
     }
 }

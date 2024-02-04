@@ -1046,6 +1046,27 @@
 
 ## 申请
 
+#### 创建申请
+
+**create_apply**
+
+> Requests and Parameter Description
+>
+> | Parameter | Type   | Must | Parameter Description     |
+> | :-------- | :----- | :--- | :------------------------ |
+> | type      | int    | yes  | 1/添加好友 2/申请加入社区 |
+> | type_id   | int    | yes  | 2/申请加入社区            |
+> | user_id   | int    | yes  | 请求人                    |
+> | content   | String | yes  | 请求消息                  |
+>
+> Response and Parameters in data
+>
+> no data
+
+------
+
+
+
 #### 获取申请列表
 
 **apply_list**

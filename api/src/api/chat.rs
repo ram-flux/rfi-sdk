@@ -3,10 +3,7 @@ pub async fn chat_list(
     user_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<crate::logic::chat::ChatDetailRes>,
-    crate::Error,
-> {
+) -> Result<Vec<crate::logic::chat::ChatDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -23,7 +20,7 @@ pub async fn chat_list(
                 ..Default::default()
             },
         ];
-        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -39,12 +36,7 @@ pub async fn chat_list(
 pub async fn search_chat(
     chat_id: u32,
     keyword: String,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::admin::CommunityAdminDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<Vec<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -61,7 +53,7 @@ pub async fn search_chat(
                 ..Default::default()
             },
         ];
-        return Ok(crate::operator::sqlite::query::QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     todo!()

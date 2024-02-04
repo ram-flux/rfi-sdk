@@ -1,11 +1,9 @@
-use crate::operator::sqlite::query::QueryResult;
-
 /// 管理员列表(done, untested)
 pub async fn admin_list(
     community_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<QueryResult<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
+) -> Result<Vec<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -22,7 +20,7 @@ pub async fn admin_list(
                 ..Default::default()
             },
         ];
-        return Ok(QueryResult::Vec(list));
+        return Ok(list);
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -98,12 +96,7 @@ pub async fn del_admin(community_id: u32, user_id: u32) -> Result<(), crate::Err
 pub async fn admin_detail(
     community_id: u32,
     user_id: u32,
-) -> Result<
-    crate::operator::sqlite::query::QueryResult<
-        crate::logic::community::admin::CommunityAdminDetailRes,
-    >,
-    crate::Error,
-> {
+) -> Result<crate::logic::community::admin::CommunityAdminDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let admin = crate::logic::community::admin::CommunityAdminDetailRes {
@@ -114,7 +107,7 @@ pub async fn admin_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(crate::operator::sqlite::query::QueryResult::One(admin));
+        return Ok(admin);
     }
     #[cfg(not(feature = "mock"))]
     {
