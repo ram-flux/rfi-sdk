@@ -1,5 +1,5 @@
 use payload::resources::{
-    account::{avatar::Avatar, community::AccountCommunity, elf::AccountElf, Account},
+    account::{avatar::AccountAvatar, community::AccountCommunity, elf::AccountElf, Account},
     apply::{reply::ApplyReply, Apply},
     chat::{status::ChatStatus, Chat},
     community::{
@@ -25,7 +25,7 @@ pub enum Resources {
     Account(resource::Command<resource::GeneralAction<Account>>),
     AccountElf(resource::Command<resource::GeneralAction<AccountElf>>),
     AccountCommunity(resource::Command<resource::GeneralAction<AccountCommunity>>),
-    Avatar(resource::Command<resource::GeneralAction<Avatar>>),
+    AccountAvatar(resource::Command<resource::GeneralAction<AccountAvatar>>),
     // Community
     Community(resource::Command<resource::GeneralAction<Community>>),
     CommunityInfo(resource::Command<resource::GeneralAction<CommunityInfo>>),
@@ -67,7 +67,7 @@ impl resource::Action for Resources {
             Resources::Account(r) => r.execute(executor).await,
             Resources::AccountElf(r) => r.execute(executor).await,
             Resources::AccountCommunity(r) => r.execute(executor).await,
-            Resources::Avatar(r) => r.execute(executor).await,
+            Resources::AccountAvatar(r) => r.execute(executor).await,
             // Community
             Resources::Community(r) => r.execute(executor).await,
             Resources::CommunityInfo(r) => r.execute(executor).await,

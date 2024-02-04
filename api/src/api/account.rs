@@ -32,7 +32,7 @@ pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate:
     {
         let account = account_detail(account_id).await?;
 
-        let avatar = payload::resources::account::avatar::Avatar::new(avatar);
+        let avatar = payload::resources::account::avatar::AccountAvatar::new(avatar);
 
         crate::service::account::UpdateAvatarReq::new(avatar, account.user_id)
             .exec()
@@ -63,27 +63,50 @@ pub async fn account_detail(
 }
 
 /// 添加社区(done, untested)
-pub async fn add_community(
-    community_id: u32,
-    user_id: u32,
-    name: String,
-    avatar: String,
-) -> Result<(), crate::Error> {
+pub async fn add_community(community_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
+        let community = super::community::_community::community_detail(community_id).await?;
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
         let community = payload::resources::account::community::AccountCommunity::new(
             community_id,
-            user_id,
-            name,
-            avatar,
+            user.user_id,
+            community.name,
+            community.avatar,
         );
 
         crate::service::account::AddCommunityReq::new(community, community_id)
             .exec()
             .await?;
         Ok(())
+    }
+}
+
+/// 创建账户机器人(done, untested)
+pub async fn create_account_elf(
+    user_id: u32,
+    name: String,
+    avatar: String,
+) -> Result<u32, crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(111);
+    // #[cfg(not(feature = "mock"))]
+    {
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let account_elf_id = worker.gen_id()?;
+        let account_elf = payload::resources::account::elf::AccountElf::new(
+            account_elf_id,
+            user_id,
+            name,
+            avatar,
+        );
+
+        crate::service::account::elf::AddAccountElfReq::new(account_elf, account_elf_id)
+            .exec()
+            .await?;
+        Ok(account_elf_id)
     }
 }
 

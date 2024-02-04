@@ -32,6 +32,7 @@ pub struct Community {
     pub bio: String,
     pub passwd: Option<String>,
     pub announcement: Option<String>,
+    pub avatar: String,
     pub pinned: bool,
     pub status: u8,
     pub created_at: DateTime<Utc>,
@@ -46,6 +47,7 @@ impl Community {
         bio: String,
         passwd: Option<String>,
         announcement: Option<String>,
+        avatar: String,
         pinned: bool,
         status: u8,
     ) -> Self {
@@ -56,6 +58,7 @@ impl Community {
             bio,
             passwd,
             announcement,
+            avatar,
             pinned,
             status,
             created_at: crate::utils::time::now(),

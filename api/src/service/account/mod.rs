@@ -1,3 +1,4 @@
+pub(crate) mod elf;
 pub(crate) struct UpdateAccountReq {
     account: payload::resources::account::Account,
     account_id: u32,
@@ -17,13 +18,13 @@ impl UpdateAccountReq {
 }
 
 pub(crate) struct UpdateAvatarReq {
-    avatar: payload::resources::account::avatar::Avatar,
+    avatar: payload::resources::account::avatar::AccountAvatar,
     account_id: u32,
 }
 
 impl UpdateAvatarReq {
     pub(crate) fn new(
-        avatar: payload::resources::account::avatar::Avatar,
+        avatar: payload::resources::account::avatar::AccountAvatar,
         account_id: u32,
     ) -> Self {
         Self { avatar, account_id }

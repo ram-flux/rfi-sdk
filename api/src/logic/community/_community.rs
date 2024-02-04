@@ -9,6 +9,7 @@ pub struct CommunityDetailRes {
     pub bio: String,
     pub passwd: Option<String>,
     pub announcement: Option<String>,
+    pub avatar: String,
     pub pinned: bool,
     pub status: u8,
     pub created_at: DateTime<Utc>,
@@ -21,7 +22,7 @@ impl CommunityDetailRes {
     ) -> Result<CommunityDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
         CommunityDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement,
+            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
                     pinned, status, created_at, updated_at
                 FROM community
                 WHERE id =$1;";
@@ -41,7 +42,7 @@ impl CommunityDetailRes {
     ) -> Result<Vec<CommunityDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
         CommunityDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement,
+            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
                  pinned, status, created_at, updated_at
             FROM community
             WHERE user_id = $1

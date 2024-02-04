@@ -21,6 +21,7 @@ pub struct CommunityInfo {
     pub bio: String,
     pub passwd: Option<String>,
     pub announcement: Option<String>,
+    pub avatar: String,
     pub pinned: bool,
     pub status: u8,
     pub created_at: DateTime<Utc>,
@@ -68,9 +69,9 @@ impl Resource<sqlx::Sqlite> for CommunityInfo {
         E: sqlx::prelude::Executor<'c, Database = sqlx::Sqlite>,
     {
         let sql = "UPDATE community SET 
-        name = $1, bio = $2, passwd = $3, announcement = $4, pinned = $5, status = $6, 
-        updated_at = $7
-        WHERE user_id = $8;";
+        name = $1, bio = $2, passwd = $3, announcement = $4, pinned = $5, status = $6, avatar = %7
+        updated_at = $8
+        WHERE user_id = $9;";
         sqlx::query(sql)
             .bind(&self.name)
             .bind(&self.bio)
@@ -78,6 +79,7 @@ impl Resource<sqlx::Sqlite> for CommunityInfo {
             .bind(&self.announcement)
             .bind(&self.pinned)
             .bind(&self.status)
+            .bind(&self.avatar)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

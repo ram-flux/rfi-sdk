@@ -42,13 +42,13 @@ impl UpdateCommunityReq {
 }
 
 pub(crate) struct UpdateAvatarReq {
-    avatar: payload::resources::account::avatar::Avatar,
+    avatar: payload::resources::account::avatar::AccountAvatar,
     account_id: u32,
 }
 
 impl UpdateAvatarReq {
     pub(crate) fn new(
-        avatar: payload::resources::account::avatar::Avatar,
+        avatar: payload::resources::account::avatar::AccountAvatar,
         account_id: u32,
     ) -> Self {
         Self { avatar, account_id }

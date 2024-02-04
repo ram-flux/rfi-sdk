@@ -59,6 +59,13 @@ pub(crate) mod upsert {
     );
 
     upsert_resource!(
+        create_account_elf,
+        AccountElf,
+        UpsertAccountElf,
+        payload::resources::account::elf::AccountElf
+    );
+
+    upsert_resource!(
         new_message,
         Message,
         UpsertMessage,
@@ -205,9 +212,9 @@ pub(crate) mod update {
     );
     update_resource!(
         update_avatar,
-        Avatar,
+        AccountAvatar,
         UpdateAvatar,
-        payload::resources::account::avatar::Avatar
+        payload::resources::account::avatar::AccountAvatar
     );
     update_resource!(
         update_chat_status,

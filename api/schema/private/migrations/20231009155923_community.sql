@@ -5,6 +5,7 @@ CREATE TABLE community (
     user_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     bio TEXT NOT NULL,
+    avatar TEXT,
     passwd TEXT,
     announcement TEXT,
     pinned BOOLEAN NOT NULL,
