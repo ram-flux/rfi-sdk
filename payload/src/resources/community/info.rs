@@ -10,7 +10,6 @@ pub struct CommunityInfo {
     pub avatar: String,
     pub pinned: bool,
     pub status: u8,
-    pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
@@ -20,19 +19,20 @@ impl CommunityInfo {
         bio: String,
         passwd: Option<String>,
         announcement: Option<String>,
+        avatar: String,
         pinned: bool,
         status: u8,
     ) -> Self {
         let time = crate::utils::time::now();
         Self {
-            created_at: time,
+            updated_at: Some(time),
             name,
             bio,
             passwd,
             announcement,
             pinned,
             status,
-            ..Default::default()
+            avatar,
         }
     }
 }
@@ -55,9 +55,9 @@ impl Resource<sqlx::Sqlite> for CommunityInfo {
         E: sqlx::prelude::Executor<'c, Database = sqlx::Sqlite>,
     {
         let sql = "UPDATE community SET 
-        name = $1, bio = $2, passwd = $3, announcement = $4, pinned = $5, status = $6, avatar = %7
+        name = $1, bio = $2, passwd = $3, announcement = $4, pinned = $5, status = $6, avatar = $7,
         updated_at = $8
-        WHERE user_id = $9;";
+        WHERE id = $9;";
         sqlx::query(sql)
             .bind(&self.name)
             .bind(&self.bio)

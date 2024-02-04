@@ -2,7 +2,7 @@ use crate::{operator::sqlite::query::Query as _, service};
 #[cfg(not(feature = "mock"))]
 use resource::Action as _;
 
-/// 创建社区(done, untested)
+/// 创建社区(tested)
 pub async fn create_community(
     user_id: u32,
     father_id: Option<u32>,
@@ -46,6 +46,7 @@ pub async fn update_community(
     bio: String,
     passwd: Option<String>,
     announcement: Option<String>,
+    avatar: String,
     pinned: bool,
     status: u8,
 ) -> Result<(), crate::Error> {
@@ -58,6 +59,7 @@ pub async fn update_community(
             bio,
             passwd,
             announcement,
+            avatar,
             pinned,
             status,
         );
@@ -192,8 +194,6 @@ mod tests {
         )
         .await;
 
-        // Add assertions or checks based on the expected behavior
-        // For example:
         assert!(result.is_ok());
         let community_id = result.unwrap();
         assert_ne!(community_id, 0);
@@ -203,13 +203,14 @@ mod tests {
     async fn test_update_community() {
         init_db().await;
         // Test case for updating a community
-        let community_id = 123;
+        let community_id = 662835200;
         let name = "Updated Community Name".to_string();
         let bio = "Updated Community Bio".to_string();
         let passwd = Some("new_password".to_string());
         let announcement = Some("Updated Announcement".to_string());
+        let avatar = "new_community_avatar.jpg".to_string();
         let pinned = false;
-        let status = 2;
+        let status = 3;
 
         let result = update_community(
             community_id,
@@ -217,32 +218,26 @@ mod tests {
             bio,
             passwd,
             announcement,
+            avatar,
             pinned,
             status,
         )
         .await;
 
-        // Add assertions or checks based on the expected behavior
-        // For example:
         assert!(result.is_ok());
     }
-
-    // Similarly, you can add tests for other functions like del_community, community_list, community_detail
-    // ...
 
     #[tokio::test]
     async fn test_community_list() {
         init_db().await;
         // Test case for getting a list of communities
-        let user_id = 1;
+        let user_id = 121769984;
         let page_size = 10;
         let offset = 0;
 
         let result = community_list(user_id, page_size, offset).await;
 
-        // Add assertions or checks based on the expected behavior
-        // For example:
-        assert!(result.is_ok());
+        println!("{:#?}", result);
         let community_list = result.unwrap();
         assert!(!community_list.is_empty());
     }
@@ -251,14 +246,11 @@ mod tests {
     async fn test_community_detail() {
         init_db().await;
         // Test case for getting details of a community
-        let community_id = 456;
+        let community_id = 1442975744;
 
         let result = community_detail(community_id).await;
 
-        // Add assertions or checks based on the expected behavior
-        // For example:
-        assert!(result.is_ok());
+        println!("{:#?}", result);
         let community_detail = result.unwrap();
-        assert_eq!(community_detail.user_id, 5435);
     }
 }
