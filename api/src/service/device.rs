@@ -2,7 +2,7 @@ pub(crate) struct InitDeviceReq {
     device: payload::resources::device::Device,
     device_id: u32,
     account: payload::resources::account::Account,
-    account_id: u32, // recv_list: Vec<u32>,
+    user_id: u32, // recv_list: Vec<u32>,
 }
 
 impl InitDeviceReq {
@@ -10,13 +10,13 @@ impl InitDeviceReq {
         device: payload::resources::device::Device,
         device_id: u32,
         account: payload::resources::account::Account,
-        account_id: u32,
+        user_id: u32,
     ) -> Self {
         Self {
             device,
             device_id,
             account,
-            account_id,
+            user_id,
         }
     }
     pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
@@ -24,7 +24,7 @@ impl InitDeviceReq {
         crate::logic::upsert::new_device(self.device, self.device_id).await?;
         // upsert_resource!(new_account, account, account_action, "UpsertAccount");
         // super::account::new_account(self.account, self.account_id).await?;
-        crate::logic::upsert::new_account(self.account, self.account_id).await?;
+        crate::logic::upsert::new_account(self.account, self.user_id).await?;
         Ok(())
     }
 }

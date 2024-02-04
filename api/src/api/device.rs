@@ -16,7 +16,6 @@ pub async fn init_device(
         let mut worker = crate::operator::WrapWorker::worker()?;
         let user_id = worker.gen_id()?;
         let device_id = worker.gen_id()?;
-        let account_id = worker.gen_id()?;
 
         let device = payload::resources::device::Device {
             public_key: device_pk,
@@ -31,14 +30,13 @@ pub async fn init_device(
         };
         let account = payload::resources::account::Account {
             public_key: account_pk,
-            user_id,
             created_at: payload::utils::time::now(),
             updated_at: Some(payload::utils::time::now()),
             salt,
             name,
             ..Default::default()
         };
-        crate::service::device::InitDeviceReq::new(device, device_id, account, account_id)
+        crate::service::device::InitDeviceReq::new(device, device_id, account, user_id)
             .exec()
             .await?;
         Ok(device_id)
@@ -109,15 +107,18 @@ pub async fn del_device(device_id: u32) -> Result<(), crate::Error> {
 
 #[cfg(test)]
 mod test {
-    use crate::operator::sqlite::init::DbConnection;
-
-    #[tokio::test]
-    async fn test_init_device() {
+    async fn init_db() {
+        use crate::operator::sqlite::init::DbConnection;
         let pri_url = "sqlite://test_pri.db";
         let pub_url = "sqlite://test_pub.db";
         let res = DbConnection::init_user_database(pri_url.to_string()).await;
         println!("init_user_database res: {res:?}");
         let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+    }
+
+    #[tokio::test]
+    async fn test_init_device() {
+        init_db().await;
 
         let account_pk = "frefref".to_string();
         let device_pk = "asdsadasd".to_string();
@@ -137,11 +138,7 @@ mod test {
     #[tokio::test]
     async fn test_update_token() {
         crate::init_log();
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let res = DbConnection::init_user_database(pri_url.to_string()).await;
-        println!("init_user_database res: {res:?}");
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+        init_db().await;
 
         let device_id = 3393327105;
         let res = crate::api::device::update_token(device_id).await;
@@ -151,11 +148,7 @@ mod test {
     #[tokio::test]
     async fn test_del_device() {
         crate::init_log();
-        let pri_url = "sqlite://test_pri.db";
-        let pub_url = "sqlite://test_pub.db";
-        let res = DbConnection::init_user_database(pri_url.to_string()).await;
-        println!("init_user_database res: {res:?}");
-        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+        init_db().await;
 
         let device_id = 3393327105;
         let res = crate::api::device::del_device(device_id).await;

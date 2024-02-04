@@ -19,11 +19,10 @@ use sqlx::Sqlite;
     schema_name = "im",
     pg_table_name = "account",
     sqlite_table_name = "account",
-    primary_key = "id:u32",
+    primary_key = "user_id:u32",
     constraint = "im_account_id_idx"
 )]
 pub struct Account {
-    pub user_id: u32,
     pub public_key: String,
     pub account: String,
     pub salt: String,
@@ -37,7 +36,6 @@ pub struct Account {
 
 impl Account {
     pub fn new(
-        user_id: u32,
         public_key: String,
         account: String,
         salt: String,
@@ -47,7 +45,6 @@ impl Account {
         bio: String,
     ) -> Self {
         Self {
-            user_id,
             public_key,
             account,
             salt,

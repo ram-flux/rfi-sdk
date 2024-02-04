@@ -1,6 +1,5 @@
 -- Add migration script here
 CREATE TABLE account (
-    id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     public_key TEXT NOT NULL,
     account TEXT NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE account (
     bio TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (user_id)
 );
 
-CREATE INDEX im_account_id_idx ON account (id);
+CREATE INDEX im_account_id_idx ON account (user_id);

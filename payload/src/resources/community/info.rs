@@ -1,21 +1,7 @@
 use chrono::prelude::*;
 
 use resource::Resource;
-#[derive(
-    serde::Deserialize,
-    serde::Serialize,
-    PartialEq,
-    Debug,
-    // resource_macros::Resource,
-    Default,
-)]
-// #[resource(
-//     schema_name = "im",
-//     pg_table_name = "account",
-//     sqlite_table_name = "account",
-//     primary_key = "id:u32",
-//     constraint = "im_account_pkey"
-// )]
+#[derive(serde::Deserialize, serde::Serialize, PartialEq, Debug, Default)]
 pub struct CommunityInfo {
     pub name: String,
     pub bio: String,

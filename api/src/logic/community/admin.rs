@@ -38,8 +38,8 @@ impl CommunityAdminDetailRes {
         CommunityAdminDetailRes::query_all(async move |user_pool, pub_pool| {
             let sql = "SELECT id, type, user_id, community_id,
                 created_at, updated_at
-            FROM community
-            WHERE user_id = $1
+            FROM community_admin
+            WHERE community_id = $1
             LIMIT $2 OFFSET $3;";
 
             sqlx::query_as::<sqlx::Sqlite, CommunityAdminDetailRes>(sql)

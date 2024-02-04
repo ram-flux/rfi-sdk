@@ -17,7 +17,7 @@ pub async fn update_info(
     #[cfg(not(feature = "mock"))]
     {
         let account = payload::resources::account::Account::new(
-            user_id, public_key, account, salt, gender, name, avatar, bio,
+            public_key, account, salt, gender, name, avatar, bio,
         );
         crate::logic::update::update_account(account, account_id).await;
         Ok(())
