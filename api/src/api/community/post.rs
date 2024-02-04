@@ -35,7 +35,7 @@ pub async fn post_list(
     }
 }
 
-/// 创建帖子(done, untested)
+/// 创建帖子(tested)
 pub async fn create_post(
     community_id: u32,
     user_id: u32,
@@ -45,7 +45,7 @@ pub async fn create_post(
 ) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(3234).into();
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         let post = payload::resources::community::post::Post::new(
             community_id,
@@ -63,34 +63,53 @@ pub async fn create_post(
     }
 }
 
-pub async fn update_post(
+// pub async fn update_post(
+//     post_id: u32,
+//     community_id: u32,
+//     user_id: u32,
+//     name: String,
+//     content: String,
+//     sort_count: i32,
+// ) -> Result<(), crate::Error> {
+//     #[cfg(feature = "mock")]
+//     return Ok(()).into();
+//     // #[cfg(not(feature = "mock"))]
+//     {
+//         let post = payload::resources::community::post::Post::new(
+//             community_id,
+//             user_id,
+//             name,
+//             content,
+//             sort_count,
+//         );
+//         let mut worker = crate::operator::WrapWorker::worker()?;
+//         crate::service::community::post::UpdatePostReq::new(post, post_id)
+//             .exec()
+//             .await?;
+//         Ok(())
+//     }
+// }
+
+/// 编辑帖子(tested)
+pub async fn edit_post(
     post_id: u32,
-    community_id: u32,
-    user_id: u32,
     name: String,
     content: String,
     sort_count: i32,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
-        let post = payload::resources::community::post::Post::new(
-            community_id,
-            user_id,
-            name,
-            content,
-            sort_count,
-        );
-        let mut worker = crate::operator::WrapWorker::worker()?;
-        crate::service::community::post::UpdatePostReq::new(post, post_id)
+        let post_info = payload::resources::community::post::info::PostInfo::new(name, content);
+        crate::service::community::post::EditPostReq::new(post_info, post_id)
             .exec()
             .await?;
         Ok(())
     }
 }
 
-/// 删除帖子(done, untested)
+/// 删除帖子(tested)
 pub async fn del_post(post_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
@@ -103,7 +122,7 @@ pub async fn del_post(post_id: u32) -> Result<(), crate::Error> {
     }
 }
 
-/// 帖子详情(done, untested)
+/// 帖子详情(tested)
 pub async fn post_detail(
     post_id: u32,
 ) -> Result<crate::logic::community::post::PostDetailRes, crate::Error> {
@@ -115,11 +134,115 @@ pub async fn post_detail(
         };
         return Ok(post);
     }
-    // #[cfg(not(feature = "mock"))]
+    #[cfg(not(feature = "mock"))]
     {
         use crate::operator::sqlite::query::Query;
         Ok(crate::service::community::post::PostDetailReq::new(post_id)
             .exec()
             .await?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    async fn init_db() {
+        use crate::operator::sqlite::init::DbConnection;
+        let pri_url = "sqlite://test_pri.db";
+        let pub_url = "sqlite://test_pub.db";
+        let res = DbConnection::init_user_database(pri_url.to_string()).await;
+        println!("init_user_database res: {res:?}");
+        let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
+    }
+
+    // Other test functions from the previous response...
+
+    #[tokio::test]
+    async fn test_post_list() {
+        init_db().await;
+        // Test case for post_list function
+        let community_id = 784470016;
+        let page_size = 10;
+        let offset = 0;
+
+        let result = post_list(community_id, page_size, offset).await;
+
+        println!("{:#?}", result);
+        let post_list = result.unwrap();
+        // Include assertions for specific details if needed
+    }
+
+    #[tokio::test]
+    async fn test_create_post() {
+        init_db().await;
+        // Test case for create_post function
+        let community_id = 784470016;
+        let user_id = 2894204928;
+        let name = "Test Post".to_string();
+        let content = "Post content here".to_string();
+        let sort_count = 42;
+
+        let result = create_post(community_id, user_id, name, content, sort_count).await;
+
+        assert!(result.is_ok());
+        let post_id = result.unwrap();
+        assert_ne!(post_id, 0);
+    }
+
+    // #[tokio::test]
+    // async fn test_update_post() {
+    //     init_db().await;
+    //     // Test case for update_post function
+    //     let post_id = 12345;
+    //     let community_id = 6789;
+    //     let user_id = 5432;
+    //     let name = "Updated Post Name".to_string();
+    //     let content = "Updated post content".to_string();
+    //     let sort_count = 55;
+
+    //     let result: Result<(), crate::Error> =
+    //         update_post(post_id, community_id, user_id, name, content, sort_count).await;
+
+    //     assert!(result.is_ok());
+    // }
+
+    #[tokio::test]
+    async fn test_edit_post() {
+        init_db().await;
+        // Test case for update_post function
+        let post_id = 2088898560;
+        let name = "Updated Post Name".to_string();
+        let content = "Updated post content".to_string();
+        let sort_count = 55;
+
+        let result: Result<(), crate::Error> = edit_post(post_id, name, content, sort_count).await;
+
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_del_post() {
+        init_db().await;
+        // Test case for del_post function
+        let post_id = 2088898560;
+
+        let result: Result<(), crate::Error> = del_post(post_id).await;
+
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_post_detail() {
+        init_db().await;
+        // Test case for post_detail function
+        let post_id = 2088898560;
+
+        let result: Result<crate::logic::community::post::PostDetailRes, crate::Error> =
+            post_detail(post_id).await;
+
+        println!("{:#?}", result);
+        let post_detail = result.unwrap();
+        // Include assertions for specific details if needed
     }
 }

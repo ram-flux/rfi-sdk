@@ -1,22 +1,23 @@
 use chrono::prelude::*;
-
 use resource::Resource;
 #[derive(serde::Deserialize, serde::Serialize, PartialEq, Debug, Default)]
-pub struct CommunityMemberType {
-    pub r#type: u8,
+pub struct PostInfo {
+    pub name: String,
+    pub content: String,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
-impl CommunityMemberType {
-    pub fn new(r#type: u8) -> Self {
+impl PostInfo {
+    pub fn new(name: String, content: String) -> Self {
         Self {
-            r#type,
             updated_at: Some(crate::utils::time::now()),
+            name,
+            content,
         }
     }
 }
 
-impl resource::GenResourceID for CommunityMemberType {
+impl resource::GenResourceID for PostInfo {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {
@@ -26,19 +27,20 @@ impl resource::GenResourceID for CommunityMemberType {
     }
 }
 
-impl Resource<sqlx::Sqlite> for CommunityMemberType {
+impl Resource<sqlx::Sqlite> for PostInfo {
     type ResourceID = u32;
 
     async fn update<'c, E>(&self, id: &Self::ResourceID, executor: E) -> Result<(), resource::Error>
     where
         E: sqlx::prelude::Executor<'c, Database = sqlx::Sqlite>,
     {
-        let sql = "UPDATE community_member SET 
-        type = $1, 
-        updated_at = $2
-        WHERE id = $3;";
+        let sql = "UPDATE community_post SET 
+        name = $1, content = $2,
+        updated_at = $3
+        WHERE id = $4;";
         sqlx::query(sql)
-            .bind(self.r#type)
+            .bind(&self.name)
+            .bind(&self.content)
             .bind(self.updated_at)
             .bind(id)
             .execute(executor)

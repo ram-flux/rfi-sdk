@@ -222,6 +222,12 @@ pub(crate) mod update {
         payload::resources::community::post::Post
     );
     update_resource!(
+        edit_post,
+        PostInfo,
+        EditPost,
+        payload::resources::community::post::info::PostInfo
+    );
+    update_resource!(
         update_post_reply,
         PostReply,
         UpdatePost,

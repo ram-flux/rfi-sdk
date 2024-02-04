@@ -16,7 +16,7 @@ impl PostDetailRes {
     pub(crate) async fn detail(post_id: u32) -> Result<PostDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
         PostDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, community_id, user_id, name, content, sort_count
+            let sql = "SELECT id, community_id, user_id, name, content, sort_count,
                     created_at, updated_at
                 FROM community_post
                 WHERE id =$1;";
@@ -36,7 +36,7 @@ impl PostDetailRes {
     ) -> Result<Vec<PostDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
         PostDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, community_id, user_id, name, content, sort_count
+            let sql = "SELECT id, community_id, user_id, name, content, sort_count,
                 created_at, updated_at
             FROM community_post
             WHERE community_id = $1

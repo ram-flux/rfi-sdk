@@ -30,6 +30,25 @@ impl UpdatePostReq {
     }
 }
 
+pub(crate) struct EditPostReq {
+    post_info: payload::resources::community::post::info::PostInfo,
+    post_id: u32,
+}
+
+impl EditPostReq {
+    pub(crate) fn new(
+        post_info: payload::resources::community::post::info::PostInfo,
+        post_id: u32,
+    ) -> Self {
+        Self { post_info, post_id }
+    }
+
+    pub(crate) async fn exec(self) -> Result<(), crate::SystemError> {
+        crate::logic::update::edit_post(self.post_info, self.post_id).await?;
+        Ok(())
+    }
+}
+
 pub(crate) struct PostDetailReq {
     post_id: u32,
 }

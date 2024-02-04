@@ -37,9 +37,9 @@ impl ApplyDetailRes {
     ) -> Result<Vec<ApplyDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
         ApplyDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, community_id, user_id, name, content, sort_count
-                created_at, updated_at
-            FROM community_post
+            let sql = "SELECT id, type, type_id, user_id, content, status,
+                created_at, updated_at 
+            FROM apply
             WHERE type = $1 AND type_id = $2
             LIMIT $2 OFFSET $3;";
 

@@ -1,3 +1,4 @@
+pub mod info;
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};
 use sqlx::Sqlite;
@@ -11,10 +12,10 @@ use sqlx::Sqlite;
 )]
 #[resource(
     schema_name = "im",
-    pg_table_name = "post",
-    sqlite_table_name = "post",
+    pg_table_name = "community_post",
+    sqlite_table_name = "community_post",
     primary_key = "id:u32",
-    constraint = "im_post_id_idx"
+    constraint = "im_community_post_id_idx"
 )]
 pub struct Post {
     pub community_id: u32,
