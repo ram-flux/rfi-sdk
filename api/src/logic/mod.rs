@@ -2,6 +2,7 @@ pub mod account;
 pub mod apply;
 pub mod chat;
 pub mod community;
+pub mod contact;
 // #[cfg(not(feature = "mock"))]
 pub mod message;
 
@@ -218,6 +219,12 @@ pub(crate) mod update {
         Contact,
         UpdateContact,
         payload::resources::contact::Contact
+    );
+    update_resource!(
+        update_contact_remark,
+        ContactRemark,
+        UpdateContactRemark,
+        payload::resources::contact::remark::ContactRemark
     );
     update_resource!(
         update_community,

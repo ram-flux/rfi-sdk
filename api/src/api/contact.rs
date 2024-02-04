@@ -18,16 +18,20 @@ pub async fn add_contact(
     }
 }
 
-pub async fn contact_list() -> Result<Vec<payload::resources::contact::Contact>, crate::Error> {
+/// 联系人列表(done, untested)
+pub async fn contact_list(
+    page_size: u16,
+    offset: u16,
+) -> Result<Vec<crate::logic::contact::ContactDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![
-            payload::resources::contact::Contact {
+            crate::logic::contact::ContactDetailRes {
                 user_id: 123123,
                 friend_id: 234234,
                 ..Default::default()
             },
-            payload::resources::contact::Contact {
+            crate::logic::contact::ContactDetailRes {
                 user_id: 123123,
                 friend_id: 54353,
                 ..Default::default()
@@ -36,25 +40,42 @@ pub async fn contact_list() -> Result<Vec<payload::resources::contact::Contact>,
         return Ok(msgs).into();
     }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::contact::ContactListReq::new(user.user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
+    }
 }
 
-pub async fn update_contact(
-    user_id: u32,
-    friend_id: u32,
-    remark: String,
-) -> Result<(), crate::Error> {
+/// 更新联系人备注(done, untested)
+pub async fn update_contact_remark(contact_id: u32, remark: String) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let contact_remark = payload::resources::contact::remark::ContactRemark::new(remark);
+        crate::service::contact::UpdateContactRemarkReq::new(contact_remark, contact_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
-pub async fn del_contact(user_id: u32) -> Result<(), crate::Error> {
+/// 删除联系人(done, untested)
+pub async fn del_contact(contact_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        crate::service::contact::DeleteContactReq::new(contact_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
 pub async fn search_contact(

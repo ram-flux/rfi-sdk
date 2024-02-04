@@ -10,7 +10,7 @@ use payload::resources::{
         post_reply::PostReply,
         Community,
     },
-    contact::Contact,
+    contact::{remark::ContactRemark, Contact},
     device::{token::Token, Device},
     elf::Elf,
     favorite::Favorite,
@@ -45,7 +45,9 @@ pub enum Resources {
     // Apply
     Apply(resource::Command<resource::GeneralAction<Apply>>),
     ApplyReply(resource::Command<resource::GeneralAction<ApplyReply>>),
+    // Contact
     Contact(resource::Command<resource::GeneralAction<Contact>>),
+    ContactRemark(resource::Command<resource::GeneralAction<ContactRemark>>),
     Elf(resource::Command<resource::GeneralAction<Elf>>),
     // Chat
     Chat(resource::Command<resource::GeneralAction<Chat>>),
@@ -61,10 +63,12 @@ impl resource::Action for Resources {
         E: sqlx::prelude::Executor<'c, Database = sqlx::Sqlite>,
     {
         match self {
+            // Account
             Resources::Account(r) => r.execute(executor).await,
             Resources::AccountElf(r) => r.execute(executor).await,
             Resources::AccountCommunity(r) => r.execute(executor).await,
             Resources::Avatar(r) => r.execute(executor).await,
+            // Community
             Resources::Community(r) => r.execute(executor).await,
             Resources::CommunityInfo(r) => r.execute(executor).await,
             Resources::CommunityAdmin(r) => r.execute(executor).await,
@@ -72,15 +76,21 @@ impl resource::Action for Resources {
             Resources::Member(r) => r.execute(executor).await,
             Resources::Post(r) => r.execute(executor).await,
             Resources::PostReply(r) => r.execute(executor).await,
+            // Device
             Resources::Device(r) => r.execute(executor).await,
             Resources::Token(r) => r.execute(executor).await,
+            // Message
             Resources::Message(r) => r.execute(executor).await,
             Resources::Block(r) => r.execute(executor).await,
             Resources::Status(r) => r.execute(executor).await,
+            // Apply
             Resources::Apply(r) => r.execute(executor).await,
             Resources::ApplyReply(r) => r.execute(executor).await,
+            // Contact
             Resources::Contact(r) => r.execute(executor).await,
+            Resources::ContactRemark(r) => r.execute(executor).await,
             Resources::Elf(r) => r.execute(executor).await,
+            // Chat
             Resources::Chat(r) => r.execute(executor).await,
             Resources::ChatStatus(r) => r.execute(executor).await,
             Resources::Favorite(r) => r.execute(executor).await,

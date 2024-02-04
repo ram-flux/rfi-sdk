@@ -14,8 +14,8 @@ pub(crate) struct UserState {
 }
 #[derive(Debug, Default, Clone)]
 pub(crate) struct UserData {
-    account_id: u32,
-    user_id: u32,
+    pub(crate) account_id: u32,
+    pub(crate) user_id: u32,
 }
 
 impl UserState {
