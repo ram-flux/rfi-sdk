@@ -14,7 +14,7 @@ use payload::resources::{
     device::{token::Token, Device},
     elf::Elf,
     favorite::Favorite,
-    message::{block::Block, status::Status, Message},
+    message::{block::Block, status::MessageStatus, Message},
     nav::Nav,
     settings::Settings,
 };
@@ -41,7 +41,7 @@ pub enum Resources {
     // Message
     Message(resource::Command<resource::GeneralAction<Message>>),
     Block(resource::Command<resource::GeneralAction<Block>>),
-    Status(resource::Command<resource::GeneralAction<Status>>),
+    Status(resource::Command<resource::GeneralAction<MessageStatus>>),
     // Apply
     Apply(resource::Command<resource::GeneralAction<Apply>>),
     ApplyReply(resource::Command<resource::GeneralAction<ApplyReply>>),

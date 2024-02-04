@@ -252,13 +252,13 @@ pub(crate) mod update {
         update_message_status,
         Status,
         UpdateMessageStatus,
-        payload::resources::message::status::Status
+        payload::resources::message::status::MessageStatus
     );
     update_resource!(
         edit_message,
         Status,
         UpdateMessageStatus,
-        payload::resources::message::status::Status
+        payload::resources::message::status::MessageStatus
     );
     update_resource!(update_nav, Nav, UpdateNav, payload::resources::nav::Nav);
     update_resource!(

@@ -50,32 +50,83 @@ pub async fn pull_msg(
     todo!()
 }
 
+/// 更新消息(done, untested)
 pub async fn update_msg(
+    from_id: u32,
+    user_id: u32,
+    chat_id: u32,
+    chat_type: u8,
     message_id: u32,
     content: String,
-) -> Result<payload::resources::message::Message, crate::Error> {
-    let message = payload::resources::message::Message {
-        datas: content,
-        ..Default::default()
-    };
+) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(message).into();
+    {
+        return Ok(());
+    }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let message =
+            payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type);
+        crate::service::message::UpdateMessageReq::new(message, message_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
+/// 删除消息(done, untested)
 pub async fn del_msg(message_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
+    // #[cfg(not(feature = "mock"))]
+    {
+        crate::service::message::DeleteMessageReq::new(message_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
+/// 置顶消息(done, untested)
 pub async fn pin_msg(message_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let message_status = payload::resources::message::status::MessageStatus::new(5);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
+}
+
+/// 取消置顶消息(done, untested)
+pub async fn unpin_msg(message_id: u32) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    #[cfg(not(feature = "mock"))]
+    {
+        let message_status = payload::resources::message::status::MessageStatus::new(2);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
+}
+
+/// 撤回消息(done, untested)
+pub async fn revoke_msg(message_id: u32) -> Result<(), crate::Error> {
+    #[cfg(feature = "mock")]
+    return Ok(()).into();
+    // #[cfg(not(feature = "mock"))]
+    {
+        let message_status = payload::resources::message::status::MessageStatus::new(4);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
+    }
 }
 
 // struct Test {}

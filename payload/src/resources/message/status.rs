@@ -16,13 +16,13 @@ use resource::Resource;
 //     primary_key = "id:u32",
 //     constraint = "im_account_pkey"
 // )]
-pub struct Status {
+pub struct MessageStatus {
     pub status: u8,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
-impl Status {
+impl MessageStatus {
     pub fn new(status: u8) -> Self {
         Self {
             status,
@@ -32,7 +32,7 @@ impl Status {
     }
 }
 
-impl resource::GenResourceID for Status {
+impl resource::GenResourceID for MessageStatus {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {
@@ -42,7 +42,7 @@ impl resource::GenResourceID for Status {
     }
 }
 
-impl Resource<sqlx::Sqlite> for Status {
+impl Resource<sqlx::Sqlite> for MessageStatus {
     type ResourceID = u32;
 
     async fn update<'c, E>(&self, id: &Self::ResourceID, executor: E) -> Result<(), resource::Error>
