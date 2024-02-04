@@ -17,7 +17,7 @@ use sqlx::Sqlite;
     constraint = "im_nav_id_idx"
 )]
 pub struct Nav {
-    pub r#type: String,
+    pub r#type: u8,
     pub type_id: u32,
     pub user_id: u32,
     pub sort: u32,
@@ -25,7 +25,7 @@ pub struct Nav {
     pub updated_at: Option<DateTime<Utc>>,
 }
 impl Nav {
-    pub fn new(r#type: String, type_id: u32, user_id: u32, sort: u32) -> Self {
+    pub fn new(r#type: u8, type_id: u32, user_id: u32, sort: u32) -> Self {
         Self {
             created_at: crate::utils::time::now(),
             r#type,
