@@ -1,3 +1,4 @@
+pub mod language;
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};
 use sqlx::Sqlite;

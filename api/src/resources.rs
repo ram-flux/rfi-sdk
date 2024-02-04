@@ -16,7 +16,7 @@ use payload::resources::{
     favorite::Favorite,
     message::{block::Block, status::MessageStatus, Message},
     nav::Nav,
-    settings::Settings,
+    settings::{language::Language, Settings},
 };
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
@@ -54,7 +54,9 @@ pub enum Resources {
     ChatStatus(resource::Command<resource::GeneralAction<ChatStatus>>),
     Favorite(resource::Command<resource::GeneralAction<Favorite>>),
     Nav(resource::Command<resource::GeneralAction<Nav>>),
+    // Settings
     Settings(resource::Command<resource::GeneralAction<Settings>>),
+    Language(resource::Command<resource::GeneralAction<Language>>),
 }
 
 impl resource::Action for Resources {
@@ -95,7 +97,9 @@ impl resource::Action for Resources {
             Resources::ChatStatus(r) => r.execute(executor).await,
             Resources::Favorite(r) => r.execute(executor).await,
             Resources::Nav(r) => r.execute(executor).await,
+            // Settings
             Resources::Settings(r) => r.execute(executor).await,
+            Resources::Language(r) => r.execute(executor).await,
         }
     }
 }

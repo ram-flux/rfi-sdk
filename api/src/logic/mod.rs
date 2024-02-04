@@ -6,6 +6,7 @@ pub mod contact;
 pub mod elf;
 pub mod favorite;
 pub mod nav;
+pub mod settings;
 // #[cfg(not(feature = "mock"))]
 pub mod message;
 
@@ -263,10 +264,10 @@ pub(crate) mod update {
     );
     update_resource!(update_nav, Nav, UpdateNav, payload::resources::nav::Nav);
     update_resource!(
-        update_language,
-        Settings,
-        UpdateSetting,
-        payload::resources::settings::Settings
+        switch_language,
+        Language,
+        UpdateLanguage,
+        payload::resources::settings::language::Language
     );
 }
 

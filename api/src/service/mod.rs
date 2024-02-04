@@ -5,6 +5,7 @@ pub mod community;
 pub mod contact;
 pub mod device;
 pub mod elf;
-pub mod nav;
 pub mod favorite;
 pub mod message;
+pub mod nav;
+pub mod settings;

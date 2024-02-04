@@ -1,37 +1,54 @@
-pub async fn add_settings(
-    user_id: u32,
-    r#type: u8,
-    type_id: u32,
-    sort: u8,
-) -> Result<(), crate::Error> {
-    let nav = payload::resources::settings::Settings {
-        user_id,
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
+/// 新设置(done, untested)
+pub async fn new_settings(user_id: u32, language: String) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(211);
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        let settings = payload::resources::settings::Settings::new(user.user_id, language);
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let settings_id = worker.gen_id()?;
+        crate::service::settings::AddSettings::new(settings, settings_id)
+            .exec()
+            .await?;
+        Ok(settings_id)
+    }
 }
 
-pub async fn settings_detail(
-    user_id: u32,
-) -> Result<payload::resources::settings::Settings, crate::Error> {
-    let elf = payload::resources::settings::Settings {
-        user_id,
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
+/// 设置详情(done, untested)
+pub async fn settings_detail() -> Result<crate::logic::settings::SettingsDetailRes, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(elf).into();
+    {
+        let settings = crate::logic::settings::SettingsDetailRes {
+            updated_at: Some(payload::utils::time::now()),
+            ..Default::default()
+        };
+        return Ok(settings).into();
+    }
     #[cfg(not(feature = "mock"))]
-    todo!()
+    {
+        use crate::operator::sqlite::query::Query;
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::settings::SettingsDetailReq::new(user.user_id)
+                .exec()
+                .await?,
+        )
+    }
 }
 
-pub async fn update_language(user_id: u32, language: String) -> Result<(), crate::Error> {
+/// 切换语言(done, untested)
+pub async fn switch_language(language: String) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    todo!()
+    // #[cfg(not(feature = "mock"))]
+    {
+        let language = payload::resources::settings::language::Language::new(language);
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        crate::service::settings::language::SwitchLanguageReq::new(language, user.user_id)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
 }
