@@ -1,5 +1,5 @@
 [workspace]
-members = ["api", "payload", "wallet"]
+members = ["im-sdk-api", "payload", "wallet"]
 
 [profile.dev]
 codegen-units = 4
