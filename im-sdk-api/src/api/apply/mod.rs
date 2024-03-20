@@ -3,7 +3,7 @@ pub mod reply;
 pub async fn apply_list(
     page_size: u16,
     offset: u16,
-) -> Result<Vec<crate::logic::apply::ApplyDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::apply::ApplyDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -24,18 +24,16 @@ pub async fn apply_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        Ok(
-            crate::service::apply::ApplyListReq::new(1, 2, page_size, offset)
-                .exec()
-                .await?,
-        )
+        crate::handler::apply::apply_list(page_size, offset)
+            .await
+            .into()
     }
 }
 
 /// 申请详情(done, untested)
 pub async fn apply_detail(
     apply_id: u32,
-) -> Result<crate::logic::apply::ApplyDetailRes, crate::Error> {
+) -> crate::response::Response<crate::logic::apply::ApplyDetailRes> {
     #[cfg(feature = "mock")]
     {
         let apply = crate::logic::apply::ApplyDetailRes {
@@ -49,9 +47,7 @@ pub async fn apply_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        Ok(crate::service::apply::ApplyDetailReq::new(apply_id)
-            .exec()
-            .await?)
+        crate::handler::apply::apply_detail(apply_id).await.into()
     }
 }
 
@@ -60,14 +56,14 @@ pub async fn create_apply(
     type_id: u32,
     user_id: u32,
     content: String,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     todo!()
 }
 
-pub async fn del_apply(apply_id: u32) -> Result<(), crate::Error> {
+pub async fn del_apply(apply_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
