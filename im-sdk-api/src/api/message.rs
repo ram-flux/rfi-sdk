@@ -7,7 +7,7 @@ pub async fn push_msg(
     chat_id: u32,
     chat_type: u8,
     _endpoint: String,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
 
@@ -23,7 +23,7 @@ pub async fn push_msg(
 
 pub async fn pull_msg(
     _message_id: u32,
-) -> Result<Vec<payload::resources::message::Message>, crate::Error> {
+) -> crate::response::Response<Vec<payload::resources::message::Message>> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![
@@ -54,7 +54,7 @@ pub async fn update_msg(
     mode: u8,
     message_id: u32,
     content: String,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     {
         return Ok(());
@@ -70,7 +70,7 @@ pub async fn update_msg(
 }
 
 /// 删除消息(done, untested)
-pub async fn del_msg(message_id: u32) -> Result<(), crate::Error> {
+pub async fn del_msg(message_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
@@ -80,7 +80,7 @@ pub async fn del_msg(message_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 置顶消息(done, untested)
-pub async fn pin_msg(message_id: u32) -> Result<(), crate::Error> {
+pub async fn pin_msg(message_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -90,7 +90,7 @@ pub async fn pin_msg(message_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 取消置顶消息(done, untested)
-pub async fn unpin_msg(message_id: u32) -> Result<(), crate::Error> {
+pub async fn unpin_msg(message_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -100,7 +100,7 @@ pub async fn unpin_msg(message_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 撤回消息(done, untested)
-pub async fn revoke_msg(message_id: u32) -> Result<(), crate::Error> {
+pub async fn revoke_msg(message_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
@@ -116,9 +116,9 @@ pub async fn revoke_msg(message_id: u32) -> Result<(), crate::Error> {
 //         &mut self,
 //         message_op: MF,
 //         resp_op: AF,
-//     ) -> Result<(), crate::Error>
+//     ) -> crate::response::Response<()>
 //     where
-//         U: std::future::Future<Output = Result<(), crate::Error>>,
+//         U: std::future::Future<Output = crate::response::Response<()>>,
 //         MF: Fn(i8, i8) -> U,
 //         AF: Fn(u64 /* trace */, u64) -> U,
 //     {
@@ -129,11 +129,11 @@ pub async fn revoke_msg(message_id: u32) -> Result<(), crate::Error> {
 // }
 
 // async fn a() {
-//     let op = |a: i8, b: i8| -> Pin<Box<dyn Future<Output = Result<(), crate::Error>>>> {
-//         Box::pin(async move { Ok::<(), crate::Error>(()) })
+//     let op = |a: i8, b: i8| -> Pin<Box<dyn Future<Output = crate::response::Response<()>>>> {
+//         Box::pin(async move { Ok::<()>(()) })
 //     };
-//     let aop = |a: u64, b: u64| -> Pin<Box<dyn Future<Output = Result<(), crate::Error>>>> {
-//         Box::pin(async move { Ok::<(), crate::Error>(()) })
+//     let aop = |a: u64, b: u64| -> Pin<Box<dyn Future<Output = crate::response::Response<()>>>> {
+//         Box::pin(async move { Ok::<()>(()) })
 //     };
 
 //     let mut t = Test {};

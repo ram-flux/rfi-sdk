@@ -3,7 +3,7 @@ pub async fn chat_list(
     user_id: u32,
     page_size: u16,
     offset: u16,
-) -> Result<Vec<crate::logic::chat::ChatDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::chat::ChatDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -33,7 +33,7 @@ pub async fn chat_list(
 pub async fn search_chat(
     _chat_id: u32,
     _keyword: String,
-) -> Result<Vec<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::community::admin::CommunityAdminDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let list = vec![
@@ -57,7 +57,7 @@ pub async fn search_chat(
 }
 
 /// 置顶会话(done, untested)
-pub async fn pin_chat(chat_id: u32) -> Result<(), crate::Error> {
+pub async fn pin_chat(chat_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -67,7 +67,7 @@ pub async fn pin_chat(chat_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 显示会话(done, untested)
-pub async fn show_chat(chat_id: u32) -> Result<(), crate::Error> {
+pub async fn show_chat(chat_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -77,7 +77,7 @@ pub async fn show_chat(chat_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 隐藏会话(done, untested)
-pub async fn hide_chat(chat_id: u32) -> Result<(), crate::Error> {
+pub async fn hide_chat(chat_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

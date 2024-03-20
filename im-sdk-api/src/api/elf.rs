@@ -1,5 +1,5 @@
 /// 创建精灵(done, untested)
-pub async fn create_elf(r#type: u8, name: String, avatar: String) -> Result<u32, crate::Error> {
+pub async fn create_elf(r#type: u8, name: String, avatar: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
     return Ok(434);
     #[cfg(not(feature = "mock"))]
@@ -17,7 +17,7 @@ pub async fn update_elf(
     name: String,
     avatar: String,
     status: u8,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
@@ -29,7 +29,7 @@ pub async fn update_elf(
 }
 
 /// 精灵详情(done, untested)
-pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, crate::Error> {
+pub async fn elf_detail(elf_id: u32) -> crate::response::Response<crate::logic::elf::ElfDetailRes> {
     #[cfg(feature = "mock")]
     {
         let elf = crate::logic::elf::ElfDetailRes {
@@ -45,7 +45,7 @@ pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, 
 }
 
 /// 删除精灵(done, untested)
-pub async fn del_elf(elf_id: u32) -> Result<(), crate::Error> {
+pub async fn del_elf(elf_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

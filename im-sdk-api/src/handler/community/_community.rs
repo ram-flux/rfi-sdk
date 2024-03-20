@@ -177,7 +177,7 @@ pub async fn community_detail(
 
 #[cfg(test)]
 mod tests {
-    use crate::{api::account::account_list, operator::sqlite::UserState};
+    use crate::{handler::account::account_list, operator::sqlite::UserState};
 
     use super::*;
 

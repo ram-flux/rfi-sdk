@@ -8,7 +8,7 @@ pub async fn update_info(
     salt: String,
     avatar: String,
     bio: String,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -22,7 +22,7 @@ pub async fn update_info(
 }
 
 /// 更新头像(tested)
-pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate::Error> {
+pub async fn update_avatar(account_id: u32, avatar: String) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
@@ -36,7 +36,7 @@ pub async fn update_avatar(account_id: u32, avatar: String) -> Result<(), crate:
 /// 账号详情(tested)
 pub async fn account_detail(
     user_id: u32,
-) -> Result<crate::logic::account::AccountDetailRes, crate::Error> {
+) -> crate::response::Response<crate::logic::account::AccountDetailRes> {
     #[cfg(feature = "mock")]
     {
         let comm = crate::logic::account::AccountDetailRes {
@@ -58,7 +58,7 @@ pub async fn account_detail(
 pub async fn account_list(
     page_size: u16,
     offset: u16,
-) -> Result<Vec<crate::logic::account::AccountDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::account::AccountDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let comm = vec![crate::logic::account::AccountDetailRes {
@@ -77,7 +77,7 @@ pub async fn account_list(
 }
 
 /// 添加社区(done, untested)
-pub async fn add_community(community_id: u32) -> Result<(), crate::Error> {
+pub async fn add_community(community_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -89,7 +89,7 @@ pub async fn add_community(community_id: u32) -> Result<(), crate::Error> {
 }
 
 /// 创建账户机器人(done, untested)
-pub async fn create_account_elf(name: String, avatar: String) -> Result<u32, crate::Error> {
+pub async fn create_account_elf(name: String, avatar: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
     return Ok(111);
     // #[cfg(not(feature = "mock"))]
@@ -101,7 +101,7 @@ pub async fn create_account_elf(name: String, avatar: String) -> Result<u32, cra
 }
 
 /// 退出社区(done, untested)
-pub async fn quit_community(community_id: u32) -> Result<(), crate::Error> {
+pub async fn quit_community(community_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

@@ -2,7 +2,7 @@
 pub async fn nav_list(
     page_size: u16,
     offset: u16,
-) -> Result<Vec<crate::logic::nav::NavDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::nav::NavDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![
@@ -26,7 +26,7 @@ pub async fn nav_list(
 }
 
 /// 添加菜单(done, untested)
-pub async fn add_nav(r#type: u8, type_id: u32, sort: u32) -> Result<u32, crate::Error> {
+pub async fn add_nav(r#type: u8, type_id: u32, sort: u32) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
     return Ok(111).into();
     #[cfg(not(feature = "mock"))]
@@ -44,7 +44,7 @@ pub async fn update_nav(
     user_id: u32,
     sort: u32,
     nav_id: u32,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -56,7 +56,7 @@ pub async fn update_nav(
 }
 
 /// 删除菜单(done, untested)
-pub async fn del_nav(nav_id: u32) -> Result<(), crate::Error> {
+pub async fn del_nav(nav_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

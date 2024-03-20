@@ -8,7 +8,7 @@ pub async fn init_device(
     platform: String,
     salt: String,
     name: String,
-) -> Result<u32, crate::Error> {
+) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
     return Ok(454456).into();
     #[cfg(not(feature = "mock"))]
@@ -43,7 +43,7 @@ pub fn crypt_secret_key(secret_key_hex: String) -> Result<String, crate::Error> 
 }
 
 /// 授权
-pub async fn warrant() -> Result<String, crate::Error> {
+pub async fn warrant() -> crate::response::Response<String> {
     #[cfg(feature = "mock")]
     return Ok("server_pubkey".to_string()).into();
     #[cfg(not(feature = "mock"))]
@@ -51,7 +51,7 @@ pub async fn warrant() -> Result<String, crate::Error> {
 }
 
 /// 更新token(tested)
-pub async fn update_token(device_id: u32) -> Result<String, crate::Error> {
+pub async fn update_token(device_id: u32) -> crate::response::Response<String> {
     #[cfg(feature = "mock")]
     return Ok("token".to_string()).into();
     #[cfg(not(feature = "mock"))]
@@ -61,7 +61,7 @@ pub async fn update_token(device_id: u32) -> Result<String, crate::Error> {
 }
 
 /// 删除设备(tested)
-pub async fn del_device(device_id: u32) -> Result<(), crate::Error> {
+pub async fn del_device(device_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

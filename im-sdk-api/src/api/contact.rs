@@ -3,7 +3,7 @@ pub async fn add_contact(
     friend_id: u32,
     user_id: u32,
     _content: String,
-) -> Result<(), crate::Error> {
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
@@ -18,7 +18,7 @@ pub async fn add_contact(
 pub async fn contact_list(
     page_size: u16,
     offset: u16,
-) -> Result<Vec<crate::logic::contact::ContactDetailRes>, crate::Error> {
+) -> crate::response::Response<Vec<crate::logic::contact::ContactDetailRes>> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![
@@ -44,7 +44,7 @@ pub async fn contact_list(
 }
 
 /// 更新联系人备注(done, untested)
-pub async fn update_contact_remark(contact_id: u32, remark: String) -> Result<(), crate::Error> {
+pub async fn update_contact_remark(contact_id: u32, remark: String) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -56,7 +56,7 @@ pub async fn update_contact_remark(contact_id: u32, remark: String) -> Result<()
 }
 
 /// 删除联系人(done, untested)
-pub async fn del_contact(contact_id: u32) -> Result<(), crate::Error> {
+pub async fn del_contact(contact_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
@@ -69,7 +69,7 @@ pub async fn del_contact(contact_id: u32) -> Result<(), crate::Error> {
 
 pub async fn search_contact(
     _keyword: String,
-) -> Result<Vec<payload::resources::contact::Contact>, crate::Error> {
+) -> crate::response::Response<Vec<payload::resources::contact::Contact>> {
     #[cfg(feature = "mock")]
     {
         let msgs = vec![

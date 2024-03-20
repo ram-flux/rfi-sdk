@@ -1,5 +1,5 @@
 /// 新设置(done, untested)
-pub async fn new_settings(language: String) -> Result<u32, crate::Error> {
+pub async fn new_settings(language: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
     return Ok(211);
     #[cfg(not(feature = "mock"))]
@@ -11,7 +11,7 @@ pub async fn new_settings(language: String) -> Result<u32, crate::Error> {
 }
 
 /// 设置详情(done, untested)
-pub async fn settings_detail() -> Result<crate::logic::settings::SettingsDetailRes, crate::Error> {
+pub async fn settings_detail() -> crate::response::Response<crate::logic::settings::SettingsDetailRes> {
     #[cfg(feature = "mock")]
     {
         let settings = crate::logic::settings::SettingsDetailRes {
@@ -27,7 +27,7 @@ pub async fn settings_detail() -> Result<crate::logic::settings::SettingsDetailR
 }
 
 /// 切换语言(done, untested)
-pub async fn switch_language(language: String) -> Result<(), crate::Error> {
+pub async fn switch_language(language: String) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
