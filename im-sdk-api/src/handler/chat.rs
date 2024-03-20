@@ -1,6 +1,5 @@
 /// 会话列表(done, untested)
 pub async fn chat_list(
-    user_id: u32,
     page_size: u16,
     offset: u16,
 ) -> Result<Vec<crate::logic::chat::ChatDetailRes>, crate::Error> {
@@ -24,8 +23,9 @@ pub async fn chat_list(
     }
     #[cfg(not(feature = "mock"))]
     {
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
-            crate::service::chat::ChatListReq::new(user_id, page_size, offset)
+            crate::service::chat::ChatListReq::new(user.user_id, page_size, offset)
                 .exec()
                 .await?,
         )
