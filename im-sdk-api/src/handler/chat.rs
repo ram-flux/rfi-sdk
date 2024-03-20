@@ -24,9 +24,11 @@ pub async fn chat_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::chat::chat_list(user_id, page_size, offset)
-            .await
-            .into()
+        Ok(
+            crate::service::chat::ChatListReq::new(user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
     }
 }
 
@@ -62,7 +64,11 @@ pub async fn pin_chat(chat_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::chat::pin_chat(chat_id).await.into()
+        let chat_status = payload::resources::chat::status::ChatStatus::new(3);
+        crate::service::chat::UpdateChatStatusReq::new(chat_status, chat_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -72,7 +78,11 @@ pub async fn show_chat(chat_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::chat::show_chat(chat_id).await.into()
+        let chat_status = payload::resources::chat::status::ChatStatus::new(2);
+        crate::service::chat::UpdateChatStatusReq::new(chat_status, chat_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -82,6 +92,10 @@ pub async fn hide_chat(chat_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::chat::hide_chat(chat_id).await.into()
+        let chat_status = payload::resources::chat::status::ChatStatus::new(1);
+        crate::service::chat::UpdateChatStatusReq::new(chat_status, chat_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }

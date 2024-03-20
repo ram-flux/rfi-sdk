@@ -4,6 +4,7 @@
 #![allow(clippy::too_many_arguments)]
 pub mod api;
 pub mod error;
+pub mod handler;
 pub mod logic;
 pub mod operator;
 pub mod resources;

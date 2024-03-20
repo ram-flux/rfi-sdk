@@ -4,21 +4,9 @@ pub async fn create_elf(r#type: u8, name: String, avatar: String) -> Result<u32,
     return Ok(434);
     #[cfg(not(feature = "mock"))]
     {
-        let elf = payload::resources::elf::Elf {
-            r#type,
-            name,
-            avatar,
-            status: 1,
-            created_at: payload::utils::time::now(),
-            updated_at: Some(payload::utils::time::now()),
-            ..Default::default()
-        };
-        let mut worker = crate::operator::WrapWorker::worker()?;
-        let elf_id = worker.gen_id()?;
-        crate::service::elf::CreateElfReq::new(elf, elf_id)
-            .exec()
-            .await?;
-        Ok(elf_id)
+        crate::handler::elf::create_elf(r#type, name, avatar)
+            .await
+            .into()
     }
 }
 
@@ -34,19 +22,9 @@ pub async fn update_elf(
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
     {
-        let elf = payload::resources::elf::Elf {
-            r#type,
-            name,
-            avatar,
-            status,
-            created_at: payload::utils::time::now(),
-            updated_at: Some(payload::utils::time::now()),
-            ..Default::default()
-        };
-        crate::service::elf::UpdateElfReq::new(elf, elf_id)
-            .exec()
-            .await?;
-        Ok(())
+        crate::handler::elf::update_elf(elf_id, r#type, name, avatar, status)
+            .await
+            .into()
     }
 }
 
@@ -62,9 +40,7 @@ pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, 
     }
     #[cfg(not(feature = "mock"))]
     {
-        Ok(crate::service::elf::ElfDetailReq::new(elf_id)
-            .exec()
-            .await?)
+        crate::handler::elf::elf_detail(elf_id).await.into()
     }
 }
 
@@ -74,9 +50,6 @@ pub async fn del_elf(elf_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::service::elf::DeleteElfReq::new(elf_id)
-            .exec()
-            .await?;
-        Ok(())
+        crate::handler::elf::del_elf(elf_id).await.into()
     }
 }

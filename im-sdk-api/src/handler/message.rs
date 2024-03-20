@@ -13,11 +13,16 @@ pub async fn push_msg(
 
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::push_msg(
-            content, mode, from_id, user_id, chat_id, chat_type, _endpoint,
-        )
-        .await
-        .into()
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let message_id = worker.gen_id()?;
+        let message =
+            payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type)
+                .set_data(&content, mode);
+        let recv_list = Vec::new();
+        crate::service::message::SendMessageReq::new(message, message_id, recv_list)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -61,11 +66,13 @@ pub async fn update_msg(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::update_msg(
-            from_id, user_id, chat_id, chat_type, mode, message_id, content,
-        )
-        .await
-        .into()
+        let message =
+            payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type)
+                .set_data(&content, mode);
+        crate::service::message::UpdateMessageReq::new(message, message_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -75,7 +82,10 @@ pub async fn del_msg(message_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::del_msg(message_id).await.into()
+        crate::service::message::DeleteMessageReq::new(message_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -85,7 +95,11 @@ pub async fn pin_msg(message_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::pin_msg(message_id).await.into()
+        let message_status = payload::resources::message::status::MessageStatus::new(5);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -95,7 +109,11 @@ pub async fn unpin_msg(message_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::unpin_msg(message_id).await.into()
+        let message_status = payload::resources::message::status::MessageStatus::new(2);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -105,7 +123,11 @@ pub async fn revoke_msg(message_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
     {
-        crate::handler::message::revoke_msg(message_id).await.into()
+        let message_status = payload::resources::message::status::MessageStatus::new(4);
+        crate::service::message::status::UpdateMessageStatusReq::new(message_status, message_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 

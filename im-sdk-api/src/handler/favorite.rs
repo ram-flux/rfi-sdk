@@ -19,9 +19,12 @@ pub async fn favorite_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::favorite::favorite_list(page_size, offset)
-            .await
-            .into()
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::favorite::FavoriteListReq::new(user.user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
     }
 }
 
@@ -31,7 +34,15 @@ pub async fn add_favorite(content: String) -> Result<u32, crate::Error> {
     return Ok(123);
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::favorite::add_favorite(content).await.into()
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        let favorite = payload::resources::favorite::Favorite::new(user.user_id, content);
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let favorite_id = worker.gen_id()?;
+        crate::service::favorite::AddFavorite::new(favorite, favorite_id)
+            .exec()
+            .await?;
+
+        Ok(favorite_id)
     }
 }
 
@@ -41,9 +52,10 @@ pub async fn del_favorite(favorite_id: u32) -> Result<(), crate::Error> {
     return Ok(());
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::favorite::del_favorite(favorite_id)
-            .await
-            .into()
+        crate::service::favorite::DeleteFavoriteReq::new(favorite_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -61,8 +73,10 @@ pub async fn favorite_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::favorite::favorite_detail(favorite_id)
-            .await
-            .into()
+        Ok(
+            crate::service::favorite::FavoriteDetailReq::new(favorite_id)
+                .exec()
+                .await?,
+        )
     }
 }

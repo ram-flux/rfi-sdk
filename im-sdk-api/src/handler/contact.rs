@@ -8,9 +8,13 @@ pub async fn add_contact(
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
     {
-        crate::handler::contact::add_contact(friend_id, user_id, _content)
-            .await
-            .into()
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let trace_id = worker.gen_id()?;
+        let contact = payload::resources::contact::Contact::new(user_id, friend_id);
+        crate::service::contact::AddContactReq::new(contact, trace_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -37,9 +41,12 @@ pub async fn contact_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::contact::contact_list(page_size, offset)
-            .await
-            .into()
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::contact::ContactListReq::new(user.user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
     }
 }
 
@@ -49,9 +56,11 @@ pub async fn update_contact_remark(contact_id: u32, remark: String) -> Result<()
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::contact::update_contact_remark(contact_id, remark)
-            .await
-            .into()
+        let contact_remark = payload::resources::contact::remark::ContactRemark::new(remark);
+        crate::service::contact::UpdateContactRemarkReq::new(contact_remark, contact_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -61,9 +70,10 @@ pub async fn del_contact(contact_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::contact::del_contact(contact_id)
-            .await
-            .into()
+        crate::service::contact::DeleteContactReq::new(contact_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 

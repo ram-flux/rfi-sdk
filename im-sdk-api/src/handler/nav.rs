@@ -19,9 +19,12 @@ pub async fn nav_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::nav::nav_list(page_size, offset)
-            .await
-            .into()
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        Ok(
+            crate::service::nav::NavListReq::new(user.user_id, page_size, offset)
+                .exec()
+                .await?,
+        )
     }
 }
 
@@ -31,9 +34,15 @@ pub async fn add_nav(r#type: u8, type_id: u32, sort: u32) -> Result<u32, crate::
     return Ok(111).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::nav::add_nav(r#type, type_id, sort)
-            .await
-            .into()
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
+        let nav = payload::resources::nav::Nav::new(r#type, type_id, user.user_id, sort);
+        let mut worker = crate::operator::WrapWorker::worker()?;
+        let favorite_id = worker.gen_id()?;
+        crate::service::nav::AddNav::new(nav, favorite_id)
+            .exec()
+            .await?;
+
+        Ok(favorite_id)
     }
 }
 
@@ -49,9 +58,11 @@ pub async fn update_nav(
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::nav::update_nav(r#type, type_id, user_id, sort, nav_id)
-            .await
-            .into()
+        let nav = payload::resources::nav::Nav::new(r#type, type_id, user_id, sort);
+        crate::service::nav::UpdateNav::new(nav, nav_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
 
@@ -61,6 +72,9 @@ pub async fn del_nav(nav_id: u32) -> Result<(), crate::Error> {
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::nav::del_nav(nav_id).await.into()
+        crate::service::nav::DeleteNavReq::new(nav_id)
+            .exec()
+            .await?;
+        Ok(())
     }
 }
