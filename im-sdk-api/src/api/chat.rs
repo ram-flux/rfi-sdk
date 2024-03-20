@@ -1,6 +1,5 @@
 /// 会话列表(done, untested)
 pub async fn chat_list(
-    user_id: u32,
     page_size: u16,
     offset: u16,
 ) -> crate::response::Response<Vec<crate::logic::chat::ChatDetailRes>> {
@@ -24,7 +23,7 @@ pub async fn chat_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        crate::handler::chat::chat_list(user_id, page_size, offset)
+        crate::handler::chat::chat_list(page_size, offset)
             .await
             .into()
     }

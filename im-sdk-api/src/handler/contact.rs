@@ -2,7 +2,6 @@
 pub async fn add_contact(
     friend_id: u32,
     user_id: u32,
-    _content: String,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();

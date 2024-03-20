@@ -1,14 +1,10 @@
 /// 添加联系人(done, untested)
-pub async fn add_contact(
-    friend_id: u32,
-    user_id: u32,
-    _content: String,
-) -> crate::response::Response<()> {
+pub async fn add_contact(friend_id: u32, user_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]
     {
-        crate::handler::contact::add_contact(friend_id, user_id, _content)
+        crate::handler::contact::add_contact(friend_id, user_id)
             .await
             .into()
     }
@@ -44,7 +40,10 @@ pub async fn contact_list(
 }
 
 /// 更新联系人备注(done, untested)
-pub async fn update_contact_remark(contact_id: u32, remark: String) -> crate::response::Response<()> {
+pub async fn update_contact_remark(
+    contact_id: u32,
+    remark: String,
+) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]
