@@ -5,7 +5,7 @@
 //we is coin type:369777 is RF to ram flux
 //https://github.com/satoshilabs/slips/blob/master/slip-0044.md
 use bip39::{Language, Mnemonic, MnemonicType, Seed};
-use hex;
+// use hex;
 use secp256k1::{PublicKey, Secp256k1, SecretKey};
 use tiny_hderive::bip32::ExtendedPrivKey;
 
@@ -63,7 +63,7 @@ impl<'a> Hdrf<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bs58;
+    // use bs58;
     #[test]
     fn test_hdrf() {
         let hdrf = Hdrf::new("123456");

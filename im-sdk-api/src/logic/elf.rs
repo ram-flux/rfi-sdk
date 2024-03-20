@@ -16,16 +16,18 @@ pub struct ElfDetailRes {
 impl ElfDetailRes {
     pub(crate) async fn detail(id: u32) -> Result<ElfDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        ElfDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, type, token, name, avatar, ext, status,
+        ElfDetailRes::query_one(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, type, token, name, avatar, ext, status,
                     created_at, updated_at 
                 FROM elf 
                 WHERE id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, ElfDetailRes>(sql)
-                .bind(id)
-                .fetch_one(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, ElfDetailRes>(sql)
+                    .bind(id)
+                    .fetch_one(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }
@@ -37,7 +39,7 @@ impl ElfDetailRes {
     //     offset: u16,
     // ) -> Result<Vec<ElfDetailRes>, crate::SystemError> {
     //     use crate::operator::sqlite::query::Query as _;
-    //     ElfDetailRes::query_all(async move |user_pool, pub_pool| {
+    //     ElfDetailRes::query_all(async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
     //         let sql = "SELECT id, type, token, name, avatar, ext, status,
     //             created_at, updated_at
     //         FROM elf

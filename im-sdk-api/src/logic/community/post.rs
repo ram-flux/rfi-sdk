@@ -15,16 +15,18 @@ pub struct PostDetailRes {
 impl PostDetailRes {
     pub(crate) async fn detail(post_id: u32) -> Result<PostDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        PostDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, community_id, user_id, name, content, sort_count,
+        PostDetailRes::query_one(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, community_id, user_id, name, content, sort_count,
                     created_at, updated_at
                 FROM community_post
                 WHERE id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, PostDetailRes>(sql)
-                .bind(post_id)
-                .fetch_one(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, PostDetailRes>(sql)
+                    .bind(post_id)
+                    .fetch_one(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }
@@ -35,20 +37,22 @@ impl PostDetailRes {
         offset: u16,
     ) -> Result<Vec<PostDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        PostDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, community_id, user_id, name, content, sort_count,
+        PostDetailRes::query_all(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, community_id, user_id, name, content, sort_count,
                 created_at, updated_at
             FROM community_post
             WHERE community_id = $1
             LIMIT $2 OFFSET $3;";
 
-            sqlx::query_as::<sqlx::Sqlite, PostDetailRes>(sql)
-                .bind(community_id)
-                .bind(page_size)
-                .bind(offset)
-                .fetch_all(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, PostDetailRes>(sql)
+                    .bind(community_id)
+                    .bind(page_size)
+                    .bind(offset)
+                    .fetch_all(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }

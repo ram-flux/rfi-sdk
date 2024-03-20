@@ -35,7 +35,7 @@ impl DbConnection {
     pub async fn init_user_database(url: String) -> Result<(), crate::DatabaseError> {
         let mut conn = DbConnection::default();
         conn.set_migrator(Migrator::Pri);
-        let migrator = conn.migrator();
+        // let migrator = conn.migrator();
         let db = conn.set_uri(Some(url)).init_database().await?;
 
         let mut pool = USER_SQLITE_POOL.write().await;
@@ -47,7 +47,7 @@ impl DbConnection {
     pub async fn init_pub_database(url: String) -> Result<(), crate::DatabaseError> {
         let mut conn = DbConnection::default();
         conn.set_migrator(Migrator::Pub);
-        let migrator = conn.migrator();
+        // let migrator = conn.migrator();
         let db = conn.set_uri(Some(url)).init_database().await?;
 
         let _ = PUBLIC_SQLITE_POOL.set(std::sync::Arc::new(db));

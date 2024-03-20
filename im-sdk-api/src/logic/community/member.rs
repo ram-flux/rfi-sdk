@@ -19,17 +19,19 @@ impl CommunityMemberDetailRes {
         member_id: u32,
     ) -> Result<CommunityMemberDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityMemberDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, type, user_id, community_id, name, avatar, sort,
+        CommunityMemberDetailRes::query_one(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, type, user_id, community_id, name, avatar, sort,
                     created_at, updated_at
                 FROM community_member
                 WHERE user_id =$1 AND community_id =$2;";
-            sqlx::query_as::<sqlx::Sqlite, CommunityMemberDetailRes>(sql)
-                .bind(member_id)
-                .bind(community_id)
-                .fetch_one(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, CommunityMemberDetailRes>(sql)
+                    .bind(member_id)
+                    .bind(community_id)
+                    .fetch_one(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }
@@ -40,20 +42,22 @@ impl CommunityMemberDetailRes {
         offset: u16,
     ) -> Result<Vec<CommunityMemberDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityMemberDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, type, user_id, community_id, name, avatar, sort,
+        CommunityMemberDetailRes::query_all(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, type, user_id, community_id, name, avatar, sort,
                 created_at, updated_at
             FROM community_member
             WHERE community_id = $1
             LIMIT $2 OFFSET $3;";
 
-            sqlx::query_as::<sqlx::Sqlite, CommunityMemberDetailRes>(sql)
-                .bind(community_id)
-                .bind(page_size)
-                .bind(offset)
-                .fetch_all(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, CommunityMemberDetailRes>(sql)
+                    .bind(community_id)
+                    .bind(page_size)
+                    .bind(offset)
+                    .fetch_all(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }

@@ -1,7 +1,6 @@
 pub mod reply;
 /// 申请列表(done, untested)
 pub async fn apply_list(
-    user_id: u32,
     page_size: u16,
     offset: u16,
 ) -> Result<Vec<crate::logic::apply::ApplyDetailRes>, crate::Error> {
@@ -25,7 +24,6 @@ pub async fn apply_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::apply::ApplyListReq::new(1, 2, page_size, offset)
                 .exec()
@@ -51,7 +49,6 @@ pub async fn apply_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(crate::service::apply::ApplyDetailReq::new(apply_id)
             .exec()
             .await?)

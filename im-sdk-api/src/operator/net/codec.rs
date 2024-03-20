@@ -1,13 +1,13 @@
 #[derive(Clone)]
 pub(crate) struct CodecChannel(
-    #[allow(dead_code)] tokio::sync::mpsc::UnboundedSender<im_net::Protocol>,
+    #[allow(dead_code)] tokio::sync::mpsc::UnboundedSender<im_net::Packet>,
 );
 
 impl CodecChannel {
     // wrap channel
     pub(crate) async fn init(
         #[cfg(not(feature = "mock"))] endpoint: std::net::SocketAddr,
-        #[cfg(not(feature = "mock"))] hanshake: im_net::Protocol,
+        #[cfg(not(feature = "mock"))] hanshake: im_net::Packet,
     ) -> Result<Self, crate::SystemError> {
         let trace_id = crate::operator::WrapWorker::worker()?.gen_trace_id()? as u64;
         let res = CodecChannel::codec_init(
@@ -24,7 +24,7 @@ impl CodecChannel {
     }
 
     // #[cfg(not(feature = "mock"))]
-    pub(crate) fn send(&self, protocol: im_net::Protocol) -> Result<(), crate::ChannelError> {
+    pub(crate) fn send(&self, protocol: im_net::Packet) -> Result<(), crate::ChannelError> {
         self.0
             .send(protocol)
             .map_err(|e| crate::ChannelError::SendFailed)
@@ -34,8 +34,8 @@ impl CodecChannel {
     pub(crate) async fn codec_init(
         #[cfg(not(feature = "mock"))] trace_id: u64,
         #[cfg(not(feature = "mock"))] endpoint: std::net::SocketAddr,
-        #[cfg(not(feature = "mock"))] hanshake: im_net::Protocol,
-    ) -> Result<tokio::sync::mpsc::UnboundedSender<im_net::Protocol>, crate::NetError> {
+        #[cfg(not(feature = "mock"))] hanshake: im_net::Packet,
+    ) -> Result<tokio::sync::mpsc::UnboundedSender<im_net::Packet>, crate::NetError> {
         use std::{future::Future, pin::Pin};
         // 生成handler
         let mut handler = {
@@ -52,7 +52,7 @@ impl CodecChannel {
                 #[cfg(not(feature = "mock"))]
                 endpoint,
                 #[cfg(not(feature = "mock"))]
-                im_net::Protocol::heartbeat(trace_id),
+                im_net::Packet::heartbeat(trace_id),
                 10,
                 5,
                 3,

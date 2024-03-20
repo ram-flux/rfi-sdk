@@ -75,7 +75,7 @@ impl Pin {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use hex;
+    // use hex;
 
     #[test]
     fn is_check() -> Result<(), crate::Error> {

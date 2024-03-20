@@ -24,7 +24,6 @@ pub async fn member_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::member::CommunityMemberlistReq::new(
                 community_id,
@@ -37,7 +36,7 @@ pub async fn member_list(
     }
 }
 
-/// 添加成员类型(tested)
+/// 添加成员(tested)
 pub async fn add_member(
     r#type: u8,
     user_id: u32,
@@ -101,7 +100,7 @@ pub async fn add_member(
 //     }
 // }
 
-/// 更新成员(tested)
+/// 更新成员类型(tested)
 pub async fn update_member_type(
     r#type: u8,
     community_id: u32,
@@ -156,7 +155,6 @@ pub async fn member_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::member::CommunityMemberDetailReq::new(community_id, user_id)
                 .exec()
@@ -219,9 +217,9 @@ mod tests {
         let r#type = 2;
         let community_id = 3963752448;
         let member_id = 1979846656;
-        let name = "Updated Member Name".to_string();
-        let avatar = "updated_avatar.jpg".to_string();
-        let sort = 55;
+        let _name = "Updated Member Name".to_string();
+        let _avatar = "updated_avatar.jpg".to_string();
+        let _sort = 55;
 
         let result: Result<(), crate::Error> =
             update_member_type(r#type, community_id, member_id).await;
@@ -254,7 +252,7 @@ mod tests {
         > = member_detail(community_id, user_id).await;
 
         println!("{:#?}", result);
-        let member_detail = result.unwrap();
+        let _member_detail = result.unwrap();
         // Include assertions for specific details if needed
     }
 }

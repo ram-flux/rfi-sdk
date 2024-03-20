@@ -1,6 +1,5 @@
-use crate::{operator::sqlite::query::Query as _, service};
+use crate::service;
 #[cfg(not(feature = "mock"))]
-use resource::Action as _;
 
 /// 创建社区(tested)
 pub async fn create_community(
@@ -109,7 +108,6 @@ pub async fn del_community(community_id: u32) -> Result<(), crate::Error> {
 
 /// 社区列表(tested)
 pub async fn community_list(
-    user_id: u32,
     page_size: u16,
     offset: u16,
 ) -> Result<Vec<crate::logic::community::_community::CommunityDetailRes>, crate::Error> {
@@ -137,10 +135,12 @@ pub async fn community_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
+        let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
             crate::service::community::_community::CommunityListReq::new(
-                user_id, page_size, offset,
+                user.user_id,
+                page_size,
+                offset,
             )
             .exec()
             .await?,
@@ -167,7 +167,6 @@ pub async fn community_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::_community::CommunityDetailReq::new(community_id)
                 .exec()
@@ -191,7 +190,7 @@ mod tests {
         let _ = DbConnection::init_pub_database(pub_url.to_string()).await;
 
         let user_id = account_list(1, 0).await.unwrap().pop().unwrap();
-        UserState::init_user_state(user_id.user_id).await;
+        let _ = UserState::init_user_state(user_id.user_id).await;
     }
 
     #[tokio::test]
@@ -258,11 +257,11 @@ mod tests {
     async fn test_community_list() {
         init().await;
         // Test case for getting a list of communities
-        let user_id = 121769984;
+        let _user_id = 121769984;
         let page_size = 10;
         let offset = 0;
 
-        let result = community_list(user_id, page_size, offset).await;
+        let result = community_list(page_size, offset).await;
 
         println!("{:#?}", result);
         let community_list = result.unwrap();
@@ -278,6 +277,6 @@ mod tests {
         let result = community_detail(community_id).await;
 
         println!("{:#?}", result);
-        let community_detail = result.unwrap();
+        let _community_detail = result.unwrap();
     }
 }

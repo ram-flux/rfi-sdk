@@ -11,8 +11,8 @@ pub use util::{hdrf::Hdrf, pin::Pin};
 #[cfg(test)]
 mod tests {
     use super::*;
-    use util::hdrf::Hdrf;
-    use util::pin::Pin;
+    // use util::hdrf::Hdrf;
+    // use util::pin::Pin;
 
     #[test]
     fn test_hdrf() -> Result<(), Box<dyn std::error::Error>> {

@@ -43,7 +43,7 @@ pub async fn init_device(
     }
 }
 
-pub fn create_pin(passwd: String) {}
+pub fn create_pin(_passwd: String) {}
 
 // 获取助记词
 pub fn get_phrase() -> String {

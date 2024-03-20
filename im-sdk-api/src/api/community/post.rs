@@ -26,7 +26,6 @@ pub async fn post_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::post::PostListReq::new(community_id, page_size, offset)
                 .exec()
@@ -95,7 +94,7 @@ pub async fn edit_post(
     post_id: u32,
     name: String,
     content: String,
-    sort_count: i32,
+    _sort_count: i32,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
@@ -136,7 +135,6 @@ pub async fn post_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(crate::service::community::post::PostDetailReq::new(post_id)
             .exec()
             .await?)
@@ -171,7 +169,7 @@ mod tests {
         let result = post_list(community_id, page_size, offset).await;
 
         println!("{:#?}", result);
-        let post_list = result.unwrap();
+        let _post_list = result.unwrap();
         // Include assertions for specific details if needed
     }
 
@@ -180,11 +178,7 @@ mod tests {
         init_db().await;
         // Test case for create_post function
         let user = account_list(1, 0).await.unwrap().pop().unwrap();
-        let community = community_list(user.user_id, 1, 0)
-            .await
-            .unwrap()
-            .pop()
-            .unwrap();
+        let community = community_list(1, 0).await.unwrap().pop().unwrap();
         let community_id = community.id;
         let user_id = user.user_id;
         let name = "Test Post".to_string();
@@ -250,7 +244,7 @@ mod tests {
             post_detail(post_id).await;
 
         println!("{:#?}", result);
-        let post_detail = result.unwrap();
+        let _post_detail = result.unwrap();
         // Include assertions for specific details if needed
     }
 }

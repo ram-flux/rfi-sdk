@@ -6,7 +6,7 @@ pub async fn push_msg(
     user_id: u32,
     chat_id: u32,
     chat_type: u8,
-    endpoint: String,
+    _endpoint: String,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
@@ -27,7 +27,7 @@ pub async fn push_msg(
 }
 
 pub async fn pull_msg(
-    message_id: u32,
+    _message_id: u32,
 ) -> Result<Vec<payload::resources::message::Message>, crate::Error> {
     #[cfg(feature = "mock")]
     {
@@ -56,6 +56,7 @@ pub async fn update_msg(
     user_id: u32,
     chat_id: u32,
     chat_type: u8,
+    mode: u8,
     message_id: u32,
     content: String,
 ) -> Result<(), crate::Error> {
@@ -66,7 +67,8 @@ pub async fn update_msg(
     #[cfg(not(feature = "mock"))]
     {
         let message =
-            payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type);
+            payload::resources::message::Message::new(from_id, user_id, chat_id, chat_type)
+                .set_data(&content, mode);
         crate::service::message::UpdateMessageReq::new(message, message_id)
             .exec()
             .await?;

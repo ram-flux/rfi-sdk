@@ -1,5 +1,5 @@
 /// 新设置(done, untested)
-pub async fn new_settings(user_id: u32, language: String) -> Result<u32, crate::Error> {
+pub async fn new_settings(language: String) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(211);
     #[cfg(not(feature = "mock"))]
@@ -27,7 +27,6 @@ pub async fn settings_detail() -> Result<crate::logic::settings::SettingsDetailR
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
             crate::service::settings::SettingsDetailReq::new(user.user_id)

@@ -21,7 +21,7 @@ impl NetChannel {
     pub(crate) fn send(&self, message: Event) -> Result<(), crate::ChannelError> {
         self.0
             .send(message)
-            .map_err(|e| crate::ChannelError::SendFailed)
+            .map_err(|_| crate::ChannelError::SendFailed)
     }
 }
 
@@ -35,7 +35,7 @@ pub(crate) enum Event {
     Send {
         from_id: u32,
         recv_list: Vec<u32>,
-        data: im_net::Protocol,
+        data: im_net::Packet,
     },
 }
 

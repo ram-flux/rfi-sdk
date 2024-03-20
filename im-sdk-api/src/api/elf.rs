@@ -4,7 +4,6 @@ pub async fn create_elf(r#type: u8, name: String, avatar: String) -> Result<u32,
     return Ok(434);
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         let elf = payload::resources::elf::Elf {
             r#type,
             name,
@@ -39,7 +38,7 @@ pub async fn update_elf(
             r#type,
             name,
             avatar,
-            status: 1,
+            status,
             created_at: payload::utils::time::now(),
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
@@ -63,7 +62,6 @@ pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, 
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(crate::service::elf::ElfDetailReq::new(elf_id)
             .exec()
             .await?)
@@ -72,10 +70,6 @@ pub async fn elf_detail(elf_id: u32) -> Result<crate::logic::elf::ElfDetailRes, 
 
 /// 删除精灵(done, untested)
 pub async fn del_elf(elf_id: u32) -> Result<(), crate::Error> {
-    let elf = payload::resources::elf::Elf {
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
     #[cfg(feature = "mock")]
     return Ok(()).into();
     #[cfg(not(feature = "mock"))]

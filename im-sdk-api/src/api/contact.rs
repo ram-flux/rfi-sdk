@@ -2,7 +2,7 @@
 pub async fn add_contact(
     friend_id: u32,
     user_id: u32,
-    content: String,
+    _content: String,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
@@ -41,7 +41,6 @@ pub async fn contact_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
             crate::service::contact::ContactListReq::new(user.user_id, page_size, offset)
@@ -79,7 +78,7 @@ pub async fn del_contact(contact_id: u32) -> Result<(), crate::Error> {
 }
 
 pub async fn search_contact(
-    keyword: String,
+    _keyword: String,
 ) -> Result<Vec<payload::resources::contact::Contact>, crate::Error> {
     #[cfg(feature = "mock")]
     {

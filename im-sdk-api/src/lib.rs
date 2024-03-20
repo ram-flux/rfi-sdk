@@ -10,9 +10,6 @@ pub mod resources;
 pub mod response;
 pub mod service;
 
-#[cfg(not(feature = "mock"))]
-pub(crate) use error::api::{account::AccountError, community::CommunityError};
-
 pub(crate) use error::{common::channel::ChannelError, common::database::DatabaseError, Error};
 
 pub use operator::sqlite::init::DbConnection;

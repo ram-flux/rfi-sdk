@@ -19,7 +19,6 @@ pub async fn nav_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
             crate::service::nav::NavListReq::new(user.user_id, page_size, offset)
@@ -30,18 +29,13 @@ pub async fn nav_list(
 }
 
 /// 添加菜单(done, untested)
-pub async fn add_nav(
-    user_id: u32,
-    r#type: u8,
-    type_id: u32,
-    sort: u32,
-) -> Result<u32, crate::Error> {
+pub async fn add_nav(r#type: u8, type_id: u32, sort: u32) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(111).into();
     #[cfg(not(feature = "mock"))]
     {
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
-        let nav = payload::resources::nav::Nav::new(r#type, type_id, user_id, sort);
+        let nav = payload::resources::nav::Nav::new(r#type, type_id, user.user_id, sort);
         let mut worker = crate::operator::WrapWorker::worker()?;
         let favorite_id = worker.gen_id()?;
         crate::service::nav::AddNav::new(nav, favorite_id)

@@ -1,7 +1,7 @@
 // net send
 pub(crate) async fn send_message(
     message: &payload::resources::message::Message,
-    message_id: u32,
+    _message_id: u32,
     recv_list: Vec<u32>,
 ) -> Result<(), crate::SystemError> {
     let mut worker = crate::operator::WrapWorker::worker()?;
@@ -13,7 +13,7 @@ pub(crate) async fn send_message(
     };
 
     let list: Vec<[u8; 32]> = Vec::new();
-    let msg = im_net::Protocol::message(trace_id as u64, list, data);
+    let msg = im_net::Packet::message(trace_id as u64, list, data);
 
     let tx = crate::operator::net::channel::net_channel_generator();
     tx.send(crate::operator::net::channel::Event::Send {

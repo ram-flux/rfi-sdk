@@ -21,16 +21,18 @@ impl CommunityDetailRes {
         community_id: u32,
     ) -> Result<CommunityDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
+        CommunityDetailRes::query_one(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
                     pinned, status, created_at, updated_at
                 FROM community
                 WHERE id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, CommunityDetailRes>(sql)
-                .bind(community_id)
-                .fetch_one(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, CommunityDetailRes>(sql)
+                    .bind(community_id)
+                    .fetch_one(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }
@@ -41,20 +43,22 @@ impl CommunityDetailRes {
         offset: u16,
     ) -> Result<Vec<CommunityDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        CommunityDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
+        CommunityDetailRes::query_all(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, father_id, user_id, name, bio, passwd, announcement, avatar,
                  pinned, status, created_at, updated_at
             FROM community
             WHERE user_id = $1
             LIMIT $2 OFFSET $3;";
 
-            sqlx::query_as::<sqlx::Sqlite, CommunityDetailRes>(sql)
-                .bind(user_id)
-                .bind(page_size)
-                .bind(offset)
-                .fetch_all(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, CommunityDetailRes>(sql)
+                    .bind(user_id)
+                    .bind(page_size)
+                    .bind(offset)
+                    .fetch_all(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }

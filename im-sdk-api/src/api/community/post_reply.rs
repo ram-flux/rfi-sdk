@@ -28,7 +28,6 @@ pub async fn post_reply_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::post_reply::PostReplyListReq::new(
                 post_id, page_size, offset,
@@ -99,7 +98,7 @@ pub async fn edit_post_reply(
     post_reply_id: u32,
     user_id: u32,
     content: String,
-    sort: i32,
+    _sort: i32,
 ) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
@@ -152,7 +151,6 @@ pub async fn post_reply_detail(
     }
     // #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::post_reply::PostReplyDetailReq::new(post_reply_id)
                 .exec()
@@ -184,12 +182,8 @@ mod tests {
     async fn test_post_reply_list() {
         init_db().await;
         // Test case for post_reply_list function
-        let user = account_list(1, 0).await.unwrap().pop().unwrap();
-        let community = community_list(user.user_id, 1, 0)
-            .await
-            .unwrap()
-            .pop()
-            .unwrap();
+        let _user = account_list(1, 0).await.unwrap().pop().unwrap();
+        let community = community_list(1, 0).await.unwrap().pop().unwrap();
         let post = post_list(community.id, 1, 0).await.unwrap().pop().unwrap();
         let post_id = post.id;
         let page_size = 10;
@@ -198,7 +192,7 @@ mod tests {
         let result = post_reply_list(post_id, page_size, offset).await;
 
         println!("{:#?}", result);
-        let reply_list = result.unwrap();
+        let _reply_list = result.unwrap();
         // Include assertions for specific details if needed
     }
 
@@ -207,11 +201,7 @@ mod tests {
         init_db().await;
         // Test case for reply_post function
         let user = account_list(1, 0).await.unwrap().pop().unwrap();
-        let community = community_list(user.user_id, 1, 0)
-            .await
-            .unwrap()
-            .pop()
-            .unwrap();
+        let community = community_list(1, 0).await.unwrap().pop().unwrap();
         let post = post_list(community.id, 1, 0).await.unwrap().pop().unwrap();
 
         let community_id = community.id;
@@ -262,7 +252,7 @@ mod tests {
             post_reply_detail(post_reply_id).await;
 
         println!("{:#?}", result);
-        let reply_detail = result.unwrap();
+        let _reply_detail = result.unwrap();
         // Include assertions for specific details if needed
     }
 }

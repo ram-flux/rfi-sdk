@@ -24,7 +24,6 @@ pub async fn chat_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::chat::ChatListReq::new(user_id, page_size, offset)
                 .exec()
@@ -34,8 +33,8 @@ pub async fn chat_list(
 }
 
 pub async fn search_chat(
-    chat_id: u32,
-    keyword: String,
+    _chat_id: u32,
+    _keyword: String,
 ) -> Result<Vec<crate::logic::community::admin::CommunityAdminDetailRes>, crate::Error> {
     #[cfg(feature = "mock")]
     {

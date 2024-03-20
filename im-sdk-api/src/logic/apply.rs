@@ -15,16 +15,18 @@ pub struct ApplyDetailRes {
 impl ApplyDetailRes {
     pub(crate) async fn detail(id: u32) -> Result<ApplyDetailRes, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        ApplyDetailRes::query_one(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, type, type_id, user_id, content, status,
+        ApplyDetailRes::query_one(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, type, type_id, user_id, content, status,
                     created_at, updated_at 
                 FROM apply 
                 WHERE id =$1;";
-            sqlx::query_as::<sqlx::Sqlite, ApplyDetailRes>(sql)
-                .bind(id)
-                .fetch_one(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, ApplyDetailRes>(sql)
+                    .bind(id)
+                    .fetch_one(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }
@@ -36,21 +38,23 @@ impl ApplyDetailRes {
         offset: u16,
     ) -> Result<Vec<ApplyDetailRes>, crate::SystemError> {
         use crate::operator::sqlite::query::Query as _;
-        ApplyDetailRes::query_all(async move |user_pool, pub_pool| {
-            let sql = "SELECT id, type, type_id, user_id, content, status,
+        ApplyDetailRes::query_all(
+            async move |user_pool: std::sync::Arc<sqlx::Pool<sqlx::Sqlite>>, _pub_pool| {
+                let sql = "SELECT id, type, type_id, user_id, content, status,
                 created_at, updated_at 
             FROM apply
             WHERE type = $1 AND type_id = $2
             LIMIT $2 OFFSET $3;";
 
-            sqlx::query_as::<sqlx::Sqlite, ApplyDetailRes>(sql)
-                .bind(r#type)
-                .bind(type_id)
-                .bind(page_size)
-                .bind(offset)
-                .fetch_all(user_pool.as_ref())
-                .await
-        })
+                sqlx::query_as::<sqlx::Sqlite, ApplyDetailRes>(sql)
+                    .bind(r#type)
+                    .bind(type_id)
+                    .bind(page_size)
+                    .bind(offset)
+                    .fetch_all(user_pool.as_ref())
+                    .await
+            },
+        )
         .await
         .map_err(Into::into)
     }

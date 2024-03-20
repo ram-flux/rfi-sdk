@@ -1,12 +1,5 @@
 /// 添加管理员(tested)
 pub async fn add_admin(community_id: u32, r#type: u8, user_id: u32) -> Result<u32, crate::Error> {
-    let admin = payload::resources::community::admin::CommunityAdmin {
-        community_id,
-        r#type,
-        user_id,
-        created_at: payload::utils::time::now(),
-        updated_at: Some(payload::utils::time::now()),
-    };
     #[cfg(feature = "mock")]
     return Ok(111).into();
     #[cfg(not(feature = "mock"))]
@@ -78,7 +71,6 @@ pub async fn admin_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::admin::CommunityAdminlistReq::new(
                 community_id,
@@ -109,7 +101,6 @@ pub async fn admin_detail(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::community::admin::CommunityAdminDetailReq::new(admin_id)
                 .exec()

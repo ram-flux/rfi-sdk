@@ -19,7 +19,6 @@ pub async fn favorite_list(
     }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
         Ok(
             crate::service::favorite::FavoriteListReq::new(user.user_id, page_size, offset)
@@ -64,15 +63,16 @@ pub async fn del_favorite(favorite_id: u32) -> Result<(), crate::Error> {
 pub async fn favorite_detail(
     favorite_id: u32,
 ) -> Result<crate::logic::favorite::FavoriteDetailRes, crate::Error> {
-    let favorite = crate::logic::favorite::FavoriteDetailRes {
-        updated_at: Some(payload::utils::time::now()),
-        ..Default::default()
-    };
     #[cfg(feature = "mock")]
-    return Ok(favorite);
+    {
+        let favorite = crate::logic::favorite::FavoriteDetailRes {
+            updated_at: Some(payload::utils::time::now()),
+            ..Default::default()
+        };
+        return Ok(favorite);
+    }
     #[cfg(not(feature = "mock"))]
     {
-        use crate::operator::sqlite::query::Query;
         Ok(
             crate::service::favorite::FavoriteDetailReq::new(favorite_id)
                 .exec()
