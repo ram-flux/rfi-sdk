@@ -91,7 +91,7 @@ pub async fn add_community(community_id: u32) -> crate::response::Response<()> {
 /// 创建账户机器人(done, untested)
 pub async fn create_account_elf(name: String, avatar: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
-    return Ok(111);
+    return Ok(111).into();
     // #[cfg(not(feature = "mock"))]
     {
         crate::handler::account::create_account_elf(name, avatar)

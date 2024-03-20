@@ -4,7 +4,7 @@ use sqlx::types::chrono::{DateTime, Utc};
 pub struct ChatDetailRes {
     pub id: u32,
     pub user_id: i32,
-    pub r#type: String,
+    pub r#type: u8,
     pub msg_increase: i32,
     pub from_id: i32,
     pub from_public_key: String,
@@ -15,7 +15,7 @@ pub struct ChatDetailRes {
     pub from_msg: String,
     pub from_update: String,
     pub ext: String,
-    pub status: String,
+    pub status: u8,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }

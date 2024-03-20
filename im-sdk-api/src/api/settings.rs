@@ -1,7 +1,7 @@
 /// 新设置(done, untested)
 pub async fn new_settings(language: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
-    return Ok(211);
+    return Ok(211).into();
     #[cfg(not(feature = "mock"))]
     {
         crate::handler::settings::new_settings(language)

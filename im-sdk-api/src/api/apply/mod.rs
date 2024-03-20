@@ -20,7 +20,7 @@ pub async fn apply_list(
                 ..Default::default()
             },
         ];
-        return Ok(list);
+        return Ok(list).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -43,7 +43,7 @@ pub async fn apply_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(apply);
+        return Ok(apply).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -54,7 +54,6 @@ pub async fn apply_detail(
 pub async fn create_apply(
     r#type: u8,
     type_id: u32,
-    user_id: u32,
     content: String,
 ) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]

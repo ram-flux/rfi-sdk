@@ -22,7 +22,7 @@ pub async fn post_list(
                 ..Default::default()
             },
         ];
-        return Ok(list);
+        return Ok(list).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -122,7 +122,7 @@ pub async fn post_detail(
             user_id: 6565656,
             ..Default::default()
         };
-        return Ok(post);
+        return Ok(post).into();
     }
     #[cfg(not(feature = "mock"))]
     {

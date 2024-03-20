@@ -57,7 +57,7 @@ pub async fn update_msg(
 ) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
     {
-        return Ok(());
+        return Ok(()).into();
     }
     #[cfg(not(feature = "mock"))]
     {

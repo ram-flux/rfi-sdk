@@ -24,7 +24,7 @@ pub async fn post_reply_list(
                 ..Default::default()
             },
         ];
-        return Ok(list);
+        return Ok(list).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -133,7 +133,7 @@ pub async fn post_reply_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(post_reply);
+        return Ok(post_reply).into();
     }
     // #[cfg(not(feature = "mock"))]
     {

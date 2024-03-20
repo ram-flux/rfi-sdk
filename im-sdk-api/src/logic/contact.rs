@@ -6,7 +6,7 @@ pub struct ContactDetailRes {
     pub user_id: u32,
     pub friend_id: u32,
     pub friend_account: String,
-    pub gender: String,
+    pub gender: u8,
     pub name: String,
     pub avatar: String,
     pub bio: String,

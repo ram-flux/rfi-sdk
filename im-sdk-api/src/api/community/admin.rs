@@ -60,7 +60,7 @@ pub async fn admin_list(
                 ..Default::default()
             },
         ];
-        return Ok(list);
+        return Ok(list).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -84,7 +84,7 @@ pub async fn admin_detail(
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(admin);
+        return Ok(admin).into();
     }
     #[cfg(not(feature = "mock"))]
     {

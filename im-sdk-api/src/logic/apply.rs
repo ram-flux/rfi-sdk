@@ -7,7 +7,7 @@ pub struct ApplyDetailRes {
     pub type_id: u8,
     pub user_id: u32,
     pub content: String,
-    pub status: String,
+    pub status: u8,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }

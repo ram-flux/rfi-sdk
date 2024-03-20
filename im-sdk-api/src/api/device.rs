@@ -51,7 +51,7 @@ pub async fn warrant() -> crate::response::Response<String> {
 }
 
 /// 更新token(tested)
-pub async fn update_token(device_id: u32) -> crate::response::Response<String> {
+pub async fn update_token(device_id: u32, token: String) -> crate::response::Response<String> {
     #[cfg(feature = "mock")]
     return Ok("token".to_string()).into();
     #[cfg(not(feature = "mock"))]
@@ -106,7 +106,7 @@ mod test {
         init_db().await;
 
         let device_id = 3393327105;
-        let res = crate::api::device::update_token(device_id).await;
+        let res = crate::api::device::update_token(device_id, "token".to_string()).await;
         println!("res: {res:#?}");
     }
 

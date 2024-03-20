@@ -48,7 +48,6 @@ pub async fn add_member(
     #[cfg(feature = "mock")]
     {
         let community_member = payload::resources::community::member::CommunityMember {
-            user_id,
             ..Default::default()
         };
         return Ok(323);

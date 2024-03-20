@@ -22,7 +22,7 @@ pub struct Contact {
     pub user_id: u32,
     pub friend_id: u32,
     pub friend_account: String,
-    pub gender: String,
+    pub gender: u8,
     pub name: String,
     pub avatar: String,
     pub bio: String,
@@ -35,7 +35,7 @@ impl Contact {
     pub fn set_data(
         mut self,
         friend_account: String,
-        gender: String,
+        gender: u8,
         name: String,
         avatar: String,
         bio: String,

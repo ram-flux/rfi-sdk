@@ -141,7 +141,7 @@ mod test {
         init_db().await;
 
         let device_id = 3393327105;
-        let res = crate::api::device::update_token(device_id).await;
+        let res = crate::api::device::update_token(device_id, "token".to_string()).await;
         println!("res: {res:#?}");
     }
 

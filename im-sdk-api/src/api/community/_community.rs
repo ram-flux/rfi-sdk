@@ -43,7 +43,7 @@ pub async fn update_community(
     status: u8,
 ) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
-    return Ok(());
+    return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
         crate::handler::community::_community::update_community(
@@ -64,7 +64,7 @@ pub async fn update_community(
 /// 删除社区(tested)
 pub async fn del_community(community_id: u32) -> crate::response::Response<()> {
     #[cfg(feature = "mock")]
-    return Ok(());
+    return Ok(()).into();
     #[cfg(not(feature = "mock"))]
     {
         crate::handler::community::_community::del_community(community_id)
@@ -98,7 +98,7 @@ pub async fn community_list(
                 ..Default::default()
             },
         ];
-        return Ok(list);
+        return Ok(list).into();
     }
     #[cfg(not(feature = "mock"))]
     {
@@ -123,7 +123,7 @@ pub async fn community_detail(
             status: 2,
             ..Default::default()
         };
-        return Ok(comm);
+        return Ok(comm).into();
     }
     #[cfg(not(feature = "mock"))]
     {

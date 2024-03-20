@@ -1,7 +1,7 @@
 /// 创建精灵(done, untested)
 pub async fn create_elf(r#type: u8, name: String, avatar: String) -> crate::response::Response<u32> {
     #[cfg(feature = "mock")]
-    return Ok(434);
+    return Ok(434).into();
     #[cfg(not(feature = "mock"))]
     {
         crate::handler::elf::create_elf(r#type, name, avatar)
@@ -36,7 +36,7 @@ pub async fn elf_detail(elf_id: u32) -> crate::response::Response<crate::logic::
             updated_at: Some(payload::utils::time::now()),
             ..Default::default()
         };
-        return Ok(elf);
+        return Ok(elf).into();
     }
     #[cfg(not(feature = "mock"))]
     {

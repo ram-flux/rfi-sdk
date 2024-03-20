@@ -15,7 +15,7 @@ pub async fn nav_list(
                 ..Default::default()
             },
         ];
-        return Ok(msgs);
+        return Ok(msgs).into();
     }
     #[cfg(not(feature = "mock"))]
     {

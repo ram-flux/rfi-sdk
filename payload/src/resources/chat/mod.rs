@@ -19,7 +19,7 @@ use sqlx::Sqlite;
 )]
 pub struct Chat {
     pub user_id: i32,
-    pub r#type: String,
+    pub r#type: u8,
     pub msg_increase: i32,
     pub from_id: i32,
     pub from_public_key: String,
@@ -37,7 +37,7 @@ pub struct Chat {
 impl Chat {
     pub fn new(
         user_id: i32,
-        r#type: String,
+        r#type: u8,
         msg_increase: i32,
         from_id: i32,
         from_public_key: String,

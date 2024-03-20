@@ -24,13 +24,13 @@ pub struct Apply {
     pub type_id: u8,
     pub user_id: u32,
     pub content: String,
-    pub status: String,
+    pub status: u8,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
 impl Apply {
-    pub fn new(r#type: u8, type_id: u8, user_id: u32, content: String, status: String) -> Self {
+    pub fn new(r#type: u8, type_id: u8, user_id: u32, content: String, status: u8) -> Self {
         Self {
             created_at: crate::utils::time::now(),
             r#type,
