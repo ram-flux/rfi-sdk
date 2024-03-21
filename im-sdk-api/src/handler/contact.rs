@@ -1,16 +1,16 @@
 /// 添加联系人(done, untested)
-pub async fn add_contact(friend_id: u32, user_id: u32) -> Result<(), crate::Error> {
+pub async fn add_contact(friend_id: u32, user_id: u32) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(1234123).into();
     // #[cfg(not(feature = "mock"))]
     {
         let mut worker = crate::operator::WrapWorker::worker()?;
-        let trace_id = worker.gen_id()?;
+        let contact_id = worker.gen_id()?;
         let contact = payload::resources::contact::Contact::new(user_id, friend_id);
-        crate::service::contact::AddContactReq::new(contact, trace_id)
+        crate::service::contact::AddContactReq::new(contact, contact_id)
             .exec()
             .await?;
-        Ok(())
+        Ok(contact_id)
     }
 }
 
