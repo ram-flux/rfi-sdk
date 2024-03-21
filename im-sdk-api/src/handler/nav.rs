@@ -37,12 +37,12 @@ pub async fn add_nav(r#type: u8, type_id: u32, sort: u32) -> Result<u32, crate::
         let user = crate::operator::sqlite::UserState::get_user_state().await?;
         let nav = payload::resources::nav::Nav::new(r#type, type_id, user.user_id, sort);
         let mut worker = crate::operator::WrapWorker::worker()?;
-        let favorite_id = worker.gen_id()?;
-        crate::service::nav::AddNav::new(nav, favorite_id)
+        let nav_id = worker.gen_id()?;
+        crate::service::nav::AddNav::new(nav, nav_id)
             .exec()
             .await?;
 
-        Ok(favorite_id)
+        Ok(nav_id)
     }
 }
 
