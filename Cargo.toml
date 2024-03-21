@@ -1,6 +1,8 @@
 [workspace]
 members = ["im-sdk-api", "payload", "wallet"]
 
+resolver = "2"
+
 [profile.dev]
 codegen-units = 4
 debug = true

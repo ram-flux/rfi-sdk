@@ -14,6 +14,23 @@ pub enum Error {
     HDInvalidExtendedPrivKey,
     #[error("HD Secp256k1 error: `{0}`")]
     HDSecp256k1(String),
+
+    #[error("HD Pin error: `{0}`")]
+    HD256Err(String),
+
+    #[error("`{0}`")]
+    Msg(String),
+}
+
+
+impl From<hex::FromHexError> for Error {
+    fn from(value: hex::FromHexError) -> Self {
+        match value {
+        hex::FromHexError::InvalidHexCharacter { c, index } => Self::Msg(format!("{}:{}", c, index)),
+           hex::FromHexError::OddLength => Self::Msg(hex::FromHexError::OddLength.to_string()),
+           hex::FromHexError::InvalidStringLength => Self::Msg(hex::FromHexError::InvalidStringLength.to_string()),
+        }
+    }
 }
 
 impl From<tiny_hderive::Error> for Error {
@@ -30,5 +47,11 @@ impl From<tiny_hderive::Error> for Error {
 impl From<aes_gcm::Error> for Error {
     fn from(value: aes_gcm::Error) -> Self {
         Self::Aes256Gcm(value.to_string())
+    }
+}
+
+impl From<k256::elliptic_curve::Error> for Error {
+    fn from(err: k256::elliptic_curve::Error) -> Self {
+        Self::HD256Err(format!("{}", err.to_string()))
     }
 }

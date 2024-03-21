@@ -34,11 +34,11 @@ impl Pin {
         pbkdf2_hmac::<Sha256>(
             self.passwd.as_slice(),
             self.salt.as_slice(),
-            100_000,
+            500_000,
             &mut dk,
         );
 
-        let secret_key = SecretKey::from_bytes(&dk.into()).unwrap();
+        let secret_key = SecretKey::from_bytes(&dk.into()).map_err(|e| crate::Error::from(e))?;
         let public_key = secret_key.public_key();
         let shared_secret = diffie_hellman(secret_key.to_nonzero_scalar(), public_key.as_affine());
         let hkdf = Hkdf::<Sha256>::new(None, shared_secret.raw_secret_bytes());
@@ -52,7 +52,6 @@ impl Pin {
     pub fn encrypt(&self, aes_key: &[u8], aes_iv: &[u8]) -> Result<Vec<u8>, crate::Error> {
         let cipher = Aes256Gcm::new(GenericArray::from_slice(aes_key));
         let nonce = GenericArray::from_slice(aes_iv);
-
         let ciphertext = cipher.encrypt(nonce, self.wpriv_key.as_ref())?;
         Ok(ciphertext)
     }
@@ -65,33 +64,16 @@ impl Pin {
     ) -> Result<Vec<u8>, crate::Error> {
         let cipher = Aes256Gcm::new(GenericArray::from_slice(aes_key));
         let nonce = GenericArray::from_slice(aes_iv);
-
         let decrypted_data = cipher.decrypt(nonce, ciphertext)?;
-
         Ok(decrypted_data)
     }
+
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    // use hex;
-
-    #[test]
-    fn is_check() -> Result<(), crate::Error> {
-        let pin = Pin::new(b"123456".to_vec(), b"some_salt".to_vec(), None);
-        let (aes_key, aes_iv) = pin.derive_key()?;
-        let ciphertext = hex::decode(
-            "2fd8eb3e0551d48aeacfbf779d975c36a18c03ac46b2be80328a07ee5fecf0897293fca44fd79f",
-        )
-        .unwrap();
-        let decrypted_data = pin.decrypt(&aes_key, &aes_iv, &ciphertext)?;
-
-        let decrypted_str = std::str::from_utf8(&decrypted_data).unwrap();
-        println!("Decrypted text: {}", decrypted_str);
-        Ok(())
-    }
-
+    
     #[test]
     fn it_work() -> Result<(), crate::Error> {
         let wallet_priv_key = b"wallet private key data".to_vec();
@@ -100,6 +82,7 @@ mod tests {
             b"some_salt".to_vec(),
             Some(wallet_priv_key.clone()),
         );
+        
         let (aes_key, aes_iv) = pin.derive_key()?;
 
         let ciphertext = pin.encrypt(&aes_key, &aes_iv)?;
@@ -108,6 +91,9 @@ mod tests {
         println!("Ciphertext (Hex): {}", ciphertext_hex);
 
         let ciphertext = hex::decode(ciphertext_hex).unwrap();
+
+        //is def
+        let (aes_key, aes_iv) = pin.derive_key()?;
 
         let decrypted_data = pin.decrypt(&aes_key, &aes_iv, &ciphertext)?;
 
@@ -137,4 +123,62 @@ mod tests {
 
         Ok(())
     }
+
+
+
+
+    
+    #[test]
+    fn test_key_derivation() {
+        let pin = Pin::new(b"password".to_vec(), b"salt".to_vec(), None);
+        let (aes_key1, aes_iv1) = pin.derive_key().unwrap();
+        let (aes_key2, aes_iv2) = pin.derive_key().unwrap();
+
+        // 确保对于相同的输入，派生的密钥和IV是一致的
+        assert_eq!(aes_key1, aes_key2);
+        assert_eq!(aes_iv1, aes_iv2);
+    }
+
+    #[test]
+    fn test_encrypt() {
+        let data = b"Hello, world!".to_vec();
+        let pin = Pin::new(b"encrypt_test".to_vec(), b"unique_salt".to_vec(), Some(data.clone()));
+        let (aes_key, aes_iv) = pin.derive_key().unwrap();
+
+        let ciphertext = pin.encrypt(&aes_key, &aes_iv).unwrap();
+
+        // 确保加密后的数据不为空且不等于原始数据
+        assert_ne!(ciphertext, Vec::new());
+        assert_ne!(ciphertext, data);
+    }
+
+    #[test]
+    fn test_decryption_matches_original() {
+        let original_data = b"test data".to_vec();
+        let pin = Pin::new(b"decryption_test".to_vec(), b"another_salt".to_vec(), Some(original_data.clone()));
+        let (aes_key, aes_iv) = pin.derive_key().unwrap();
+
+        let ciphertext = pin.encrypt(&aes_key, &aes_iv).unwrap();
+        let decrypted_data = pin.decrypt(&aes_key, &aes_iv, &ciphertext).unwrap();
+
+        // 确保解密后的数据与原始数据一致
+        assert_eq!(decrypted_data, original_data);
+    }
+
+    #[test]
+    fn test_error_handling_with_wrong_key() {
+        let data = b"secret data".to_vec();
+        let pin = Pin::new(b"error_test".to_vec(), b"some_salt".to_vec(), Some(data));
+        let (aes_key, aes_iv) = pin.derive_key().unwrap();
+
+        // 故意更改密钥和IV以产生错误
+        let mut wrong_aes_key = aes_key.clone();
+        wrong_aes_key.rotate_left(1); // 将密钥向左旋转1位
+
+        let ciphertext = pin.encrypt(&aes_key, &aes_iv).unwrap();
+
+        // 尝试用错误的密钥解密，并期望返回错误
+        assert!(pin.decrypt(&wrong_aes_key, &aes_iv, &ciphertext).is_err());
+    }
+
 }

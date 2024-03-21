@@ -2,10 +2,12 @@
 //  Copyright 2024 Ram Flux, LLC.
 //
 
-//we is coin type:369777 is RF to ram flux
+//we is coin type:369777 is RF as ram flux
 //https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+
 use bip39::{Language, Mnemonic, MnemonicType, Seed};
 // use hex;
+// use bs58;
 use secp256k1::{PublicKey, Secp256k1, SecretKey};
 use tiny_hderive::bip32::ExtendedPrivKey;
 
@@ -58,6 +60,16 @@ impl<'a> Hdrf<'a> {
         let public_key_hex = hex::encode(public_key.serialize());
         Ok((secret_key_hex, public_key_hex))
     }
+
+    pub fn get_pri(secret_key: &str) -> Result<SecretKey, crate::Error> {
+        let secret_key_vec = hex::decode(secret_key)?;
+        let secret_key = SecretKey::from_slice(&secret_key_vec)?;
+        Ok(secret_key)
+    }
+
+
+
+
 }
 
 #[cfg(test)]
