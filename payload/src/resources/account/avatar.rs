@@ -1,28 +1,14 @@
 use chrono::prelude::*;
 
 use resource::Resource;
-#[derive(
-    serde::Deserialize,
-    serde::Serialize,
-    PartialEq,
-    Debug,
-    // resource_macros::Resource,
-    Default,
-)]
-// #[resource(
-//     schema_name = "im",
-//     pg_table_name = "account",
-//     sqlite_table_name = "account",
-//     primary_key = "id:u32",
-//     constraint = "im_account_pkey"
-// )]
-pub struct Avatar {
+#[derive(serde::Deserialize, serde::Serialize, PartialEq, Debug, Default)]
+pub struct AccountAvatar {
     pub avatar: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
 
-impl Avatar {
+impl AccountAvatar {
     pub fn new(avatar: String) -> Self {
         Self {
             avatar,
@@ -32,7 +18,7 @@ impl Avatar {
     }
 }
 
-impl resource::GenResourceID for Avatar {
+impl resource::GenResourceID for AccountAvatar {
     type Target = u32;
 
     async fn gen_id() -> Result<Self::Target, resource::Error> {
@@ -42,7 +28,7 @@ impl resource::GenResourceID for Avatar {
     }
 }
 
-impl Resource<sqlx::Sqlite> for Avatar {
+impl Resource<sqlx::Sqlite> for AccountAvatar {
     type ResourceID = u32;
 
     async fn update<'c, E>(&self, id: &Self::ResourceID, executor: E) -> Result<(), resource::Error>

@@ -1,4 +1,6 @@
 pub mod block;
+pub mod data;
+pub mod status;
 
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};

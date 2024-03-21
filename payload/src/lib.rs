@@ -1,4 +1,4 @@
-#![feature(async_closure, associated_type_bounds)]
+#![feature(async_closure)]
 #![allow(refining_impl_trait)]
 #![allow(clippy::too_many_arguments)]
 pub mod error;

@@ -4,6 +4,7 @@ use resource::{GenResourceID, Resource};
 use sqlx::Sqlite;
 
 pub mod admin;
+pub mod info;
 pub mod member;
 pub mod post;
 pub mod post_reply;
@@ -31,6 +32,7 @@ pub struct Community {
     pub bio: String,
     pub passwd: Option<String>,
     pub announcement: Option<String>,
+    pub avatar: String,
     pub pinned: bool,
     pub status: u8,
     pub created_at: DateTime<Utc>,
@@ -41,20 +43,22 @@ impl Community {
     pub fn new(
         father_id: Option<u32>,
         user_id: u32,
-        name: String,
+        name: &str,
         bio: String,
         passwd: Option<String>,
         announcement: Option<String>,
+        avatar: &str,
         pinned: bool,
         status: u8,
     ) -> Self {
         Self {
             father_id,
             user_id,
-            name,
+            name: name.to_string(),
             bio,
             passwd,
             announcement,
+            avatar: avatar.to_string(),
             pinned,
             status,
             created_at: crate::utils::time::now(),
