@@ -1,8 +1,5 @@
 /// 添加联系人(done, untested)
-pub async fn add_contact(
-    friend_id: u32,
-    user_id: u32,
-) -> Result<(), crate::Error> {
+pub async fn add_contact(friend_id: u32, user_id: u32) -> Result<(), crate::Error> {
     #[cfg(feature = "mock")]
     return Ok(()).into();
     // #[cfg(not(feature = "mock"))]

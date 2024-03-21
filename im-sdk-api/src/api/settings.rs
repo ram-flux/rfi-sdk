@@ -11,7 +11,8 @@ pub async fn new_settings(language: String) -> crate::response::Response<u32> {
 }
 
 /// 设置详情(done, untested)
-pub async fn settings_detail() -> crate::response::Response<crate::logic::settings::SettingsDetailRes> {
+pub async fn settings_detail(
+) -> crate::response::Response<crate::logic::settings::SettingsDetailRes> {
     #[cfg(feature = "mock")]
     {
         let settings = crate::logic::settings::SettingsDetailRes {

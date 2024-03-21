@@ -1,3 +1,4 @@
+pub mod param;
 /// 初始化设备(tested)
 pub async fn init_device(
     account_pk: String,
@@ -8,24 +9,33 @@ pub async fn init_device(
     platform: String,
     salt: String,
     name: String,
-) -> crate::response::Response<u32> {
-    #[cfg(feature = "mock")]
-    return Ok(454456).into();
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::device::init_device(
-            account_pk, device_pk, proof, version, last_ip, platform, salt, name,
-        )
-        .await
-        .into()
-    }
+) -> crate::response::Response<param::InitDeviceRes> {
+    param::InitDeviceRes::init_device(
+        account_pk, device_pk, proof, version, last_ip, platform, salt, name,
+    )
+    .await
+    .into()
 }
 
 pub fn create_pin(_passwd: String) {}
 
-// 获取助记词
-pub fn get_phrase() -> String {
-    wallet::Hdrf::get_phrase()
+/// 获取助记词
+pub fn get_phrase() -> crate::response::Response<param::GetPhraseRes> {
+    param::GetPhraseRes::get_phrase().into()
+}
+
+/// 获取私钥和账号
+pub fn get_prikey_hex(
+    phrase: String,
+    phrase_passwd: String,
+    pin: String,
+) -> crate::response::Response<param::GetPriKeyAndAccountRes> {
+    param::GetPriKeyAndAccountRes::get_prikey_hex(&phrase, &phrase_passwd, &pin).into()
+}
+
+/// 私钥解密
+pub fn pin_decrypt(pk: String, passwd: String) -> crate::response::Response<param::PinDecryptRes> {
+    param::PinDecryptRes::pin_decrypt(pk, passwd.into_bytes()).into()
 }
 
 pub fn crypt_secret_key(secret_key_hex: String) -> Result<String, crate::Error> {
@@ -51,27 +61,46 @@ pub async fn warrant() -> crate::response::Response<String> {
 }
 
 /// 更新token(tested)
-pub async fn update_token(device_id: u32, token: String) -> crate::response::Response<String> {
-    #[cfg(feature = "mock")]
-    return Ok("token".to_string()).into();
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::device::update_token(device_id).await.into()
-    }
+pub async fn update_token(
+    device_id: u32,
+    token: String,
+) -> crate::response::Response<param::UpdateTokenRes> {
+    param::UpdateTokenRes::update_token(device_id, token)
+        .await
+        .into()
 }
 
 /// 删除设备(tested)
 pub async fn del_device(device_id: u32) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::device::del_device(device_id).await.into()
-    }
+    crate::handler::device::del_device(device_id).await.into()
 }
 
 #[cfg(test)]
 mod test {
+    use crate::api::device::{get_phrase, get_prikey_hex, pin_decrypt};
+
+    #[test]
+    fn test_phrase_pin_pk() {
+        let phrase = get_phrase().result.unwrap();
+        let crate::api::device::param::GetPriKeyAndAccountRes {
+            pin_secret,
+            account,
+        } = get_prikey_hex(phrase.phrase, "123456".to_string(), "123901".to_string())
+            .result
+            .unwrap();
+        println!("pin_secret:{}", pin_secret);
+        println!("account:{}", account);
+        let secret = hex::decode(&pin_secret).unwrap();
+        println!("secret:{:?}", secret);
+        let pin_ = wallet::pin_encrypt(Some(secret), b"123901".to_vec()).unwrap();
+        println!("pin_secret:{}", pin_);
+
+        let pdec = pin_decrypt(pin_secret, "123901".to_string())
+            .result
+            .unwrap();
+        println!("pdec Decrypted text: {:?}", pdec);
+    }
+
     async fn init_db() {
         use crate::operator::sqlite::init::DbConnection;
         let pri_url = "sqlite://test_pri.db";
