@@ -7,10 +7,9 @@ pub async fn push_msg(
     chat_id: u32,
     chat_type: u8,
     _endpoint: String,
-) -> Result<(), crate::Error> {
+) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
-
+    return Ok(123123).into();
     #[cfg(not(feature = "mock"))]
     {
         let mut worker = crate::operator::WrapWorker::worker()?;
@@ -22,7 +21,7 @@ pub async fn push_msg(
         crate::service::message::SendMessageReq::new(message, message_id, recv_list)
             .exec()
             .await?;
-        Ok(())
+        Ok(message_id)
     }
 }
 

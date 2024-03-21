@@ -1,3 +1,4 @@
+pub mod param;
 /// 发送消息(tested)
 pub async fn push_msg(
     content: String,
@@ -7,18 +8,18 @@ pub async fn push_msg(
     chat_id: u32,
     chat_type: u8,
     _endpoint: String,
-) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::push_msg(
-            content, mode, from_id, user_id, chat_id, chat_type, _endpoint,
-        )
-        .await
-        .into()
-    }
+) -> crate::response::Response<param::PushMsgRes> {
+    param::PushMsgRes::push_msg(
+        content,
+        mode,
+        from_id,
+        user_id,
+        chat_id,
+        chat_type,
+        "endpoint".to_string(),
+    )
+    .await
+    .into()
 }
 
 pub async fn pull_msg(
@@ -55,58 +56,31 @@ pub async fn update_msg(
     message_id: u32,
     content: String,
 ) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    {
-        return Ok(()).into();
-    }
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::update_msg(
-            from_id, user_id, chat_id, chat_type, mode, message_id, content,
-        )
-        .await
-        .into()
-    }
+    crate::handler::message::update_msg(
+        from_id, user_id, chat_id, chat_type, mode, message_id, content,
+    )
+    .await
+    .into()
 }
 
 /// 删除消息(done, untested)
 pub async fn del_msg(message_id: u32) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    // #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::del_msg(message_id).await.into()
-    }
+    crate::handler::message::del_msg(message_id).await.into()
 }
 
 /// 置顶消息(done, untested)
 pub async fn pin_msg(message_id: u32) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::pin_msg(message_id).await.into()
-    }
+    crate::handler::message::pin_msg(message_id).await.into()
 }
 
 /// 取消置顶消息(done, untested)
 pub async fn unpin_msg(message_id: u32) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::unpin_msg(message_id).await.into()
-    }
+    crate::handler::message::unpin_msg(message_id).await.into()
 }
 
 /// 撤回消息(done, untested)
 pub async fn revoke_msg(message_id: u32) -> crate::response::Response<()> {
-    #[cfg(feature = "mock")]
-    return Ok(()).into();
-    // #[cfg(not(feature = "mock"))]
-    {
-        crate::handler::message::revoke_msg(message_id).await.into()
-    }
+    crate::handler::message::revoke_msg(message_id).await.into()
 }
 
 // struct Test {}
