@@ -45,9 +45,9 @@ pub async fn reply_post(
     user_id: u32,
     content: String,
     sort: i32,
-) -> Result<(), crate::Error> {
+) -> Result<u32, crate::Error> {
     #[cfg(feature = "mock")]
-    return Ok(()).into();
+    return Ok(123123).into();
     #[cfg(not(feature = "mock"))]
     {
         let post_reply = payload::resources::community::post_reply::PostReply::new(
@@ -62,7 +62,7 @@ pub async fn reply_post(
         crate::service::community::post_reply::ReplyPostReq::new(post_reply, post_reply_id)
             .exec()
             .await?;
-        Ok(())
+        Ok(post_reply_id)
     }
 }
 
