@@ -39,7 +39,7 @@ pub fn get_pk_hex(
 ) -> Result<(String, String), crate::Error> {
     let hdrf = Hdrf::new(phrase_passwd);
     let (secret_key, public_key) = hdrf.get_pk(&phrase)?;
-    println!("secret_key: {:?}", secret_key.secret_bytes().to_vec());
+    // println!("secret_key: {:?}", secret_key.secret_bytes().to_vec());
     let account = Hdrf::get_pub_key_acc(public_key)?;
     let pin_secret = pin_encrypt(
         Some(secret_key.secret_bytes().to_vec()),
