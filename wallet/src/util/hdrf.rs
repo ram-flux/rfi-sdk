@@ -61,15 +61,20 @@ impl<'a> Hdrf<'a> {
         Ok((secret_key_hex, public_key_hex))
     }
 
+    /**
+     * get public account
+     */
+    pub fn get_pub_key_acc(public_key: PublicKey) -> Result<String, crate::Error> {
+        let public_key_hex = hex::encode(public_key.serialize());
+        let base58_address = bs58::encode(public_key_hex).into_string();
+        Ok(base58_address)
+    }
+
     pub fn get_pri(secret_key: &str) -> Result<SecretKey, crate::Error> {
         let secret_key_vec = hex::decode(secret_key)?;
         let secret_key = SecretKey::from_slice(&secret_key_vec)?;
         Ok(secret_key)
     }
-
-
-
-
 }
 
 #[cfg(test)]

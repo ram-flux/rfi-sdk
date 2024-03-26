@@ -7,8 +7,7 @@ pub use error::Error;
 
 mod util;
 pub use util::{hdrf::Hdrf, pin::Pin};
-use secp256k1::PublicKey;
-
+// use secp256k1::PublicKey;
 
 pub fn pin_encrypt(pk: Option<Vec<u8>>, passwd: Vec<u8>) -> Result<String, crate::Error> {
     let wallet_priv_key = pk;
@@ -33,26 +32,19 @@ pub fn get_phrase() -> String {
     Hdrf::get_phrase()
 }
 
-/**
- * get public account
- */
-pub fn get_pub_key_acc(public_key: PublicKey) -> Result<String, crate::Error> {
-    let public_key_hex = hex::encode(public_key.serialize());
-    let base58_address = bs58::encode(public_key_hex).into_string();
-    Ok(base58_address)
-}
-
 pub fn get_pk_hex(
     phrase: &str,
     phrase_passwd: &str,
     pin: &str,
 ) -> Result<(String, String), crate::Error> {
     let hdrf = Hdrf::new(phrase_passwd);
-    let (secret_key_hex, public_key_hex) = hdrf.get_pk_hex(&phrase)?;
-    let pubk = hex::decode(public_key_hex)?;
-    let public_key = PublicKey::from_slice(&pubk)?;
-    let account = get_pub_key_acc(public_key)?;
-    let pin_secret = pin_encrypt(Some(secret_key_hex.into_bytes()), pin.as_bytes().to_vec())?;
+    let (secret_key, public_key) = hdrf.get_pk(&phrase)?;
+    println!("secret_key: {:?}", secret_key.secret_bytes().to_vec());
+    let account = Hdrf::get_pub_key_acc(public_key)?;
+    let pin_secret = pin_encrypt(
+        Some(secret_key.secret_bytes().to_vec()),
+        pin.as_bytes().to_vec(),
+    )?;
     Ok((pin_secret, account))
 }
 
@@ -62,15 +54,13 @@ mod tests {
 
     #[test]
     fn test_phrase_pin_pk() {
+        //Get private key and public key account
         let phrase = get_phrase();
-        let (secret, public_key_hex) = get_pk_hex(&phrase, "123456", "123901").unwrap();
-        println!("pin_secret:{}", secret);
-        println!("account:{}", public_key_hex);
-        let secret = hex::decode(secret).unwrap();
-        println!("secret:{:?}", secret);
-        let pin_secret = pin_encrypt(Some(secret), b"123901".to_vec()).unwrap();
+        let (pin_secret, _public_key_hex) = get_pk_hex(&phrase, "123456", "123901").unwrap();
+        // println!("pin_secret:{}", pin_secret);
+        // println!("account:{}", public_key_hex);
         let pdec = pin_decrypt(pin_secret, b"123901".to_vec()).unwrap();
-        println!("pdec Decrypted text: {:?}", pdec);
+        println!("secret_key: {:?}", pdec);
     }
 
     #[test]
