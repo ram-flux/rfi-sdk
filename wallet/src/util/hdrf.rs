@@ -66,8 +66,8 @@ impl<'a> Hdrf<'a> {
      */
     pub fn get_pub_key_acc(public_key: PublicKey) -> Result<String, crate::Error> {
         let public_key_hex = hex::encode(public_key.serialize());
-        let base58_address = bs58::encode(public_key_hex).into_string();
-        Ok(base58_address)
+        // let base58_address = bs58::encode(public_key_hex).into_string();
+        Ok(public_key_hex)
     }
 
     pub fn get_pri(secret_key: &str) -> Result<SecretKey, crate::Error> {

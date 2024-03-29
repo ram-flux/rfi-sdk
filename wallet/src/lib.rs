@@ -58,7 +58,8 @@ mod tests {
         let phrase = get_phrase();
         let (pin_secret, _public_key_hex) = get_pk_hex(&phrase, "123456", "123901").unwrap();
         // println!("pin_secret:{}", pin_secret);
-        // println!("account:{}", public_key_hex);
+        // println!("account:{:#}", public_key_hex);
+        // hex::decode(data)
         let pdec = pin_decrypt(pin_secret, b"123901".to_vec()).unwrap();
         println!("secret_key: {:?}", pdec);
     }
