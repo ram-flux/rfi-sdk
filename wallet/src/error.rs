@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Bip39 error: `{0}`")]
@@ -20,6 +24,13 @@ pub enum Error {
 
     #[error("`{0}`")]
     Msg(String),
+}
+
+
+impl From<hkdf::InvalidLength> for Error {
+    fn from(err: hkdf::InvalidLength) -> Error {
+        Error::Msg(format!("HKDF invalid length error: {}", err))
+    }
 }
 
 

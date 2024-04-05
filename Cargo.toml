@@ -1,3 +1,6 @@
+#
+# Copyright 2024 Ram Flux, LLC.
+#
 [workspace]
 members = ["im-sdk-api", "payload", "wallet"]
 

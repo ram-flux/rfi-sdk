@@ -14,7 +14,7 @@ im-net = { git = "ssh://git@github.com:22/ram-flux/im-net" }
 
 [dependencies]
 im-net = { git = "ssh://git@github.com:22/ram-flux/im-net", default-features = false }
-resource = { git = "https://github.com/tediou5/resources.git", branch = "sqlite" }
+resource = { git = "https://github.com/ram-flux/resources.git", branch = "sqlite" }
 
 payload = { path = "../payload" }
 wallet = { path = "../wallet" }

@@ -4,3 +4,4 @@
 
 pub mod hdrf;
 pub mod pin;
+pub mod device;

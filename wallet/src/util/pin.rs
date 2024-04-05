@@ -1,7 +1,6 @@
 //
 //  Copyright 2024 Ram Flux, LLC.
 //
-
 use aes_gcm::{
     aead::{generic_array::GenericArray, Aead},
     Aes256Gcm, KeyInit,
@@ -123,9 +122,6 @@ mod tests {
 
         Ok(())
     }
-
-
-
 
     
     #[test]

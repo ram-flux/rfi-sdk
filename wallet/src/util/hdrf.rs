@@ -6,9 +6,10 @@
 //https://github.com/satoshilabs/slips/blob/master/slip-0044.md
 
 use bip39::{Language, Mnemonic, MnemonicType, Seed};
-// use hex;
-// use bs58;
-use secp256k1::{PublicKey, Secp256k1, SecretKey};
+use secp256k1::ecdsa::Signature;
+use secp256k1::hashes::{sha256, Hash};
+use secp256k1::{Message, PublicKey, Secp256k1, SecretKey};
+
 use tiny_hderive::bip32::ExtendedPrivKey;
 
 pub struct Hdrf<'a> {
@@ -75,12 +76,75 @@ impl<'a> Hdrf<'a> {
         let secret_key = SecretKey::from_slice(&secret_key_vec)?;
         Ok(secret_key)
     }
+
+    pub fn sign_message(
+        &self,
+        message: &[u8],
+        secret_key: &SecretKey,
+    ) -> Result<Signature, crate::Error> {
+        let digest = sha256::Hash::hash(message);
+        let message = Message::from_digest(digest.to_byte_array());
+        let secp = Secp256k1::new();
+        let sig = secp.sign_ecdsa(&message, &secret_key);
+        Ok(sig)
+    }
+
+    pub fn verify_signature(
+        &self,
+        message: &[u8],
+        signature: &Signature,
+        public_key: &PublicKey,
+    ) -> Result<bool, crate::Error> {
+        let digest = sha256::Hash::hash(message);
+        let message = Message::from_digest(digest.to_byte_array());
+        let secp = Secp256k1::new();
+        let verify = secp.verify_ecdsa(&message, &signature, &public_key).is_ok();
+        Ok(verify)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    // use bs58;
+
+    #[test]
+    fn test_sign_and_verify_message() -> Result<(), crate::Error> {
+        let hdrf = Hdrf::new("");
+        let phrase = Hdrf::get_phrase();
+        let secret_key = hdrf.recover_priv_key(&phrase)?;
+        let (_, public_key) = hdrf.get_pk(&phrase)?;
+        let message = b"Hello, world!";
+        let signature = hdrf.sign_message(message, &secret_key)?;
+        let verify_result = hdrf.verify_signature(message, &signature, &public_key)?;
+        assert!(verify_result, "Signature verification failed.");
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_invalid_signature() -> Result<(), crate::Error> {
+        let hdrf = Hdrf::new("");
+        //the test phrase two different
+        let phrase1 = Hdrf::get_phrase();
+        let secret_key1 = hdrf.recover_priv_key(&phrase1)?;
+
+        let phrase2 = Hdrf::get_phrase();
+        let (_, public_key2) = hdrf.get_pk(&phrase2)?;
+
+        let message = b"Test message";
+
+        let signature = hdrf.sign_message(message, &secret_key1)?;
+        let verify_result = hdrf.verify_signature(message, &signature, &public_key2)?;
+
+        // check is false
+        assert!(
+            !verify_result,
+            "Signature verification unexpectedly succeeded."
+        );
+
+        Ok(())
+    }
+
     #[test]
     fn test_hdrf() {
         let hdrf = Hdrf::new("123456");

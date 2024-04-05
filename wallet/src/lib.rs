@@ -2,12 +2,14 @@
 //  Copyright 2024 Ram Flux, LLC.
 //
 
+pub mod fun;
+
 mod error;
 pub use error::Error;
 
 mod util;
-pub use util::{hdrf::Hdrf, pin::Pin};
-// use secp256k1::PublicKey;
+pub use util::{hdrf::Hdrf, pin::Pin, device::Device};
+
 
 pub fn pin_encrypt(pk: Option<Vec<u8>>, passwd: Vec<u8>) -> Result<String, crate::Error> {
     let wallet_priv_key = pk;
@@ -51,21 +53,6 @@ pub fn get_pk_hex(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use num_bigint::BigUint;
-    use std::collections::hash_map::DefaultHasher;
-    use std::hash::{Hash, Hasher};
-
-    fn hex_to_biguint(hex: &str) -> BigUint {
-        let bytes = hex::decode(hex).unwrap();
-        BigUint::from_bytes_be(&bytes)
-    }
-
-    fn hash_biguint(num: &BigUint) -> u64 {
-        let mut hasher = DefaultHasher::new();
-        num.hash(&mut hasher);
-        hasher.finish()
-    }
-
     #[test]
     fn test_phrase_pin_pk() {
         //Get private key and public key account
@@ -76,12 +63,6 @@ mod tests {
         // hex::decode(data)
         let pdec = pin_decrypt(pin_secret, b"123901".to_vec()).unwrap();
         println!("secret_key: {:?}", pdec);
-        // 039df9e3a9ae97c91ddb9006a212e9c9b0c47c2c08c76698f0a42ad06ece139156
-        let hex_str = public_key_hex.as_str();
-        // let num = hex_to_biguint(hex_str);
-        let num = hex_to_biguint(hex_str);
-        let hash_value = hash_biguint(&num);
-        println!("转换后的数字: {}", hash_value);
     }
 
     #[test]
