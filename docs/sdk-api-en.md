@@ -1,8 +1,8 @@
-# IM SDK API
+# Ram Flux SDK API
 
-## 设备
+## Device
 
-#### 初始化
+#### Initialization
 
 **init**
 
@@ -10,21 +10,19 @@
 >
 > | Parameter      | Type   | Must | Parameter Description          |
 > | :------------- | :----- | :--- | :----------------------------- |
-> | account_pubkey | String | yes  | 账户公钥                       |
-> | device_pubkey  | String | yes  | 设备公钥                       |
-> | proof          | String | yes  | 证明数据，用于验证设备的合法性 |
+> | account_pubkey | String | yes  | Account public key             |
+> | device_pubkey  | String | yes  | Device public key              |
+> | proof          | String | yes  | Proof data for verifying device authenticity |
 >
 > Response and Parameters in data
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | encrypt_data | String | yes  | 加密信息              |
+> | encrypt_data | String | yes  | Encrypted information |
 
 ------
 
-
-
-#### 解密
+#### Decryption
 
 **decrypt**
 
@@ -32,21 +30,19 @@
 >
 > | Parameter      | Type   | Must | Parameter Description |
 > | :------------- | :----- | :--- | :-------------------- |
-> | encrypt_data   | String | yes  | 加密信息              |
-> | account_prikey | String | yes  | 账号私钥              |
-> | passwd         | String | yes  | 授权密码              |
+> | encrypt_data   | String | yes  | Encrypted information |
+> | account_prikey | String | yes  | Account private key   |
+> | passwd         | String | yes  | Authorization password|
 >
 > Response and Parameters in data
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | decrypt_data | String | yes  | 解密信息              |
+> | decrypt_data | String | yes  | Decrypted information |
 
 ------
 
-
-
-#### 授权
+#### Authorization
 
 **warrant**
 
@@ -54,19 +50,17 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | decrypt_data | String | yes  | 解密信息              |
+> | decrypt_data | String | yes  | Decrypted information |
 >
 > Response and Parameters in data
 >
 > | Parameter         | Type   | Must | Parameter Description |
 > | :---------------- | :----- | :--- | :-------------------- |
-> | server_public_key | String | yes  | 服务端返回的公钥      |
+> | server_public_key | String | yes  | Server returned public key |
 
 ------
 
-
-
-#### 更新设备令牌
+#### Update Device Token
 
 **update_token**
 
@@ -74,19 +68,17 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | token     | String | yes  | 访问令牌              |
+> | token     | String | yes  | Access token         |
 >
 > Response and Parameters in data
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | token     | String | yes  | 新令牌                |
+> | token     | String | yes  | New token             |
 
 ------
 
-
-
-#### 删除设备
+#### Delete Device
 
 **del_device**
 
@@ -94,7 +86,7 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | device_id | int  | yes  | 设备id                |
+> | device_id | int  | yes  | Device ID             |
 >
 > Response and Parameters in data
 >
@@ -102,11 +94,9 @@
 
 ------
 
+## Account
 
-
-## 账号
-
-#### 更新账号信息
+#### Update Account Information
 
 **update_info**
 
@@ -114,10 +104,10 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | bio       | String | yes  | 简介                  |
-> | name      | String | yes  | 名称                  |
-> | gender    | int    | yes  | 性别                  |
+> | user_id   | int    | yes  | User ID               |
+> | bio       | String | yes  | Bio                   |
+> | name      | String | yes  | Name                  |
+> | gender    | int    | yes  | Gender                |
 >
 > Response and Parameters in data
 >
@@ -125,9 +115,7 @@
 
 ------
 
-
-
-#### 更新头像
+#### Update Avatar
 
 **update_avatar**
 
@@ -135,8 +123,8 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | avatar    | String | yes  | 头像数据              |
+> | user_id   | int    | yes  | User ID               |
+> | avatar    | String | yes  | Avatar data           |
 >
 > Response and Parameters in data
 >
@@ -144,7 +132,7 @@
 
 ------
 
-#### 获取账号详情
+#### Account Detail
 
 **account_detail**
 
@@ -152,19 +140,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | account表数据结构（后续补充） |      |      |                       |
+> | Account table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 加入社区
+#### Join Community
 
 **add_community**
 
@@ -172,9 +158,9 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | user_id      | int    | yes  | 用户id                |
-> | community_id | int    | yes  | 社区id                |
-> | content      | String | yes  | 入组信息              |
+> | user_id      | int    | yes  | User ID               |
+> | community_id | int    | yes  | Community ID          |
+> | content      | String | yes  | Joining message       |
 >
 > Response and Parameters in data
 >
@@ -182,7 +168,7 @@
 
 ------
 
-#### 退出社区
+#### Leave Community
 
 **quit_community**
 
@@ -190,8 +176,10 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | user_id      | int  | yes  | 用户id                |
-> | community_id | int  | yes  | 社区id                |
+
+
+> | user_id      | int  | yes  | User ID               |
+> | community_id | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
@@ -199,9 +187,7 @@
 
 ------
 
-
-
-#### 添加联系人
+#### Add Contact
 
 **add_contact**
 
@@ -209,9 +195,9 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | friend_id | int    | yes  | 联系人id              |
-> | content   | String | no   | 发送信息              |
+> | user_id   | int    | yes  | User ID               |
+> | friend_id | int    | yes  | Contact ID            |
+> | content   | String | no   | Message               |
 >
 > Response and Parameters in data
 >
@@ -219,11 +205,9 @@
 
 ------
 
+## Conversation
 
-
-## 会话
-
-#### 发送消息
+#### Send Message
 
 **push_msg**
 
@@ -231,11 +215,11 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 接收者                |
-> | from_id   | int    | yes  | 发送者                |
-> | content   | String | yes  | 消息内容              |
-> | mode      | int    | yes  | 消息类型              |
-> | chat_type | int    | yes  | 聊天类型              |
+> | user_id   | int    | yes  | Recipient             |
+> | from_id   | int    | yes  | Sender                |
+> | content   | String | yes  | Message content       |
+> | mode      | int    | yes  | Message type          |
+> | chat_type | int    | yes  | Chat type             |
 >
 > Response and Parameters in data
 >
@@ -243,7 +227,7 @@
 
 ------
 
-#### 拉取消息
+#### Pull Messages
 
 **pull_msg**
 
@@ -251,19 +235,17 @@
 >
 > | Parameter  | Type | Must | Parameter Description |
 > | :--------- | :--- | :--- | :-------------------- |
-> | message_id | int  | yes  | 消息id                |
+> | message_id | int  | yes  | Message ID            |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | message表数据结构（后续补充） |      |      |                       |
+> | Message table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 更新消息
+#### Update Message
 
 **update_msg**
 
@@ -271,8 +253,8 @@
 >
 > | Parameter  | Type   | Must | Parameter Description |
 > | :--------- | :----- | :--- | :-------------------- |
-> | message_id | int    | yes  | 消息id                |
-> | content    | String | yes  | 消息内容              |
+> | message_id | int    | yes  | Message ID            |
+> | content    | String | yes  | Message content       |
 >
 > Response and Parameters in data
 >
@@ -280,9 +262,7 @@
 
 ------
 
-
-
-#### 删除消息
+#### Delete Message
 
 **del_msg**
 
@@ -290,7 +270,7 @@
 >
 > | Parameter  | Type | Must | Parameter Description |
 > | :--------- | :--- | :--- | :-------------------- |
-> | message_id | int  | yes  | 消息id                |
+> | message_id | int  | yes  | Message ID            |
 >
 > Response and Parameters in data
 >
@@ -298,9 +278,7 @@
 
 ------
 
-
-
-#### 置顶消息
+#### Pin Message
 
 **pin_msg**
 
@@ -308,7 +286,7 @@
 >
 > | Parameter  | Type | Must | Parameter Description |
 > | :--------- | :--- | :--- | :-------------------- |
-> | message_id | int  | yes  | 消息id                |
+> | message_id | int  | yes  | Message ID            |
 >
 > Response and Parameters in data
 >
@@ -316,9 +294,7 @@
 
 ------
 
-
-
-#### 聊天列表
+#### Chat List
 
 **chat_list**
 
@@ -326,19 +302,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                  | Type | Must | Parameter Description |
 > | :------------------------- | :--- | :--- | :-------------------- |
-> | chat表数据结构（后续补充） |      |      |                       |
+> | Chat table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 聊天记录搜索
+#### Search Chat History
 
 **chat_detail**
 
@@ -346,22 +320,20 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | chat_id   | int    | yes  | 聊天id                |
-> | keyword   | String | yes  | 关键字                |
+> | chat_id   | int    | yes  | Chat ID               |
+> | keyword   | String | yes  | Keyword               |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | message表数据结构（后续补充） |      |      |                       |
+> | Message table structure (to be added later) |      |      |                       |
 
 ------
 
+## Sprite
 
-
-## 精灵
-
-#### 创建精灵
+#### Create Sprite
 
 **create_elf**
 
@@ -369,9 +341,9 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | name      | String | yes  | 名称                  |
-> | avatar    | String | yes  | 头像                  |
-> | type      | int    | yes  | 1/普通                |
+> | name      | String | yes  | Name                  |
+> | avatar    | String | yes  | Avatar                |
+> | type      | int    | yes  | 1/Normal              |
 >
 > Response and Parameters in data
 >
@@ -379,7 +351,7 @@
 
 ------
 
-#### 更新精灵
+#### Update Sprite
 
 **update_elf**
 
@@ -387,11 +359,13 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | elf_id    | int    | yes  | 精灵id                |
-> | name      | String | yes  | 名称                  |
-> | avatar    | String | yes  | 头像                  |
-> | type      | int    | yes  | 1/普通                |
-> | status    | int    | yes  | 状态                  |
+> | elf_id    | int    | yes  | Sprite ID             |
+> | name      | String | yes  | Name                  |
+> | avatar
+
+    | String | yes  | Avatar                |
+> | type      | int    | yes  | 1/Normal              |
+> | status    | int    | yes  | Status                |
 >
 > Response and Parameters in data
 >
@@ -399,9 +373,7 @@
 
 ------
 
-
-
-#### 精灵信息
+#### Sprite Information
 
 **elf_detail**
 
@@ -409,19 +381,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | elf_id    | int  | yes  | 精灵id                |
+> | elf_id    | int  | yes  | Sprite ID             |
 >
 > Response and Parameters in data
 >
 > | Parameter                 | Type | Must | Parameter Description |
 > | :------------------------ | :--- | :--- | :-------------------- |
-> | elf表数据结构（后续补充） |      |      |                       |
+> | Elf table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 删除精灵
+#### Delete Sprite
 
 **del_elf**
 
@@ -429,7 +399,7 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | elf_id    | int  | yes  | 精灵id                |
+> | elf_id    | int  | yes  | Sprite ID             |
 >
 > Response and Parameters in data
 >
@@ -437,11 +407,9 @@
 
 ------
 
+## Address Book
 
-
-## 通讯录
-
-#### 搜索
+#### Search
 
 **search_contact**
 
@@ -449,19 +417,19 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | keyword   | String | yes  | 关键字                |
+> | keyword   | String | yes  | Keyword               |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | contact表数据结构（后续补充） |      |      |                       |
+> | Contact table structure (to be added later) |      |      |                       |
 
 ------
 
 
 
-#### 获取联系人详情
+#### Get Contact Details
 
 ****
 
@@ -469,19 +437,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | contact表数据结构（后续补充） |      |      |                       |
+> | Contact table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 获取通讯录列表
+#### Get Address Book List
 
 **contact_list**
 
@@ -489,19 +455,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                     | Type | Must | Parameter Description |
 > | :---------------------------- | :--- | :--- | :-------------------- |
-> | contact表数据结构（后续补充） |      |      |                       |
+> | Contact table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 更新联系人信息
+#### Update Contact Information
 
 **update_contact**
 
@@ -509,9 +473,9 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | friend_id | int    | yes  | 联系人id              |
-> | remark    | String | yes  | 备注                  |
+> | user_id   | int    | yes  | User ID               |
+> | friend_id | int    | yes  | Contact ID            |
+> | remark    | String | yes  | Remark                |
 >
 > Response and Parameters in data
 >
@@ -519,9 +483,7 @@
 
 ------
 
-
-
-#### 删除联系人
+#### Delete Contact
 
 **del_contact**
 
@@ -529,8 +491,8 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
-> | friend_id | int  | yes  | 联系人id              |
+> | user_id   | int  | yes  | User ID               |
+> | friend_id | int  | yes  | Contact ID            |
 >
 > Response and Parameters in data
 >
@@ -538,11 +500,9 @@
 
 ------
 
+## Community
 
-
-## 社区
-
-#### 获取社区列表
+#### Get Community List
 
 **community_list**
 
@@ -550,19 +510,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                       | Type | Must | Parameter Description |
 > | :------------------------------ | :--- | :--- | :-------------------- |
-> | community表数据结构（后续补充） |      |      |                       |
+> | Community table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 社区详情
+#### Community Detail
 
 **community_detail**
 
@@ -570,19 +528,17 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
+> | community_id | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                       | Type | Must | Parameter Description |
 > | :------------------------------ | :--- | :--- | :-------------------- |
-> | community表数据结构（后续补充） |      |      |                       |
+> | Community table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 更新社区信息
+#### Update Community Information
 
 **update_community**
 
@@ -590,13 +546,15 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | community_id | int    | yes  | 社区id                |
-> | name         | String | yes  | 名称                  |
-> | bio          | String | yes  | 简介                  |
-> | passwd       | String | no   | 密码                  |
-> | announcement | String | no   | 公告                  |
-> | pinned       | bool   | yes  | 置顶                  |
-> | status       | int    | yes  | 状态                  |
+> |
+
+ community_id | int    | yes  | Community ID          |
+> | name         | String | yes  | Name                  |
+> | bio          | String | yes  | Bio                   |
+> | passwd       | String | no   | Password              |
+> | announcement | String | no   | Announcement          |
+> | pinned       | bool   | yes  | Pinned                |
+> | status       | int    | yes  | Status                |
 >
 > Response and Parameters in data
 >
@@ -604,9 +562,7 @@
 
 ------
 
-
-
-#### 删除社区
+#### Delete Community
 
 **del_community**
 
@@ -614,7 +570,7 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | id        | int  | yes  | 社区id                |
+> | id        | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
@@ -622,9 +578,7 @@
 
 ------
 
-
-
-#### 创建社区
+#### Create Community
 
 **create_community**
 
@@ -632,26 +586,24 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | father_id | int    | no   | 父社区id              |
-> | name      | String | yes  | 社区名称              |
-> | bio       | String | yes  | 简介                  |
-> | passwd    | String | no   | 密码                  |
-> | status    | int    | yes  | 1/普通社区 2/二级社区 |
+> | user_id   | int    | yes  | User ID               |
+> | father_id | int    | no   | Parent community ID   |
+> | name      | String | yes  | Community name        |
+> | bio       | String | yes  | Bio                   |
+> | passwd    | String | no   | Password              |
+> | status    | int    | yes  | 1/Normal community 2/Sub-community |
 > 
 >Response and Parameters in data
 > 
 >| Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
+> | community_id | int  | yes  | Community ID          |
 
 ------
 
+### Community Posts
 
-
-### 社区帖子
-
-#### 获取社区帖子列表
+#### Get Community Post List
 
 **post_list**
 
@@ -659,19 +611,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | id        | int  | yes  | 社区id                |
+> | id        | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                            | Type | Must | Parameter Description |
 > | :----------------------------------- | :--- | :--- | :-------------------- |
-> | community_post表数据结构（后续补充） |      |      |                       |
+> | Community post table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 发布新帖子
+#### Publish New Post
 
 **create_post**
 
@@ -679,10 +629,10 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | community_id | int    | yes  | 社区id                |
-> | user_id      | int    | yes  | 用户id                |
-> | name         | String | yes  | 名称                  |
-> | content      | String | yes  | 内容                  |
+> | community_id | int    | yes  | Community ID          |
+> | user_id      | int    | yes  | User ID               |
+> | name         | String | yes  | Name                  |
+> | content      | String | yes  | Content               |
 >
 > Response and Parameters in data
 >
@@ -690,9 +640,7 @@
 
 ------
 
-
-
-#### 更新新帖子
+#### Update Post
 
 **update_post**
 
@@ -700,9 +648,9 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | post_id   | int    | yes  | 帖子id                |
-> | name      | String | yes  | 名称                  |
-> | content   | String | yes  | 内容                  |
+> | post_id   | int    | yes  | Post ID               |
+> | name      | String | yes  | Name                  |
+> | content   | String | yes  | Content               |
 >
 > Response and Parameters in data
 >
@@ -710,9 +658,7 @@
 
 ------
 
-
-
-#### 查看帖子详情
+#### View Post Details
 
 **post_detail**
 
@@ -720,17 +666,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | post_id   | int  | yes  | 帖子id                |
+> | post_id   | int  | yes  | Post ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                            | Type | Must | Parameter Description |
 > | :----------------------------------- | :--- | :--- | :-------------------- |
-> | community_post表数据结构（后续补充） |      |      |                       |
+> | Community post table structure (to be added later) |      |      |                       |
 
 ------
 
-#### 删除帖子
+#### Delete Post
 
 **del_post**
 
@@ -738,7 +684,7 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | post_id   | int  | yes  | 帖子id                |
+> | post_id   | int  | yes  | Post ID               |
 >
 > Response and Parameters in data
 >
@@ -746,9 +692,7 @@
 
 ------
 
-
-
-#### 获取社区帖子回复列表
+#### Get Community Post Reply List
 
 **post_reply_list**
 
@@ -756,29 +700,29 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | post_id   | int  | yes  | 社区id                |
+> | post_id   | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                                  | Type | Must | Parameter Description |
 > | :----------------------------------------- | :--- | :--- | :-------------------- |
-> | community_post_reply表数据结构（后续补充） |      |      |                       |
+> | Community post reply table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 回复帖子
+#### Reply to Post
 
 **reply_post**
 
 > Requests and Parameter Description
 >
 > | Parameter | Type   | Must | Parameter Description |
-> | :-------- | :----- | :--- | :-------------------- |
-> | post_id   | int    | yes  | 帖子id                |
-> | user_id   | int    | yes  | 用户id                |
-> | content   | String | yes  | 内容                  |
+> | :-------- | :
+
+----- | :--- | :-------------------- |
+> | post_id   | int    | yes  | Post ID               |
+> | user_id   | int    | yes  | User ID               |
+> | content   | String | yes  | Content               |
 >
 > Response and Parameters in data
 >
@@ -786,9 +730,7 @@
 
 ------
 
-
-
-#### 更新帖子回复
+#### Update Post Reply
 
 **update_post_reply**
 
@@ -796,8 +738,8 @@
 >
 > | Parameter     | Type   | Must | Parameter Description |
 > | :------------ | :----- | :--- | :-------------------- |
-> | post_reply_id | int    | yes  | 帖子id                |
-> | content       | String | yes  | 内容                  |
+> | post_reply_id | int    | yes  | Post ID               |
+> | content       | String | yes  | Content               |
 >
 > Response and Parameters in data
 >
@@ -805,7 +747,7 @@
 
 ------
 
-#### 删除帖子回复
+#### Delete Post Reply
 
 **del_post_reply**
 
@@ -813,7 +755,7 @@
 >
 > | Parameter     | Type | Must | Parameter Description |
 > | :------------ | :--- | :--- | :-------------------- |
-> | post_reply_id | int  | yes  | 帖子id                |
+> | post_reply_id | int  | yes  | Post ID               |
 >
 > Response and Parameters in data
 >
@@ -821,9 +763,7 @@
 
 ------
 
-
-
-#### 获取社区帖子回复列表
+#### Get Community Post Reply List
 
 **post_reply_list**
 
@@ -831,13 +771,13 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | post_id   | int  | yes  | 社区id                |
+> | post_id   | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                                  | Type | Must | Parameter Description |
 > | :----------------------------------------- | :--- | :--- | :-------------------- |
-> | community_post_reply表数据结构（后续补充） |      |      |                       |
+> | Community post reply table structure (to be added later) |      |      |                       |
 
 ------
 
@@ -845,9 +785,9 @@
 
 
 
-### 社区管理员
+### Community Administrators
 
-#### 管理员列表
+#### Administrator List
 
 **admin_list**
 
@@ -855,17 +795,17 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
+> | community_id | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                             | Type | Must | Parameter Description |
 > | :------------------------------------ | :--- | :--- | :-------------------- |
-> | community_admin表数据结构（后续补充） |      |      |                       |
+> | Community admin table structure (to be added later) |      |      |                       |
 
 ------
 
-#### 添加管理员
+#### Add Administrator
 
 **add_admin**
 
@@ -873,9 +813,9 @@
 >
 > | Parameter    | Type   | Must | Parameter Description |
 > | :----------- | :----- | :--- | :-------------------- |
-> | community_id | int    | yes  | 社区id                |
-> | user_id      | int    | yes  | 用户id                |
-> | type         | String | yes  | 类型                  |
+> | community_id | int    | yes  | Community ID          |
+> | user_id      | int    | yes  | User ID               |
+> | type         | String | yes  | Type                  |
 >
 > Response and Parameters in data
 >
@@ -883,9 +823,7 @@
 
 ------
 
-
-
-#### 更新管理员信息
+#### Update Administrator Information
 
 **update_admin**
 
@@ -893,9 +831,9 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
-> | type         | int  | yes  | 类型                  |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
+> | type         | int  | yes  | Type                  |
 >
 > Response and Parameters in data
 >
@@ -903,9 +841,7 @@
 
 ------
 
-
-
-#### 删除管理员
+#### Delete Administrator
 
 **del_admin**
 
@@ -913,8 +849,8 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
@@ -922,9 +858,7 @@
 
 ------
 
-
-
-#### 管理员详情
+#### Administrator Details
 
 **admin_detail**
 
@@ -932,22 +866,20 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                             | Type | Must | Parameter Description |
 > | :------------------------------------ | :--- | :--- | :-------------------- |
-> | community_admin表数据结构（后续补充） |      |      |                       |
+> | Community admin table structure (to be added later) |      |      |                       |
 
 ------
 
+### Community Members
 
-
-### 社区成员
-
-#### 成员列表
+#### Member List
 
 **member_list**
 
@@ -955,26 +887,28 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
+> | community_id | int  | yes  | Community ID          |
 >
 > Response and Parameters in data
 >
 > | Parameter                              | Type | Must | Parameter Description |
 > | :------------------------------------- | :--- | :--- | :-------------------- |
-> | community_member表数据结构（后续补充） |      |      |                       |
+> | Community member table structure (to be added later) |      |      |                       |
 
 ------
 
-#### 添加成员
+#### Add Member
 
 **add_member**
 
 > Requests and Parameter Description
 >
 > | Parameter    | Type | Must | Parameter Description |
-> | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | :-----------
+
+ | :--- | :--- | :-------------------- |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
@@ -982,9 +916,7 @@
 
 ------
 
-
-
-#### 更新成员信息
+#### Update Member Information
 
 **update_member**
 
@@ -992,9 +924,9 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
-> | type         | int  | yes  | 类型                  |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
+> | type         | int  | yes  | Type                  |
 >
 > Response and Parameters in data
 >
@@ -1002,9 +934,7 @@
 
 ------
 
-
-
-#### 删除成员
+#### Delete Member
 
 **del_member**
 
@@ -1012,8 +942,8 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
@@ -1021,9 +951,7 @@
 
 ------
 
-
-
-#### 成员详情
+#### Member Details
 
 **member_detail**
 
@@ -1031,33 +959,31 @@
 >
 > | Parameter    | Type | Must | Parameter Description |
 > | :----------- | :--- | :--- | :-------------------- |
-> | community_id | int  | yes  | 社区id                |
-> | user_id      | int  | yes  | 用户id                |
+> | community_id | int  | yes  | Community ID          |
+> | user_id      | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                              | Type | Must | Parameter Description |
 > | :------------------------------------- | :--- | :--- | :-------------------- |
-> | community_member表数据结构（后续补充） |      |      |                       |
+> | Community member table structure (to be added later) |      |      |                       |
 
 ------
 
+## Application
 
-
-## 申请
-
-#### 创建申请
+#### Create Application
 
 **create_apply**
 
 > Requests and Parameter Description
 >
-> | Parameter | Type   | Must | Parameter Description     |
-> | :-------- | :----- | :--- | :------------------------ |
-> | type      | int    | yes  | 1/添加好友 2/申请加入社区 |
-> | type_id   | int    | yes  | 2/申请加入社区            |
-> | user_id   | int    | yes  | 请求人                    |
-> | content   | String | yes  | 请求消息                  |
+> | Parameter | Type   | Must | Parameter Description        |
+> | :-------- | :----- | :--- | :--------------------------- |
+> | type      | int    | yes  | 1/Add friend 2/Apply to join community |
+> | type_id   | int    | yes  | 2/Apply to join community    |
+> | user_id   | int    | yes  | Requester                    |
+> | content   | String | yes  | Request message              |
 >
 > Response and Parameters in data
 >
@@ -1065,9 +991,7 @@
 
 ------
 
-
-
-#### 获取申请列表
+#### Get Application List
 
 **apply_list**
 
@@ -1075,19 +999,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                   | Type | Must | Parameter Description |
 > | :-------------------------- | :--- | :--- | :-------------------- |
-> | apply表数据结构（后续补充） |      |      |                       |
+> | Apply table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 查看申请详情
+#### View Application Details
 
 **applly_detail**
 
@@ -1095,28 +1017,28 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | apply_id  | int  | yes  | 申请id                |
+> | apply_id  | int  | yes  | Application ID        |
 >
 > Response and Parameters in data
 >
 > | Parameter                   | Type | Must | Parameter Description |
 > | :-------------------------- | :--- | :--- | :-------------------- |
-> | apply表数据结构（后续补充） |      |      |                       |
+> | Apply table structure (to be added later) |      |      |                       |
 
 ------
 
-#### 回复申请
+#### Reply to Application
 
 **reply_apply**
 
 > Requests and Parameter Description
 >
-> | Parameter | Type   | Must | Parameter Description                        |
-> | :-------- | :----- | :--- | :------------------------------------------- |
-> | apply_id  | int    | yes  | 申请id                                       |
-> | user_id   | int    | yes  | 用户id                                       |
-> | content   | String | no   | 回复内容                                     |
-> | status    | int    | yes  | 审核结果：1/通过 2/回复 3/拒绝 7/请求 8/过期 |
+> | Parameter | Type   | Must | Parameter Description                      |
+> | :-------- | :----- | :--- | :----------------------------------------- |
+> | apply_id  | int    | yes  | Application ID                             |
+> | user_id   | int    | yes  | User ID                                   |
+> | content   | String | no   | Reply content                             |
+> | status    | int    | yes  | Review result: 1/Approved 2/Reply 3/Rejected 7/Request 8/Expired |
 >
 > Response and Parameters in data
 >
@@ -1124,7 +1046,7 @@
 
 ------
 
-#### 删除申请
+#### Delete Application
 
 **del_apply**
 
@@ -1132,7 +1054,7 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | apply_id  | int  | yes  | 申请id                |
+> | apply_id  | int  | yes  | Application ID        |
 >
 > Response and Parameters in data
 >
@@ -1140,11 +1062,9 @@
 
 ------
 
+## Settings
 
-
-## 设置
-
-#### 获取设置信息
+#### Get Settings Information
 
 **settings_detail**
 
@@ -1152,19 +1072,19 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                      | Type | Must | Parameter Description |
-> | :----------------------------- | :--- | :--- | :-------------------- |
-> | settings表数据结构（后续补充） |      |      |                       |
+> | :-----------------------------
+
+ | :--- | :--- | :-------------------- |
+> | Settings table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 修改语言
+#### Change Language
 
 **update_language**
 
@@ -1172,8 +1092,8 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | language  | String | no   | 语言                  |
+> | user_id   | int    | yes  | User ID               |
+> | language  | String | no   | Language              |
 >
 > Response and Parameters in data
 >
@@ -1181,11 +1101,9 @@
 
 ------
 
+### Favorites
 
-
-### 收藏夹
-
-#### 收藏夹列表
+#### Favorites List
 
 **favorite_list**
 
@@ -1193,19 +1111,17 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                      | Type | Must | Parameter Description |
 > | :----------------------------- | :--- | :--- | :-------------------- |
-> | favorite表数据结构（后续补充） |      |      |                       |
+> | Favorite table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 收藏项详情
+#### Favorite Item Details
 
 **favorite_detail**
 
@@ -1213,19 +1129,17 @@
 >
 > | Parameter   | Type | Must | Parameter Description |
 > | :---------- | :--- | :--- | :-------------------- |
-> | favorite_id | int  | yes  | 收藏项id              |
+> | favorite_id | int  | yes  | Favorite item ID      |
 >
 > Response and Parameters in data
 >
 > | Parameter                      | Type | Must | Parameter Description |
 > | :----------------------------- | :--- | :--- | :-------------------- |
-> | favorite表数据结构（后续补充） |      |      |                       |
+> | Favorite table structure (to be added later) |      |      |                       |
 
 ------
 
-
-
-#### 添加到收藏夹
+#### Add to Favorites
 
 **add_favorite**
 
@@ -1233,8 +1147,8 @@
 >
 > | Parameter | Type   | Must | Parameter Description |
 > | :-------- | :----- | :--- | :-------------------- |
-> | user_id   | int    | yes  | 用户id                |
-> | content   | String | yes  | 内容                  |
+> | user_id   | int    | yes  | User ID               |
+> | content   | String | yes  | Content               |
 >
 > Response and Parameters in data
 >
@@ -1242,7 +1156,7 @@
 
 ------
 
-#### 从收藏夹移除
+#### Remove from Favorites
 
 **del_favorite**
 
@@ -1250,7 +1164,7 @@
 >
 > | Parameter   | Type | Must | Parameter Description |
 > | :---------- | :--- | :--- | :-------------------- |
-> | favorite_id | int  | yes  | 收藏项id              |
+> | favorite_id | int  | yes  | Favorite item ID      |
 >
 > Response and Parameters in data
 >
@@ -1258,11 +1172,9 @@
 
 ------
 
+## Navigation
 
-
-## 导航
-
-#### 导航列表
+#### Navigation List
 
 **nav_list**
 
@@ -1270,28 +1182,28 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | user_id   | int  | yes  | 用户id                |
+> | user_id   | int  | yes  | User ID               |
 >
 > Response and Parameters in data
 >
 > | Parameter                 | Type | Must | Parameter Description |
 > | :------------------------ | :--- | :--- | :-------------------- |
-> | nav表数据结构（后续补充） |      |      |                       |
+> | Nav table structure (to be added later) |      |      |                       |
 
 ------
 
-#### 添加导航
+#### Add Navigation
 
 **add_nav**
 
 > Requests and Parameter Description
 >
-> | Parameter | Type | Must | Parameter Description       |
-> | :-------- | :--- | :--- | :-------------------------- |
-> | user_id   | int  | yes  | 用户id                      |
-> | type      | int  | yes  | 1/私聊 2/社区 3/精灵 7/广播 |
-> | type_id   | int  | yes  | 对应的id                    |
-> | sort      | int  | yes  | 位置索引                    |
+> | Parameter | Type | Must | Parameter Description           |
+> | :-------- | :--- | :--- | :------------------------------ |
+> | user_id   | int  | yes  | User ID                         |
+> | type      | int  | yes  | 1/Private chat 2/Community 3/Sprite 7/Broadcast |
+> | type_id   | int  | yes  | Corresponding ID                |
+> | sort      | int  | yes  | Position index                  |
 >
 > Response and Parameters in data
 >
@@ -1299,7 +1211,7 @@
 
 ------
 
-#### 更新导航
+#### Update Navigation
 
 **update_nav**
 
@@ -1307,8 +1219,8 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | nav_id    | int  | yes  | 导航id                |
-> | sort      | int  | no   | 位置索引              |
+> | nav_id    | int  | yes  | Navigation ID         |
+> | sort      | int  | no   | Position index        |
 >
 > Response and Parameters in data
 >
@@ -1316,9 +1228,7 @@
 
 ------
 
-
-
-#### 删除导航
+#### Delete Navigation
 
 **del_nav**
 
@@ -1326,11 +1236,10 @@
 >
 > | Parameter | Type | Must | Parameter Description |
 > | :-------- | :--- | :--- | :-------------------- |
-> | nav_id    | int  | yes  | 导航id                |
+> | nav_id    | int  | yes  | Navigation ID         |
 >
 > Response and Parameters in data
 >
 > no data
 
 ------
-
