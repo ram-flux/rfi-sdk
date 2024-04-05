@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 // use chrono::prelude::*;
 
 pub mod avatar;

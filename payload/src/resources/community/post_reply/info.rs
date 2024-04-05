@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 use chrono::prelude::*;
 use resource::Resource;
 #[derive(serde::Deserialize, serde::Serialize, PartialEq, Debug, Default)]

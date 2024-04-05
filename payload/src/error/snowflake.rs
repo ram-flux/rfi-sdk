@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 #[derive(serde::Serialize, thiserror::Error, Debug, Clone)]
 pub enum SnowflakeError {
     #[error("Clock moved backwards.  Refusing to generate id for {0} milliseconds")]

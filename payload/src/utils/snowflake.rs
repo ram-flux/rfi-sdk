@@ -1,3 +1,6 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
 // 2023-05-24
 const TWEPOCH: u128 = 1684922700000;
 const WORKER_ID_BITS: u128 = 5;

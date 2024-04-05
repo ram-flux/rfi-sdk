@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 pub mod info;
 use chrono::prelude::*;
 use resource::{GenResourceID, Resource};

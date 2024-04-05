@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 pub mod block;
 pub mod data;
 pub mod status;

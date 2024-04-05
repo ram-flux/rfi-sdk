@@ -1,3 +1,6 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
 
 pub fn verify_keys(private_key_hex: &str, public_key_hex: &str) -> bool {
     let private_key_bytes: [u8; 32] = hex::decode(private_key_hex)

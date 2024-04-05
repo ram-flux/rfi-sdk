@@ -2,7 +2,7 @@
 # Copyright 2024 Ram Flux, LLC.
 #
 [workspace]
-members = ["im-sdk-api", "payload", "wallet"]
+members = ["sdk-api", "payload", "wallet"]
 
 resolver = "2"
 

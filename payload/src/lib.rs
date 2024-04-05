@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 #![feature(async_closure)]
 #![allow(refining_impl_trait)]
 #![allow(clippy::too_many_arguments)]

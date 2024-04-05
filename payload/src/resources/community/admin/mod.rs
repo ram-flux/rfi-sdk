@@ -1,3 +1,7 @@
+//
+//  Copyright 2024 Ram Flux, LLC.
+//
+
 pub mod typ;
 
 use chrono::prelude::*;
