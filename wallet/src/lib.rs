@@ -51,17 +51,37 @@ pub fn get_pk_hex(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use num_bigint::BigUint;
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    fn hex_to_biguint(hex: &str) -> BigUint {
+        let bytes = hex::decode(hex).unwrap();
+        BigUint::from_bytes_be(&bytes)
+    }
+
+    fn hash_biguint(num: &BigUint) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        num.hash(&mut hasher);
+        hasher.finish()
+    }
 
     #[test]
     fn test_phrase_pin_pk() {
         //Get private key and public key account
         let phrase = get_phrase();
-        let (pin_secret, _public_key_hex) = get_pk_hex(&phrase, "123456", "123901").unwrap();
+        let (pin_secret, public_key_hex) = get_pk_hex(&phrase, "123456", "123901").unwrap();
         // println!("pin_secret:{}", pin_secret);
-        // println!("account:{:#}", public_key_hex);
+        println!("account:{:#}", public_key_hex);
         // hex::decode(data)
         let pdec = pin_decrypt(pin_secret, b"123901".to_vec()).unwrap();
         println!("secret_key: {:?}", pdec);
+        // 039df9e3a9ae97c91ddb9006a212e9c9b0c47c2c08c76698f0a42ad06ece139156
+        let hex_str = public_key_hex.as_str();
+        // let num = hex_to_biguint(hex_str);
+        let num = hex_to_biguint(hex_str);
+        let hash_value = hash_biguint(&num);
+        println!("转换后的数字: {}", hash_value);
     }
 
     #[test]
