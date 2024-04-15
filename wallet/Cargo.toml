@@ -10,6 +10,7 @@ authors = ["Andy.z"]
 
 [dependencies]
 thiserror = "1"
+anyhow = "1"
 
 tiny-bip39 = "1"
 tiny-hderive = "0.3"
@@ -22,7 +23,7 @@ aes-gcm = { version = "0.10.3", features = ["aes"] }
 hkdf = "0.12.4"
 k256 = { version = "0.13.3", features = ["ecdh"] }
 sha2 = "0.10"
-hex = "0.4.3"
+hex = "0.4"
 
 bs58 = "0.5.0"
 
@@ -33,6 +34,9 @@ x25519-dalek = { version = "2.0.0", features = [
     "static_secrets",
 ] }
 
+
+fnv = "1.0.7"
+chacha20poly1305 = "0.10"
 
 [dev-dependencies]
 rand = "0.8"

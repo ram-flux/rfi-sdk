@@ -8,7 +8,7 @@ mod error;
 pub use error::Error;
 
 mod util;
-pub use util::{hdrf::Hdrf, pin::Pin, device::Device};
+pub use util::{hdrf::Hdrf, pin::Pin, device::Device,x25519_chacha20poly1305::Encrypt};
 
 
 pub fn pin_encrypt(pk: Option<Vec<u8>>, passwd: Vec<u8>) -> Result<String, crate::Error> {

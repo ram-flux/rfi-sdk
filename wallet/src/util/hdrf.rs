@@ -67,7 +67,6 @@ impl<'a> Hdrf<'a> {
      */
     pub fn get_pub_key_acc(public_key: PublicKey) -> Result<String, crate::Error> {
         let public_key_hex = hex::encode(public_key.serialize());
-        // let base58_address = bs58::encode(public_key_hex).into_string();
         Ok(public_key_hex)
     }
 
@@ -75,6 +74,12 @@ impl<'a> Hdrf<'a> {
         let secret_key_vec = hex::decode(secret_key)?;
         let secret_key = SecretKey::from_slice(&secret_key_vec)?;
         Ok(secret_key)
+    }
+
+    pub fn from_pubkey_hex(public_key_hex: &str) -> Result<PublicKey, crate::Error> {
+        let public_key_vec = hex::decode(public_key_hex)?;
+        let public_key = PublicKey::from_slice(&public_key_vec)?;
+        Ok(public_key)
     }
 
     pub fn sign_message(
@@ -113,9 +118,24 @@ mod tests {
         let phrase = Hdrf::get_phrase();
         let secret_key = hdrf.recover_priv_key(&phrase)?;
         let (_, public_key) = hdrf.get_pk(&phrase)?;
-        let message = b"Hello, world!";
+
+        let get_pub_key_acc = Hdrf::get_pub_key_acc(public_key)?;
+        println!("get_pub_key_acc:{}", get_pub_key_acc);
+
+        let message = b"382C2668-6E36-4C0E-97E3-BF11DB0424E9";
+        println!("message:Hello, world!");
+
         let signature = hdrf.sign_message(message, &secret_key)?;
-        let verify_result = hdrf.verify_signature(message, &signature, &public_key)?;
+
+        // Serialize signature into DER format and then convert to hex string for transmission
+        let signature_der_hex = hex::encode(signature.serialize_der());
+        println!("signature_der_hex:{}", signature_der_hex);
+
+        // On the verification side, the signature is first deserialized from a hex string back to a Signature object
+        let signature_from_hex = Signature::from_der(&hex::decode(signature_der_hex)?)?;
+
+        let verify_result = hdrf.verify_signature(message, &signature_from_hex, &public_key)?;
+
         assert!(verify_result, "Signature verification failed.");
 
         Ok(())

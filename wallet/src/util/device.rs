@@ -45,13 +45,20 @@ mod tests {
         let mut server_osrng = rand_core::OsRng;
         let random_number = server_osrng.next_u64().to_le_bytes();
         let server_in = hex::encode(random_number.to_vec());
+        println!("server_in: {:#?}", server_in);
 
         let (prikey, pubkey) = Device::generate_device_key(device_id, account_pk, server_in)
             .map_err(|e| crate::Error::from(e))
             .unwrap();
+        //9a71b0558ed0abf9
+        //3447a0b8093193b7a0330b632c8d4e7566ebdefcfcaf44529a97d3be5d89615a
+        //edb4fe7a1d5aae37dfc37b9e575fcd36922a02a0e3ffcb79ba85268a5fb5b120
 
-        println!("prikey: {:#?}", prikey.as_bytes());
-        println!("pubkey: {:#?}", pubkey);
+        // server_in: 2071e22e96ea8409
+        // prikey: 58f13e43e096bf261e02d0db27e72f0920f13736586e204acba3aec377ee4020
+        // pubkey: 2df994be6eb07a574a1a859032e6d395afc1de14dbac5c235ac3d153c868001b
+
+        println!("prikey: {:?}", hex::encode(prikey.to_bytes()));
+        println!("pubkey: {:#?}", hex::encode(pubkey.as_bytes()));
     }
-
 }
