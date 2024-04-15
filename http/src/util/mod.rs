@@ -11,6 +11,12 @@ pub struct DeviceInitRes {
     pubkey: String,
 }
 
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+pub struct DeviceDel {
+    pub data: String,
+    pub signature: String,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -39,7 +45,7 @@ mod tests {
         parsed_response
     }
 
-    async fn binding_device(res: DeviceInitRes) {
+    async fn binding_device(res: DeviceInitRes) -> anyhow::Result<(String, String, String)> {
         println!("res: {:?}", res);
 
         let api_client = ApiClient::new();
@@ -55,29 +61,113 @@ mod tests {
         )
         .unwrap();
 
+        let device_pri_str = hex::encode(device_pri.as_bytes());
+        let device_pub_str = hex::encode(device_pub.as_bytes());
+
         let body = json!({
-            "device_pubkey": hex::encode(device_pub.as_bytes()),
+            "device_pubkey": device_pub_str.clone(),
         });
 
         let body_str = wallet::Encrypt::new(
-            hex::encode(device_pri.as_bytes()),
+            device_pri_str.clone(),
             res.pubkey.clone(),
             "unique nonce".to_string(),
             body.to_string(),
         )
         .encrypt()
         .unwrap();
-        let data = format!("{}.{}.{}", body_str, res.osrng, res.pubkey);
+        let data = format!("{}.{}.{}", body_str, res.osrng, res.pubkey.clone());
+        let ser_pubkey = res.pubkey;
 
         let headers = Some(vec![("Content-Type", "application/json")]);
         let response = api_client
-            .send(reqwest::Method::PUT, url, Some(data), headers)
+            .send(reqwest::Method::POST, url, Some(data), headers)
             .await
             .expect("Failed to send request");
         println!("response: {:?}", response);
+        Ok((device_pri_str, device_pub_str, ser_pubkey))
+    }
 
-        // let parsed_response = ApiClient::from_json::<DeviceInitRes>(&response).await;
-        // parsed_response
+    async fn del_device(device_pri: String, device_pub: String, ser_pubkey: String) {
+        // println!("device_pri: {:?}", device_pri);
+        // println!("device_pub: {:?}", device_pub);
+        // println!("ser_pubkey: {:?}", ser_pubkey);
+
+        let api_client = ApiClient::new();
+        let url = "http://127.0.0.1:8117/v1/device";
+
+        // let acc = "038f3693e749f470accf6519a9af48667474c5da4c3b2c4d600102a423794b83eb";
+        let device_id = "382C2668-6E36-4C0E-97E3-BF11DB0424E9";
+
+        let payload = wallet::Encrypt::new(
+            device_pri.clone(),
+            ser_pubkey.clone(),
+            "unique nonce".to_string(),
+            device_id.to_string(),
+        )
+        .encrypt()
+        .unwrap();
+        let data = format!("{}.{}", payload.clone(), device_pub);
+
+        let sig = wallet::Signature::new(device_pri, ser_pubkey)
+            .sign(&payload)
+            .unwrap();
+
+        // println!("sig: {:?}", sig);
+
+        let body = json!({
+            "data": data,
+            "signature": sig,
+        });
+
+        let headers = Some(vec![("Content-Type", "application/json")]);
+        let response = api_client
+            .send(
+                reqwest::Method::DELETE,
+                url,
+                Some(body.to_string()),
+                headers,
+            )
+            .await
+            .expect("Failed to send request");
+        println!("response: {:?}", response);
+    }
+
+    /**
+     * Test device in server pubkey
+     */
+    async fn update_device(device_pri: String, device_pub: String, ser_pubkey: String) {
+        let api_client = ApiClient::new();
+        let url = "http://127.0.0.1:8117/v1/device";
+
+        // let acc = "038f3693e749f470accf6519a9af48667474c5da4c3b2c4d600102a423794b83eb";
+        let device_id = "382C2668-6E36-4C0E-97E3-BF11DB0424E9";
+
+        let payload = wallet::Encrypt::new(
+            device_pri.clone(),
+            ser_pubkey.clone(),
+            "unique nonce".to_string(),
+            device_id.to_string(),
+        )
+        .encrypt()
+        .unwrap();
+        let data = format!("{}.{}", payload.clone(), device_pub);
+
+        let sig = wallet::Signature::new(device_pri, ser_pubkey)
+            .sign(&payload)
+            .unwrap();
+
+        let body = json!({
+            "data": data,
+            "signature": sig,
+        });
+
+        let headers = Some(vec![("Content-Type", "application/json")]);
+        let response = api_client
+            .send(reqwest::Method::PUT, url, Some(body.to_string()), headers)
+            .await
+            .expect("Failed to send request");
+        println!("response: {:?}", response);
     }
 
     //cargo test --package http --lib -- util::tests::test_device --exact --nocapture
@@ -86,7 +176,9 @@ mod tests {
         let parsed_response = init_device().await.unwrap();
         if let Some(data) = parsed_response {
             // println!("Received data: {:?}", data);
-            binding_device(data).await;
+            let (pri, pubk, ser_pubk) = binding_device(data).await.unwrap();
+            update_device(pri, pubk, ser_pubk).await;
+            // del_device(pri, pubk, ser_pubk).await;
         } else {
             println!("No data in the response.");
         }

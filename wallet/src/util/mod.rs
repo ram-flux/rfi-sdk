@@ -5,6 +5,7 @@
 pub mod hdrf;
 pub mod pin;
 pub mod device;
+pub mod signature;
 // pub mod contact;
 
 pub mod x25519_chacha20poly1305;
